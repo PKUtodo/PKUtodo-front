@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,8 @@ namespace DarkDemo
         public Form1()
         {
             InitializeComponent();
+            JObject obj = HTTP.HttpPost(JSONHelper.CreateJson("test", "maruiping@pku.edu.cn"));
+            //Console.WriteLine(obj.ToString());
         }
     }
 }

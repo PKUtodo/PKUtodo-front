@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,10 +8,11 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace DarkDemo
+namespace fronttest
 {
     class HTTP
     {
+        public static string URL = "http://127.0.0.1:1000";
         #region POST请求
         /// <summary>
         /// POST请求
@@ -19,16 +21,17 @@ namespace DarkDemo
         /// <param name="url">请求Url地址</param>
         /// <param name="postParameters">post提交参数</param>
         /// <returns></returns>
-        public static T HttpPostStr<T>(string url, string js)
+        public static JObject HttpPost(string js, string url = "http://127.0.0.1:1000")
         {
             try
             {
                 string retString = "";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                //注意：输入特定格式的时候头文件上下文需说明，如JSON字符串声明 
-                //为："application/json;"
-                request.ContentType = "application/x-www-form-urlencoded;charset:utf-8";
+                HttpWebRequest request = WebRequest.CreateHttp(url);
+                request.Method = "POST";  
+                request.ContentType = "application/json;charset:utf-8";
+                // 设置超时时间
+                request.Timeout = 1000000;
+
                 //POST参数
                 //编码要跟服务器编码统一
                 byte[] bt = Encoding.UTF8.GetBytes(js);
@@ -47,11 +50,11 @@ namespace DarkDemo
                         retString = streamReader.ReadToEnd().ToString();
                     }
                 }
-                return JsonConvert.DeserializeObject<T>(retString);
+                return JObject.Parse(retString);
             }
             catch (Exception e)
             {
-                return default(T);
+                return default(JObject);
             }
         }
         #endregion

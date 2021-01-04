@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 
-namespace TODO
+namespace DarkDemo
 {
     public class JSONHelper
     {
@@ -34,14 +34,25 @@ namespace TODO
             };
             return obj.ToString(Newtonsoft.Json.Formatting.None, null);
         }
-        public static string CreateJson(string type, int user_id, int password, int id)
+        public static string CreateJsonDelList(string type, int user_id, int password, int id)
         {
             JObject obj = new JObject
             {
                 { "type", type },
                 { "user_id", user_id },
                 { "password", password },
-                { "id", id }
+                { "list_id", id }
+            };
+            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+        }
+        public static string CreateJsonDelTask(string type, int user_id, int password, int id)
+        {
+            JObject obj = new JObject
+            {
+                { "type", type },
+                { "user_id", user_id },
+                { "password", password },
+                { "task_id", id }
             };
             return obj.ToString(Newtonsoft.Json.Formatting.None, null);
         }
@@ -138,3 +149,4 @@ namespace TODO
         }
     }
 }
+

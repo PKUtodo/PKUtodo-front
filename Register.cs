@@ -98,40 +98,47 @@ namespace TODO
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (textBox4.Text == textBox5.Text)
+            try
             {
-                JObject obj = HTTP.HttpPost(JSONHelper.CreateJson(MessageType.verify, textBox1.Text, Convert.ToInt32(textBox2.Text), textBox3.Text, textBox4.Text));
-                if (obj != null)
+                if (textBox4.Text == textBox5.Text)
                 {
-                    if(obj.Value<int>("success") == 1)
+                    JObject obj = HTTP.HttpPost(JSONHelper.CreateJson(MessageType.verify, textBox1.Text, Convert.ToInt32(textBox2.Text), textBox3.Text, textBox4.Text));
+                    if (obj != null)
                     {
-                        UserData.user_id = obj.Value<int>("user_id");
-                        UserData.password = textBox5.Text;
-                        //点击登录
-                        Form1 form1 = new Form1();
-                        this.Hide();
-                        form1.ShowDialog();
-                        Application.ExitThread();
-                        //this.Show();
-                    }
-                    else if(obj.Value<int>("success") == 0)
-                    {
-                        MessageBox.Show(obj.Value<string>("error_msg"));
+                        if(obj.Value<int>("success") == 1)
+                        {
+                            UserData.user_id = obj.Value<int>("user_id");
+                            UserData.password = textBox5.Text;
+                            //点击登录
+                            Form1 form1 = new Form1();
+                            this.Hide();
+                            form1.ShowDialog();
+                            Application.ExitThread();
+                            //this.Show();
+                        }
+                        else if(obj.Value<int>("success") == 0)
+                        {
+                            MessageBox.Show(obj.Value<string>("error_msg"));
+                        }
+                        else
+                        {
+                            MessageBox.Show("出现未知错误", "ERROR");
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("出现未知错误", "ERROR");
+                        MessageBox.Show("注册失败！", "ERROR");
                     }
+
                 }
                 else
                 {
-                    MessageBox.Show("注册失败！", "ERROR");
+                    MessageBox.Show("密码输入不相同！", "ERROR");
                 }
-
             }
-            else
+            catch
             {
-                MessageBox.Show("密码输入不相同！", "ERROR");
+                MessageBox.Show("出错了！", "ERROR");
             }
         }
     }

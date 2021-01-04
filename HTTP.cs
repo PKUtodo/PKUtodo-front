@@ -30,8 +30,8 @@ namespace TODO
                 request.Method = "POST";
                 request.ContentType = "application/json;charset:utf-8";
                 // 设置超时时间
-                request.Timeout = 1000000;
-
+                request.Timeout = 3000;
+                request.KeepAlive = false;
                 //POST参数
                 //编码要跟服务器编码统一
                 byte[] bt = Encoding.UTF8.GetBytes(js);

@@ -12,9 +12,9 @@ namespace TODO
                 { "type", type },
                 { "email", email }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password)
+        public static string CreateJson(string type, int user_id, string password)
         {
             JObject obj = new JObject
             {
@@ -22,7 +22,7 @@ namespace TODO
                 { "user_id", user_id },
                 { "password", password }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, string email, string password)
         {
@@ -32,20 +32,31 @@ namespace TODO
                 { "email", email },
                 { "password", password }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password, int id)
+        public static string CreateJsonDelList(string type, int user_id, string password, int id)
         {
             JObject obj = new JObject
             {
                 { "type", type },
                 { "user_id", user_id },
                 { "password", password },
-                { "id", id }
+                { "list_id", id }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password, string list_name)
+        public static string CreateJsonDelTask(string type, int user_id, string password, int id)
+        {
+            JObject obj = new JObject
+            {
+                { "type", type },
+                { "user_id", user_id },
+                { "password", password },
+                { "task_id", id }
+            };
+            return obj.ToString();
+        }
+        public static string CreateJson(string type, int user_id, string password, string list_name)
         {
             JObject obj = new JObject
             {
@@ -54,9 +65,9 @@ namespace TODO
                 { "password", password },
                 { "list_name", list_name }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password, DateTime date)
+        public static string CreateJson(string type, int user_id, string password, DateTime date)
         {
             JObject obj = new JObject
             {
@@ -65,7 +76,7 @@ namespace TODO
                 { "password", password },
                 { "DateTime", date.ToString() }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, string email, int veri_code, string user_name, string password)
         {
@@ -73,13 +84,13 @@ namespace TODO
             {
                 { "type", type },
                 { "email", email },
-                { "veri_code", veri_code },
-                { "user_name", user_name },
+                { "verify_code", veri_code },
+                { "name", user_name },
                 { "password", password }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password, int list_id, bool state)
+        public static string CreateJson(string type, int user_id, string password, int list_id, bool state)
         {
             JObject obj = new JObject
             {
@@ -89,9 +100,9 @@ namespace TODO
                 { "list_id", list_id },
                 { "state", state }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password, int list_id, int target_user_id)
+        public static string CreateJson(string type, int user_id, string password, int list_id, int target_user_id)
         {
             JObject obj = new JObject
             {
@@ -101,9 +112,9 @@ namespace TODO
                 { "list_id", list_id },
                 { "target_user_id", target_user_id }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password, int task_id, DateTime creat_date, DateTime due_date, double position_x, double position_y, string content)
+        public static string CreateJson(string type, int user_id, string password, int task_id, DateTime creat_date, DateTime due_date, double position_x, double position_y, string content)
         {
             JObject obj = new JObject
             {
@@ -117,9 +128,9 @@ namespace TODO
                 { "position_y", position_y },
                 { "content", content }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
-        public static string CreateJson(string type, int user_id, int password, int list_id, string task_name, DateTime creat_date, DateTime due_date, double position_x, double position_y, string content)
+        public static string CreateJson(string type, int user_id, string password, int list_id, string task_name, DateTime creat_date, DateTime due_date, double position_x, double position_y, string content)
         {
             JObject obj = new JObject
             {
@@ -134,7 +145,8 @@ namespace TODO
                 { "position_y", position_y },
                 { "content", content }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
     }
 }
+

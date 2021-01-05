@@ -12,7 +12,7 @@ namespace TODO
                 { "type", type },
                 { "email", email }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, int user_id, string password)
         {
@@ -22,7 +22,7 @@ namespace TODO
                 { "user_id", user_id },
                 { "password", password }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, string email, string password)
         {
@@ -32,7 +32,7 @@ namespace TODO
                 { "email", email },
                 { "password", password }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJsonDelList(string type, int user_id, string password, int id)
         {
@@ -43,7 +43,7 @@ namespace TODO
                 { "password", password },
                 { "list_id", id }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJsonDelTask(string type, int user_id, string password, int id)
         {
@@ -54,7 +54,7 @@ namespace TODO
                 { "password", password },
                 { "task_id", id }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, int user_id, string password, string list_name)
         {
@@ -65,7 +65,7 @@ namespace TODO
                 { "password", password },
                 { "list_name", list_name }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, int user_id, string password, DateTime date)
         {
@@ -76,7 +76,7 @@ namespace TODO
                 { "password", password },
                 { "DateTime", date.ToString() }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, string email, int veri_code, string user_name, string password)
         {
@@ -88,7 +88,7 @@ namespace TODO
                 { "user_name", user_name },
                 { "password", password }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, int user_id, string password, int list_id, bool state)
         {
@@ -100,7 +100,7 @@ namespace TODO
                 { "list_id", list_id },
                 { "state", state }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, int user_id, string password, int list_id, int target_user_id)
         {
@@ -112,7 +112,7 @@ namespace TODO
                 { "list_id", list_id },
                 { "target_user_id", target_user_id }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, int user_id, string password, int task_id, DateTime creat_date, DateTime due_date, double position_x, double position_y, string content)
         {
@@ -128,7 +128,7 @@ namespace TODO
                 { "position_y", position_y },
                 { "content", content }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
         public static string CreateJson(string type, int user_id, string password, int list_id, string task_name, DateTime creat_date, DateTime due_date, double position_x, double position_y, string content)
         {
@@ -145,7 +145,7 @@ namespace TODO
                 { "position_y", position_y },
                 { "content", content }
             };
-            return obj.ToString(Newtonsoft.Json.Formatting.None, null);
+            return obj.ToString();
         }
     }
 }

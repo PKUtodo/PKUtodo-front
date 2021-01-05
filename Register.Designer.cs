@@ -52,7 +52,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button1.Location = new System.Drawing.Point(133, 196);
+            this.button1.Location = new System.Drawing.Point(133, 184);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(126, 47);
@@ -64,7 +64,7 @@
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.textBox2.Location = new System.Drawing.Point(133, 301);
+            this.textBox2.Location = new System.Drawing.Point(133, 253);
             this.textBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(365, 37);
@@ -76,7 +76,7 @@
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.textBox3.Location = new System.Drawing.Point(133, 388);
+            this.textBox3.Location = new System.Drawing.Point(133, 334);
             this.textBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(365, 37);
@@ -88,7 +88,7 @@
             // textBox4
             // 
             this.textBox4.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.textBox4.Location = new System.Drawing.Point(133, 475);
+            this.textBox4.Location = new System.Drawing.Point(133, 415);
             this.textBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(365, 37);
@@ -100,7 +100,7 @@
             // textBox5
             // 
             this.textBox5.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.textBox5.Location = new System.Drawing.Point(133, 566);
+            this.textBox5.Location = new System.Drawing.Point(133, 500);
             this.textBox5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(365, 37);
@@ -112,7 +112,7 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button2.Location = new System.Drawing.Point(133, 653);
+            this.button2.Location = new System.Drawing.Point(133, 578);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(126, 47);

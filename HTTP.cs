@@ -30,10 +30,23 @@ namespace TODO
                 HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
                 request.ProtocolVersion = HttpVersion.Version11;
                 request.Method = "POST";
-                request.ContentType = "text/json;charset:utf-8"; //
+                Console.WriteLine(js);
+                request.ContentType = "application/x-www-form-urlencoded;charset:utf-8";
+                js = js.Replace(":", "=");
+                js = js.Replace(",", "&");
+                js = js.Replace("{", string.Empty);
+                js = js.Replace("}", string.Empty);
+                js = js.Replace("\r", string.Empty);
+                js = js.Replace("\n", string.Empty);
+                js = js.Replace(" ", string.Empty);
+                js = js.Replace("\"", string.Empty);
+                js.Trim();
+                
+                // request.ContentType = "application/json;charset:utf-8";
+                // js.Trim('\"');
                 // 设置超时时间
                 request.Timeout = 3000;
-                request.KeepAlive = true;
+                request.KeepAlive = false;
 
                 //POST参数
                 //编码要跟服务器编码统一
@@ -61,18 +74,5 @@ namespace TODO
             }
         }
         #endregion
-
-        static public async System.Threading.Tasks.Task testpostAsync(string js, string url= "http://10.128.169.239:5000")
-        {
-            var data = new StringContent(js, Encoding.UTF8, "application/json");
-
-            
-            var client = new HttpClient();
-
-            var response = await client.PostAsync(url, data);
-
-            string result = response.Content.ReadAsStringAsync().Result;
-            Console.WriteLine(result);
-        }
     }
 }

@@ -13,32 +13,39 @@ namespace TODO
 
         private void button1_Click(object sender, EventArgs e)
         {
-            JObject obj =  HTTP.HttpPost(JSONHelper.CreateJson(MessageType.login, textBox1.Text, textBox2.Text));
-            if(obj != null)
+            try
             {
-                if((obj.Value<int>("success")) == 0)
+                JObject obj =  HTTP.HttpPost(JSONHelper.CreateJson(MessageType.login, textBox1.Text, textBox2.Text));
+                if(obj != null)
                 {
-                    MessageBox.Show(obj.Value<string>("error_msg"), "ERROR");
-                }
-                else if ((obj.Value<int>("success")) == 1)
-                {
-                    UserData.user_id = obj.Value<int>("user_id");
-                    UserData.password = textBox2.Text;
-                    //点击登录
-                    Form1 form1 = new Form1();
-                    this.Hide();
-                    form1.ShowDialog();
-                    Application.ExitThread();
-                    //this.Show();
+                    if((obj.Value<int>("success")) == 0)
+                    {
+                        MessageBox.Show(obj.Value<string>("error_msg"), "ERROR");
+                    }
+                    else if ((obj.Value<int>("success")) == 1)
+                    {
+                        UserData.user_id = obj.Value<int>("user_id");
+                        UserData.password = textBox2.Text;
+                        //点击登录
+                        Form1 form1 = new Form1();
+                        this.Hide();
+                        form1.ShowDialog();
+                        Application.ExitThread();
+                        //this.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("出现未知错误", "ERROR");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("出现未知错误", "ERROR");
+                    MessageBox.Show("登陆失败！", "ERROR");
                 }
             }
-            else
+            catch
             {
-                MessageBox.Show("登陆失败！", "ERROR");
+                MessageBox.Show("出现未知错误", "ERROR");
             }
         }
 
@@ -65,7 +72,7 @@ namespace TODO
         private void textBox1_Leave(object sender, EventArgs e)
         {
             if(textBox1.Text.Length == 0)
-                textBox1.Text = "用户名";
+                textBox1.Text = "邮箱";
         }
 
         private void textBox2_Leave(object sender, EventArgs e)

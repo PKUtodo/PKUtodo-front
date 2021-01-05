@@ -84,8 +84,8 @@ namespace TODO
             {
                 { "type", type },
                 { "email", email },
-                { "veri_code", veri_code },
-                { "user_name", user_name },
+                { "verify_code", veri_code },
+                { "name", user_name },
                 { "password", password }
             };
             return obj.ToString();

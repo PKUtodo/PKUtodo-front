@@ -147,6 +147,19 @@ namespace TODO
             };
             return obj.ToString();
         }
+
+        //用于课程ID检索
+        public static string CreateJson(string type, int user_id, string password, int class_id)
+        {
+            JObject obj = new JObject
+            {
+                { "type", type },
+                { "user_id", user_id },
+                { "password", password },
+                { "class_id", class_id }
+            };
+            return obj.ToString();
+        }
     }
 }
 

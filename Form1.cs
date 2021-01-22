@@ -14,6 +14,8 @@ namespace TODO
 {
     public partial class Form1 : Form
     {
+        public UserData myuser;//本用户
+
         public string temp="";//list创建的时候公用的字符串对象
         public string temp_task_str="";//任务创建的时候传输的公共字符串
         public string left_content;//左边显示栏显示的内容，有class，task两种
@@ -30,31 +32,42 @@ namespace TODO
         public Form1()
         {
             InitializeComponent();
-            //导入用户所有数据(之后要根据服务器的请求修改)
-            for(int i=0;i<10;i++)
+            preprocessing();
+        }
+        /// <summary>
+        /// 预处理：导入所有课程和用户个人清单、课程、任务数据
+        /// </summary>
+        /// <returns></returns>
+        private void preprocessing()
+        {
+            //第一步：导入所有课程数据
+            for (int i = 0; i < 10; i++)
             {
                 StudentClass new_class = new StudentClass();
                 new_class.class_id = i;
-                new_class.name = "软件工程"+i.ToString();
+                new_class.name = "软件工程" + i.ToString();
                 new_class.score = 3;
                 new_class.description = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
-                new_class.description+= "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+                new_class.description += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
                 Task new_task = new Task();
                 new_task.description = "软件工程作业对学习很有帮助。";
                 new_task.due_time = DateTime.Now;
                 new_task.start_time = DateTime.Now;
-                new_task.name= "软件工程" + i.ToString()+"作业"+i.ToString();
+                new_task.name = "软件工程" + i.ToString() + "作业" + i.ToString();
                 new_task.parent_type = "class";
                 new_task.parent_id = i;
-                if(all_tasks.Count>0)
+                if (all_tasks.Count > 0)
                 {
                     new_task.task_id = all_tasks[all_tasks.Count - 1].task_id + 1;
                 }
-                else { new_task.task_id =0; }
+                else { new_task.task_id = 0; }
                 all_tasks.Add(new_task);
                 new_class.alltaskIDs.Add(new_task.task_id);
                 all_classes.Add(new_class);
             }
+            //第二步：导入用户个人清单，连同清单中的任务
+            //第三步：导入用户个人课程，连同个人课程中的任务
+            //
         }
         #region 系统基础配置
         //鼠标拖动整体窗口函数（由于去除了边框）
@@ -100,7 +113,7 @@ namespace TODO
 
         private void collection_button_MouseEnter(object sender, EventArgs e)
         {
-            MovePanel(collection_button);
+            MovePanel(admin_button);
             if (file_slide.Visible) file_slide.Visible = false;
             if (class_slide.Visible) class_slide.Visible = false;
         }
@@ -863,6 +876,24 @@ namespace TODO
                 String itemName = this.left_display_view.SelectedItems[0].Text; //获取选中课程名
                 Point p = new Point(e.X, e.Y);
                 contextMenuStrip1.Show(this.left_display_view, p);
+            }
+        }
+        #endregion
+
+        #region 管理员权限
+        /// <summary>
+        /// 管理员：点击“管理员”按钮进入管理员界面
+        /// </summary>
+        /// <returns></returns>
+        private void admin_button_Click(object sender, EventArgs e)
+        {
+            //点击进入管理员界面
+            if(myuser.administrator_list.Count!=0)
+            {
+                AdministratorForm admin_form = new AdministratorForm();
+                this.Hide();
+                admin_form.ShowDialog();
+                Application.ExitThread();
             }
         }
         #endregion

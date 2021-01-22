@@ -1,14 +1,42 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Windows.Forms;
+using System.IO;
 
 namespace TODO
 {
     public partial class Login : Form
     {
+        public string path = "user.txt";//保存用户名(第一行)、密码(第二行)的文件
+        string password = "";
         public Login()
         {
             InitializeComponent();
+            string temp = Directory.GetCurrentDirectory();
+            temp = temp.Substring(0, temp.Length - 9);
+            path = temp + path;
+            if (File.Exists(path))
+            {
+                try
+                {
+                    //查找是否有user.txt，如果有，读取信息显示
+                    using (StreamReader sr = new StreamReader(path))
+                    {
+                        string line = sr.ReadLine();
+                        password = sr.ReadLine();
+                        if((line.Length>0)&&(password.Length!=0))
+                        {
+                            textBox1.Text = line;
+                            textBox2.Text = password;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    // 向用户显示出错消息
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -19,7 +47,7 @@ namespace TODO
             form.ShowDialog();
             Application.ExitThread();
             
-            //正常使用的代码
+            //正常使用的代码，可以利用上次登陆记录
             try
             {
                 JObject obj =  HTTP.HttpPost(JSONHelper.CreateJson(MessageType.login, textBox1.Text, textBox2.Text));
@@ -31,10 +59,21 @@ namespace TODO
                     }
                     else if ((obj.Value<int>("success")) == 1)
                     {
-                        UserData.user_id = obj.Value<int>("user_id");
-                        UserData.password = textBox2.Text;
+                        //生成用户对象
+                        UserData myuser = new UserData();
+                        myuser.user_id = obj.Value<int>("user_id");
+                        myuser.password = textBox2.Text;
+
+                        //保存记录到本地
+                        using (StreamWriter sw = new StreamWriter(path))
+                        {
+                            sw.WriteLine(textBox1.Text);
+                            sw.WriteLine(password);
+                        }
+
                         //点击登录
                         Form1 form1 = new Form1();
+                        form1.myuser = myuser;
                         this.Hide();
                         form1.ShowDialog();
                         Application.ExitThread();

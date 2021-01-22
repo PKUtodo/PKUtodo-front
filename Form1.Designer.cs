@@ -45,7 +45,7 @@
             this.class_button = new System.Windows.Forms.Button();
             this.all_task_button = new System.Windows.Forms.Button();
             this.foot_button = new System.Windows.Forms.Button();
-            this.collection_button = new System.Windows.Forms.Button();
+            this.admin_button = new System.Windows.Forms.Button();
             this.slide_panel = new System.Windows.Forms.Panel();
             this.person_list_button = new System.Windows.Forms.Button();
             this.title_label = new System.Windows.Forms.Label();
@@ -202,7 +202,7 @@
             this.menu_panel.Controls.Add(this.class_button);
             this.menu_panel.Controls.Add(this.all_task_button);
             this.menu_panel.Controls.Add(this.foot_button);
-            this.menu_panel.Controls.Add(this.collection_button);
+            this.menu_panel.Controls.Add(this.admin_button);
             this.menu_panel.Controls.Add(this.slide_panel);
             this.menu_panel.Controls.Add(this.person_list_button);
             this.menu_panel.Location = new System.Drawing.Point(0, 162);
@@ -266,23 +266,24 @@
             this.foot_button.UseVisualStyleBackColor = true;
             this.foot_button.MouseEnter += new System.EventHandler(this.foot_button_MouseEnter);
             // 
-            // collection_button
+            // admin_button
             // 
-            this.collection_button.FlatAppearance.BorderSize = 0;
-            this.collection_button.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(71)))), ((int)(((byte)(82)))));
-            this.collection_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.collection_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.collection_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.collection_button.Image = ((System.Drawing.Image)(resources.GetObject("collection_button.Image")));
-            this.collection_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.collection_button.Location = new System.Drawing.Point(8, 50);
-            this.collection_button.Margin = new System.Windows.Forms.Padding(4);
-            this.collection_button.Name = "collection_button";
-            this.collection_button.Size = new System.Drawing.Size(219, 50);
-            this.collection_button.TabIndex = 8;
-            this.collection_button.Text = "我的收藏";
-            this.collection_button.UseVisualStyleBackColor = true;
-            this.collection_button.MouseEnter += new System.EventHandler(this.collection_button_MouseEnter);
+            this.admin_button.FlatAppearance.BorderSize = 0;
+            this.admin_button.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(71)))), ((int)(((byte)(82)))));
+            this.admin_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.admin_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.admin_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.admin_button.Image = ((System.Drawing.Image)(resources.GetObject("admin_button.Image")));
+            this.admin_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.admin_button.Location = new System.Drawing.Point(8, 50);
+            this.admin_button.Margin = new System.Windows.Forms.Padding(4);
+            this.admin_button.Name = "admin_button";
+            this.admin_button.Size = new System.Drawing.Size(219, 50);
+            this.admin_button.TabIndex = 8;
+            this.admin_button.Text = "管理员";
+            this.admin_button.UseVisualStyleBackColor = true;
+            this.admin_button.Click += new System.EventHandler(this.admin_button_Click);
+            this.admin_button.MouseEnter += new System.EventHandler(this.collection_button_MouseEnter);
             // 
             // slide_panel
             // 
@@ -553,7 +554,7 @@
         private System.Windows.Forms.Panel slide_panel;
         private System.Windows.Forms.Button all_task_button;
         private System.Windows.Forms.Button foot_button;
-        private System.Windows.Forms.Button collection_button;
+        private System.Windows.Forms.Button admin_button;
         private System.Windows.Forms.Label menu_label;
         private System.Windows.Forms.Button refresh_button;
         private System.Windows.Forms.Button logout_button;

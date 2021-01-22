@@ -107,8 +107,10 @@ namespace TODO
                     {
                         if(obj.Value<int>("success") == 1)
                         {
-                            UserData.user_id = obj.Value<int>("user_id");
-                            UserData.password = textBox5.Text;
+                            //生成用户对象
+                            UserData myuser = new UserData();
+                            myuser.user_id = obj.Value<int>("user_id");
+                            myuser.password = textBox5.Text;
                             //点击登录
                             Form1 form1 = new Form1();
                             this.Hide();

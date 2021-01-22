@@ -184,6 +184,7 @@
             this.logout_button.TabIndex = 10;
             this.logout_button.Text = "注销";
             this.logout_button.UseVisualStyleBackColor = true;
+            this.logout_button.Click += new System.EventHandler(this.logout_button_Click);
             // 
             // menu_label
             // 

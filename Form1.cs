@@ -23,9 +23,6 @@ namespace TODO
         public int choose_list_index = -1;//被选中的列表，用于删除
         public int choose_list_index2 = -1;//选中的class
 
-        public List<StudentList> lists=new List<StudentList>();//所有的表单
-        public List<StudentClass> classes = new List<StudentClass>();//所有个人的课程
-        public List<Task> tasks= new List<Task>();//所有的私人任务和选课的公有任务（拷贝到本地）
         public List<StudentClass> all_classes = new List<StudentClass>();//所有的学校课程
         public List<Task> all_tasks = new List<Task>();//所有课程中的任务
 
@@ -181,7 +178,7 @@ namespace TODO
         private void show_class_tasks(object sender, EventArgs e)
         {
             //listview展示所有的课程任务
-            StudentClass cur_class = classes[choose_list_index2 - 1];
+            StudentClass cur_class = myuser.classes[choose_list_index2 - 1];
             refresh();//清空显示栏
             this.left_display_view.View = View.List;
 
@@ -225,11 +222,11 @@ namespace TODO
             this.color_imageList.ImageSize = new Size(10, 30); // 这实际上是图片的占位，可能导致图片无法显示
             this.left_display_view.BeginUpdate();
 
-            for (int i = 0; i < tasks.Count; i++)
+            for (int i = 0; i < myuser.tasks.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.ImageIndex = i;
-                lvi.Text = tasks[i].name;//对应文字
+                lvi.Text = myuser.tasks[i].name;//对应文字
                 lvi.ImageIndex = 0;
                 this.left_display_view.Items.Add(lvi);
             }
@@ -304,7 +301,7 @@ namespace TODO
         /// <returns></returns>
         private void show_list_info(object sender, MouseEventArgs e)
         {
-            StudentList cur_list = lists[choose_list_index - 1];
+            StudentList cur_list = myuser.lists[choose_list_index - 1];
             refresh();//清空显示栏
             this.left_display_view.View = View.List;
 
@@ -319,7 +316,7 @@ namespace TODO
                 int index = get_task_index(cur_list.taskIDs[i]);
                 if (index != -1)
                 {
-                    lvi.Text = tasks[index].name;//对应文字
+                    lvi.Text = myuser.tasks[index].name;//对应文字
                 }
                 else
                 {
@@ -357,9 +354,9 @@ namespace TODO
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             //判断是否选了那门课
-            for (int i = 0; i < classes.Count; i++)
+            for (int i = 0; i < myuser.classes.Count; i++)
             {
-                if (classes[i].name == all_classes[index].name) { class_exists = true; break; }
+                if (myuser.classes[i].name == all_classes[index].name) { class_exists = true; break; }
             }
             if (!button.Enabled) { button.Enabled = true; }
             if (!class_exists)
@@ -450,7 +447,7 @@ namespace TODO
             //加入新课程
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
-            classes.Add(all_classes[index]);
+            myuser.classes.Add(all_classes[index]);
             //讲新课程中的所有task从all_tasks放入tasks
             for (int i = 0; i < all_classes[index].alltaskIDs.Count; i++)
             {
@@ -463,13 +460,13 @@ namespace TODO
                 new_task.start_time = temp_task.start_time;
                 new_task.parent_type = "class";
                 new_task.name = temp_task.name;
-                if (tasks.Count > 0)
+                if (myuser.tasks.Count > 0)
                 {
-                    new_task.task_id = tasks[tasks.Count - 1].task_id + 1;
+                    new_task.task_id = myuser.tasks[myuser.tasks.Count - 1].task_id + 1;
                 }
                 else { new_task.task_id = 0; }
                 new_task.parent_id = all_classes[index].class_id;
-                tasks.Add(new_task);
+                myuser.tasks.Add(new_task);
             }
             Button temp_button = (Button)sender;
             temp_button.Text = "删除课程";
@@ -477,14 +474,14 @@ namespace TODO
 
             this.class_slide.Size = new Size(this.class_slide.Size.Width, this.class_slide.Size.Height + this.add_list_button.Height);
             Button button = new Button();
-            button.Name = "button" + classes.Count.ToString();
+            button.Name = "button" + myuser.classes.Count.ToString();
             //文字
             button.Text = all_classes[index].name;
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = this.add_class_button.Font;
             button.ForeColor = this.add_class_button.ForeColor;
             //位置和大小
-            button.Location = new Point(0, this.add_list_button.Location.Y + classes.Count * this.add_list_button.Height);
+            button.Location = new Point(0, this.add_list_button.Location.Y + myuser.classes.Count * this.add_list_button.Height);
             button.Size = this.add_class_button.Size;
             //背景
             button.BackColor = this.add_class_button.BackColor;
@@ -502,16 +499,16 @@ namespace TODO
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             //清掉所有任务
-            StudentClass cur_class = classes[get_class_index(all_classes[index].class_id)];
+            StudentClass cur_class = myuser.classes[get_class_index(all_classes[index].class_id)];
             for (int j = 0; j < cur_class.alltaskIDs.Count; j++)
             {
                 int temp_index = get_all_task_index(cur_class.alltaskIDs[j]);
                 if (temp_index != -1)
                 {
-                    tasks.RemoveAt(temp_index);
+                    myuser.tasks.RemoveAt(temp_index);
                 }
             }
-            classes.RemoveAt(get_class_index(all_classes[index].class_id));
+            myuser.classes.RemoveAt(get_class_index(all_classes[index].class_id));
 
             Button button1 = (Button)sender;
             button1.Text = "加入课程";
@@ -522,12 +519,12 @@ namespace TODO
             this.class_slide.Controls.Add(this.add_class_button);
 
             //放入其他组件
-            for (int i = 0; i < classes.Count; i++)
+            for (int i = 0; i < myuser.classes.Count; i++)
             {
                 Button button = new Button();
                 button.Name = "button" + (i + 1).ToString();
                 //文字
-                button.Text = classes[i].name;
+                button.Text = myuser.classes[i].name;
                 button.TextAlign = ContentAlignment.MiddleCenter;
                 button.Font = this.add_class_button.Font;
                 button.ForeColor = this.add_class_button.ForeColor;
@@ -579,13 +576,13 @@ namespace TODO
         {
             //删除对应的list
             //删除对应的task
-            StudentList cur_list = lists[choose_list_index - 1];
+            StudentList cur_list = myuser.lists[choose_list_index - 1];
             for (int j = 0; j < cur_list.taskIDs.Count; j++)
             {
                 int index = get_task_index(cur_list.taskIDs[j]);
                 if (index != -1)
                 {
-                    tasks.RemoveAt(index);
+                    myuser.tasks.RemoveAt(index);
                 }
             }
             this.file_slide.Controls.Clear();
@@ -593,15 +590,15 @@ namespace TODO
             list_num -= 1;
             this.add_list_button.Location = new Point(0, this.add_list_button.Location.Y - this.add_list_button.Height);
             this.file_slide.Controls.Add(this.add_list_button);
-            lists.RemoveAt(choose_list_index - 1);
+            myuser.lists.RemoveAt(choose_list_index - 1);
 
             //放入其他组件
-            for (int i = 0; i < lists.Count; i++)
+            for (int i = 0; i < myuser.lists.Count; i++)
             {
                 Button button = new Button();
                 button.Name = "button" + (i + 1).ToString();
                 //文字
-                button.Text = lists[i].name;
+                button.Text = myuser.lists[i].name;
                 button.TextAlign = ContentAlignment.MiddleCenter;
                 button.Font = this.add_class_button.Font;
                 button.ForeColor = this.add_class_button.ForeColor;
@@ -647,17 +644,17 @@ namespace TODO
             new_task.due_time = DateTime.Now;
             new_task.description = temp_str[2];
             new_task.parent_type = "list";
-            new_task.parent_id = lists[choose_list_index - 1].list_id;
+            new_task.parent_id = myuser.lists[choose_list_index - 1].list_id;
 
-            if (tasks.Count > 0)
-            { new_task.task_id = tasks[tasks.Count - 1].task_id + 1; }
+            if (myuser.tasks.Count > 0)
+            { new_task.task_id = myuser.tasks[myuser.tasks.Count - 1].task_id + 1; }
             else
             {
                 new_task.task_id = 0;
             }
-            tasks.Add(new_task);
-            lists[choose_list_index - 1].taskIDs.Add(new_task.task_id);//目前所在的清单加入新的编号
-            StudentList cur_list = lists[choose_list_index - 1];//当前列表
+            myuser.tasks.Add(new_task);
+            myuser.lists[choose_list_index - 1].taskIDs.Add(new_task.task_id);//目前所在的清单加入新的编号
+            StudentList cur_list = myuser.lists[choose_list_index - 1];//当前列表
 
             //点击加入课程
             refresh();//清除原有内容
@@ -674,7 +671,7 @@ namespace TODO
                 int index = get_task_index(cur_list.taskIDs[i]);
                 if (index != -1)
                 {
-                    lvi.Text = tasks[index].name;//对应文字
+                    lvi.Text = myuser.tasks[index].name;//对应文字
                 }
                 else
                 {
@@ -714,18 +711,18 @@ namespace TODO
             //创建新的StudentList
             StudentList new_list = new StudentList();
             new_list.name = temp;
-            if (lists.Count != 0)
+            if (myuser.lists.Count != 0)
             {
-                new_list.list_id = lists[lists.Count - 1].list_id + 1;
+                new_list.list_id = myuser.lists[myuser.lists.Count - 1].list_id + 1;
             }
             else
             {
                 new_list.list_id = 1;
             }
-            lists.Add(new_list);
+            myuser.lists.Add(new_list);
 
             Button button = new Button();
-            button.Name = "button" + lists.Count.ToString();
+            button.Name = "button" + myuser.lists.Count.ToString();
             //文字
             button.Text = temp; temp = "";
             button.TextAlign = ContentAlignment.MiddleCenter;
@@ -764,9 +761,9 @@ namespace TODO
         private int get_task_index(int task_id)
         {
             //通过task_id找到在tasks中的ID
-            for (int i = 0; i < tasks.Count; i++)
+            for (int i = 0; i < myuser.tasks.Count; i++)
             {
-                if (tasks[i].task_id == task_id)
+                if (myuser.tasks[i].task_id == task_id)
                 {
                     return i;
                 }
@@ -777,9 +774,9 @@ namespace TODO
         private int get_list_index(int list_id)
         {
             //通过list_id找到在lists中的ID
-            for (int i = 0; i < lists.Count; i++)
+            for (int i = 0; i < myuser.lists.Count; i++)
             {
-                if (lists[i].list_id == list_id)
+                if (myuser.lists[i].list_id == list_id)
                 {
                     return i;
                 }
@@ -790,9 +787,9 @@ namespace TODO
         private int get_class_index(int class_id)
         {
             //通过class_id找到在classes中的ID
-            for (int i = 0; i < classes.Count; i++)
+            for (int i = 0; i < myuser.classes.Count; i++)
             {
-                if (classes[i].class_id == class_id)
+                if (myuser.classes[i].class_id == class_id)
                 {
                     return i;
                 }
@@ -891,12 +888,26 @@ namespace TODO
             if(myuser.administrator_list.Count!=0)
             {
                 AdministratorForm admin_form = new AdministratorForm();
+                admin_form.user = myuser;//传递管理员信息
                 this.Hide();
                 admin_form.ShowDialog();
-                Application.ExitThread();
+                //Application.ExitThread();
+                this.Show();
             }
         }
         #endregion
+
+        /// <summary>
+        /// 用户：点击注销，回到登陆界面
+        /// </summary>
+        /// <returns></returns>
+        private void logout_button_Click(object sender, EventArgs e)
+        {
+            Login login = new Login();
+            this.Hide();
+            login.ShowDialog();
+            Application.ExitThread();
+        }
     }
 }
 

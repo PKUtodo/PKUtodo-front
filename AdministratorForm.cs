@@ -12,9 +12,12 @@ namespace TODO
 {
     public partial class AdministratorForm : Form
     {
+        public UserData user;//当前用户
+
         public AdministratorForm()
         {
             InitializeComponent();
         }
+
     }
 }

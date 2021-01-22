@@ -43,6 +43,8 @@ namespace TODO
         {
             //为了调试代码使用的临时代码，可以直接进入
             Form1 form = new Form1();
+            UserData myuser = new UserData();
+            form.myuser = myuser;
             this.Hide();
             form.ShowDialog();
             Application.ExitThread();
@@ -60,9 +62,9 @@ namespace TODO
                     else if ((obj.Value<int>("success")) == 1)
                     {
                         //生成用户对象
-                        UserData myuser = new UserData();
-                        myuser.user_id = obj.Value<int>("user_id");
-                        myuser.password = textBox2.Text;
+                        UserData user = new UserData();
+                        user.user_id = obj.Value<int>("user_id");
+                        user.password = textBox2.Text;
 
                         //保存记录到本地
                         using (StreamWriter sw = new StreamWriter(path))
@@ -73,7 +75,7 @@ namespace TODO
 
                         //点击登录
                         Form1 form1 = new Form1();
-                        form1.myuser = myuser;
+                        form1.myuser = user;
                         this.Hide();
                         form1.ShowDialog();
                         Application.ExitThread();

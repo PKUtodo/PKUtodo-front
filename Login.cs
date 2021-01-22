@@ -13,6 +13,12 @@ namespace TODO
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Form1 form = new Form1();
+            this.Hide();
+            form.ShowDialog();
+            Application.ExitThread();
+            
+
             try
             {
                 JObject obj =  HTTP.HttpPost(JSONHelper.CreateJson(MessageType.login, textBox1.Text, textBox2.Text));

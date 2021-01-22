@@ -16,6 +16,7 @@ namespace TODO
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Login());
+            //HTTP.HttpPost("type=verify&verify_code=6668&name=xiaotian&email=tianyp@pku.edu.cn&password=123456");
         }
     }
 }

@@ -32,6 +32,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.left_panel = new System.Windows.Forms.Panel();
+            this.purple_button = new System.Windows.Forms.Button();
+            this.blue_button = new System.Windows.Forms.Button();
+            this.grey_button = new System.Windows.Forms.Button();
+            this.yellow_button = new System.Windows.Forms.Button();
+            this.green_button = new System.Windows.Forms.Button();
+            this.red_button = new System.Windows.Forms.Button();
             this.refresh_button = new System.Windows.Forms.Button();
             this.logout_button = new System.Windows.Forms.Button();
             this.menu_label = new System.Windows.Forms.Label();
@@ -45,29 +51,27 @@
             this.title_label = new System.Windows.Forms.Label();
             this.Exit_Button = new System.Windows.Forms.Button();
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.file_slide = new System.Windows.Forms.Panel();
-            this.task4 = new System.Windows.Forms.Button();
-            this.task3 = new System.Windows.Forms.Button();
-            this.task2 = new System.Windows.Forms.Button();
-            this.task1 = new System.Windows.Forms.Button();
-            this.left_display_panel = new System.Windows.Forms.Panel();
+            this.add_list_button = new System.Windows.Forms.Button();
             this.right_display_panel = new System.Windows.Forms.Panel();
             this.search_label = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.class_slide = new System.Windows.Forms.Panel();
-            this.my_class_button = new System.Windows.Forms.Button();
             this.add_class_button = new System.Windows.Forms.Button();
-            this.red_button = new System.Windows.Forms.Button();
-            this.green_button = new System.Windows.Forms.Button();
-            this.yellow_button = new System.Windows.Forms.Button();
-            this.grey_button = new System.Windows.Forms.Button();
-            this.blue_button = new System.Windows.Forms.Button();
-            this.purple_button = new System.Windows.Forms.Button();
+            this.left_display_view = new System.Windows.Forms.ListView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.delete_menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.color_imageList = new System.Windows.Forms.ImageList(this.components);
+            this.list_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.list_delete_menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.add_task_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.left_panel.SuspendLayout();
             this.menu_panel.SuspendLayout();
             this.file_slide.SuspendLayout();
             this.class_slide.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
+            this.list_contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // left_panel
@@ -92,6 +96,66 @@
             this.left_panel.TabIndex = 5;
             this.left_panel.MouseEnter += new System.EventHandler(this.file_slide_MouseLeave);
             // 
+            // purple_button
+            // 
+            this.purple_button.Image = ((System.Drawing.Image)(resources.GetObject("purple_button.Image")));
+            this.purple_button.Location = new System.Drawing.Point(170, 419);
+            this.purple_button.Name = "purple_button";
+            this.purple_button.Size = new System.Drawing.Size(27, 27);
+            this.purple_button.TabIndex = 17;
+            this.purple_button.UseVisualStyleBackColor = true;
+            this.purple_button.Visible = false;
+            // 
+            // blue_button
+            // 
+            this.blue_button.Image = ((System.Drawing.Image)(resources.GetObject("blue_button.Image")));
+            this.blue_button.Location = new System.Drawing.Point(137, 419);
+            this.blue_button.Name = "blue_button";
+            this.blue_button.Size = new System.Drawing.Size(27, 27);
+            this.blue_button.TabIndex = 16;
+            this.blue_button.UseVisualStyleBackColor = true;
+            this.blue_button.Visible = false;
+            // 
+            // grey_button
+            // 
+            this.grey_button.Image = ((System.Drawing.Image)(resources.GetObject("grey_button.Image")));
+            this.grey_button.Location = new System.Drawing.Point(104, 419);
+            this.grey_button.Name = "grey_button";
+            this.grey_button.Size = new System.Drawing.Size(27, 27);
+            this.grey_button.TabIndex = 15;
+            this.grey_button.UseVisualStyleBackColor = true;
+            this.grey_button.Visible = false;
+            // 
+            // yellow_button
+            // 
+            this.yellow_button.Image = ((System.Drawing.Image)(resources.GetObject("yellow_button.Image")));
+            this.yellow_button.Location = new System.Drawing.Point(71, 419);
+            this.yellow_button.Name = "yellow_button";
+            this.yellow_button.Size = new System.Drawing.Size(27, 27);
+            this.yellow_button.TabIndex = 14;
+            this.yellow_button.UseVisualStyleBackColor = true;
+            this.yellow_button.Visible = false;
+            // 
+            // green_button
+            // 
+            this.green_button.Image = ((System.Drawing.Image)(resources.GetObject("green_button.Image")));
+            this.green_button.Location = new System.Drawing.Point(37, 419);
+            this.green_button.Name = "green_button";
+            this.green_button.Size = new System.Drawing.Size(27, 27);
+            this.green_button.TabIndex = 13;
+            this.green_button.UseVisualStyleBackColor = true;
+            this.green_button.Visible = false;
+            // 
+            // red_button
+            // 
+            this.red_button.Image = ((System.Drawing.Image)(resources.GetObject("red_button.Image")));
+            this.red_button.Location = new System.Drawing.Point(4, 419);
+            this.red_button.Name = "red_button";
+            this.red_button.Size = new System.Drawing.Size(27, 27);
+            this.red_button.TabIndex = 12;
+            this.red_button.UseVisualStyleBackColor = true;
+            this.red_button.Visible = false;
+            // 
             // refresh_button
             // 
             this.refresh_button.FlatAppearance.BorderSize = 0;
@@ -105,6 +169,7 @@
             this.refresh_button.TabIndex = 11;
             this.refresh_button.Text = "刷新";
             this.refresh_button.UseVisualStyleBackColor = true;
+            this.refresh_button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.refresh_button_MouseClick);
             // 
             // logout_button
             // 
@@ -180,6 +245,7 @@
             this.all_task_button.TabIndex = 10;
             this.all_task_button.Text = "所有任务";
             this.all_task_button.UseVisualStyleBackColor = true;
+            this.all_task_button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.all_task_button_MouseClick);
             this.all_task_button.MouseEnter += new System.EventHandler(this.all_task_button_MouseEnter);
             // 
             // foot_button
@@ -282,100 +348,34 @@
             this.Exit_Button.UseVisualStyleBackColor = false;
             this.Exit_Button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Exit_Button_MouseClick);
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
             // file_slide
             // 
             this.file_slide.BackColor = System.Drawing.Color.Transparent;
-            this.file_slide.Controls.Add(this.task4);
-            this.file_slide.Controls.Add(this.task3);
-            this.file_slide.Controls.Add(this.task2);
-            this.file_slide.Controls.Add(this.task1);
+            this.file_slide.Controls.Add(this.add_list_button);
             this.file_slide.Location = new System.Drawing.Point(226, 162);
             this.file_slide.Margin = new System.Windows.Forms.Padding(4);
             this.file_slide.Name = "file_slide";
-            this.file_slide.Size = new System.Drawing.Size(206, 200);
+            this.file_slide.Size = new System.Drawing.Size(206, 50);
             this.file_slide.TabIndex = 7;
             this.file_slide.Visible = false;
             this.file_slide.MouseLeave += new System.EventHandler(this.file_slide_MouseLeave);
             // 
-            // task4
+            // add_list_button
             // 
-            this.task4.BackColor = System.Drawing.Color.CadetBlue;
-            this.task4.FlatAppearance.BorderSize = 0;
-            this.task4.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Teal;
-            this.task4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.task4.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.task4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.task4.Location = new System.Drawing.Point(0, 150);
-            this.task4.Margin = new System.Windows.Forms.Padding(4);
-            this.task4.Name = "task4";
-            this.task4.Size = new System.Drawing.Size(208, 50);
-            this.task4.TabIndex = 3;
-            this.task4.Text = "其他";
-            this.task4.UseVisualStyleBackColor = false;
-            // 
-            // task3
-            // 
-            this.task3.BackColor = System.Drawing.Color.CadetBlue;
-            this.task3.FlatAppearance.BorderSize = 0;
-            this.task3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Teal;
-            this.task3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.task3.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.task3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.task3.Location = new System.Drawing.Point(0, 100);
-            this.task3.Margin = new System.Windows.Forms.Padding(4);
-            this.task3.Name = "task3";
-            this.task3.Size = new System.Drawing.Size(208, 50);
-            this.task3.TabIndex = 2;
-            this.task3.Text = "社交";
-            this.task3.UseVisualStyleBackColor = false;
-            // 
-            // task2
-            // 
-            this.task2.BackColor = System.Drawing.Color.CadetBlue;
-            this.task2.FlatAppearance.BorderSize = 0;
-            this.task2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Teal;
-            this.task2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.task2.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.task2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.task2.Location = new System.Drawing.Point(0, 50);
-            this.task2.Margin = new System.Windows.Forms.Padding(4);
-            this.task2.Name = "task2";
-            this.task2.Size = new System.Drawing.Size(208, 50);
-            this.task2.TabIndex = 1;
-            this.task2.Text = "体育锻炼";
-            this.task2.UseVisualStyleBackColor = false;
-            // 
-            // task1
-            // 
-            this.task1.BackColor = System.Drawing.Color.CadetBlue;
-            this.task1.FlatAppearance.BorderSize = 0;
-            this.task1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Teal;
-            this.task1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.task1.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.task1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.task1.Location = new System.Drawing.Point(0, 0);
-            this.task1.Margin = new System.Windows.Forms.Padding(4);
-            this.task1.Name = "task1";
-            this.task1.Size = new System.Drawing.Size(208, 50);
-            this.task1.TabIndex = 0;
-            this.task1.Text = "学习";
-            this.task1.UseVisualStyleBackColor = false;
-            // 
-            // left_display_panel
-            // 
-            this.left_display_panel.AutoScroll = true;
-            this.left_display_panel.BackColor = System.Drawing.Color.White;
-            this.left_display_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.left_display_panel.Location = new System.Drawing.Point(275, 77);
-            this.left_display_panel.Name = "left_display_panel";
-            this.left_display_panel.Size = new System.Drawing.Size(360, 549);
-            this.left_display_panel.TabIndex = 8;
+            this.add_list_button.BackColor = System.Drawing.Color.CadetBlue;
+            this.add_list_button.FlatAppearance.BorderSize = 0;
+            this.add_list_button.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Teal;
+            this.add_list_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.add_list_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.add_list_button.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.add_list_button.Image = ((System.Drawing.Image)(resources.GetObject("add_list_button.Image")));
+            this.add_list_button.Location = new System.Drawing.Point(-2, 0);
+            this.add_list_button.Margin = new System.Windows.Forms.Padding(4);
+            this.add_list_button.Name = "add_list_button";
+            this.add_list_button.Size = new System.Drawing.Size(208, 50);
+            this.add_list_button.TabIndex = 3;
+            this.add_list_button.UseVisualStyleBackColor = false;
+            this.add_list_button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.add_list_button_MouseClick);
             // 
             // right_display_panel
             // 
@@ -408,31 +408,14 @@
             // class_slide
             // 
             this.class_slide.BackColor = System.Drawing.Color.Transparent;
-            this.class_slide.Controls.Add(this.my_class_button);
             this.class_slide.Controls.Add(this.add_class_button);
             this.class_slide.Location = new System.Drawing.Point(228, 369);
-            this.class_slide.Margin = new System.Windows.Forms.Padding(4);
+            this.class_slide.Margin = new System.Windows.Forms.Padding(0);
             this.class_slide.Name = "class_slide";
-            this.class_slide.Size = new System.Drawing.Size(206, 100);
+            this.class_slide.Size = new System.Drawing.Size(206, 50);
             this.class_slide.TabIndex = 8;
             this.class_slide.Visible = false;
             this.class_slide.MouseLeave += new System.EventHandler(this.class_slide_MouseLeave);
-            // 
-            // my_class_button
-            // 
-            this.my_class_button.BackColor = System.Drawing.Color.CadetBlue;
-            this.my_class_button.FlatAppearance.BorderSize = 0;
-            this.my_class_button.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Teal;
-            this.my_class_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.my_class_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.my_class_button.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.my_class_button.Location = new System.Drawing.Point(0, 50);
-            this.my_class_button.Margin = new System.Windows.Forms.Padding(4);
-            this.my_class_button.Name = "my_class_button";
-            this.my_class_button.Size = new System.Drawing.Size(208, 50);
-            this.my_class_button.TabIndex = 1;
-            this.my_class_button.Text = "我的课程";
-            this.my_class_button.UseVisualStyleBackColor = false;
             // 
             // add_class_button
             // 
@@ -443,7 +426,7 @@
             this.add_class_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.add_class_button.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.add_class_button.Location = new System.Drawing.Point(0, 0);
-            this.add_class_button.Margin = new System.Windows.Forms.Padding(4);
+            this.add_class_button.Margin = new System.Windows.Forms.Padding(0);
             this.add_class_button.Name = "add_class_button";
             this.add_class_button.Size = new System.Drawing.Size(208, 50);
             this.add_class_button.TabIndex = 0;
@@ -451,65 +434,75 @@
             this.add_class_button.UseVisualStyleBackColor = false;
             this.add_class_button.Click += new System.EventHandler(this.add_class_button_Click);
             // 
-            // red_button
+            // left_display_view
             // 
-            this.red_button.Image = ((System.Drawing.Image)(resources.GetObject("red_button.Image")));
-            this.red_button.Location = new System.Drawing.Point(4, 419);
-            this.red_button.Name = "red_button";
-            this.red_button.Size = new System.Drawing.Size(27, 27);
-            this.red_button.TabIndex = 12;
-            this.red_button.UseVisualStyleBackColor = true;
-            this.red_button.Visible = false;
+            this.left_display_view.ContextMenuStrip = this.contextMenuStrip1;
+            this.left_display_view.Font = new System.Drawing.Font("微软雅黑", 11F);
+            this.left_display_view.HideSelection = false;
+            this.left_display_view.Location = new System.Drawing.Point(266, 77);
+            this.left_display_view.Name = "left_display_view";
+            this.left_display_view.Size = new System.Drawing.Size(364, 549);
+            this.left_display_view.TabIndex = 12;
+            this.left_display_view.UseCompatibleStateImageBehavior = false;
+            this.left_display_view.SelectedIndexChanged += new System.EventHandler(this.left_display_view_SelectedIndexChanged);
+            this.left_display_view.MouseClick += new System.Windows.Forms.MouseEventHandler(this.left_display_view_MouseClick);
             // 
-            // green_button
+            // contextMenuStrip1
             // 
-            this.green_button.Image = ((System.Drawing.Image)(resources.GetObject("green_button.Image")));
-            this.green_button.Location = new System.Drawing.Point(37, 419);
-            this.green_button.Name = "green_button";
-            this.green_button.Size = new System.Drawing.Size(27, 27);
-            this.green_button.TabIndex = 13;
-            this.green_button.UseVisualStyleBackColor = true;
-            this.green_button.Visible = false;
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.delete_menu});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(109, 28);
             // 
-            // yellow_button
+            // delete_menu
             // 
-            this.yellow_button.Image = ((System.Drawing.Image)(resources.GetObject("yellow_button.Image")));
-            this.yellow_button.Location = new System.Drawing.Point(71, 419);
-            this.yellow_button.Name = "yellow_button";
-            this.yellow_button.Size = new System.Drawing.Size(27, 27);
-            this.yellow_button.TabIndex = 14;
-            this.yellow_button.UseVisualStyleBackColor = true;
-            this.yellow_button.Visible = false;
+            this.delete_menu.Name = "delete_menu";
+            this.delete_menu.Size = new System.Drawing.Size(108, 24);
+            this.delete_menu.Text = "删除";
+            this.delete_menu.Click += new System.EventHandler(this.delete_menu_Click);
             // 
-            // grey_button
+            // imageList1
             // 
-            this.grey_button.Image = ((System.Drawing.Image)(resources.GetObject("grey_button.Image")));
-            this.grey_button.Location = new System.Drawing.Point(104, 419);
-            this.grey_button.Name = "grey_button";
-            this.grey_button.Size = new System.Drawing.Size(27, 27);
-            this.grey_button.TabIndex = 15;
-            this.grey_button.UseVisualStyleBackColor = true;
-            this.grey_button.Visible = false;
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // blue_button
+            // color_imageList
             // 
-            this.blue_button.Image = ((System.Drawing.Image)(resources.GetObject("blue_button.Image")));
-            this.blue_button.Location = new System.Drawing.Point(137, 419);
-            this.blue_button.Name = "blue_button";
-            this.blue_button.Size = new System.Drawing.Size(27, 27);
-            this.blue_button.TabIndex = 16;
-            this.blue_button.UseVisualStyleBackColor = true;
-            this.blue_button.Visible = false;
+            this.color_imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("color_imageList.ImageStream")));
+            this.color_imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.color_imageList.Images.SetKeyName(0, "purple_circle_20px.png");
+            this.color_imageList.Images.SetKeyName(1, "red_circle_20px.png");
+            this.color_imageList.Images.SetKeyName(2, "blue_circle_20px.png");
+            this.color_imageList.Images.SetKeyName(3, "green_circle_20px.png");
+            this.color_imageList.Images.SetKeyName(4, "grey_circle_20px.png");
+            this.color_imageList.Images.SetKeyName(5, "yellow_circle_20px.png");
             // 
-            // purple_button
+            // list_contextMenuStrip
             // 
-            this.purple_button.Image = ((System.Drawing.Image)(resources.GetObject("purple_button.Image")));
-            this.purple_button.Location = new System.Drawing.Point(170, 419);
-            this.purple_button.Name = "purple_button";
-            this.purple_button.Size = new System.Drawing.Size(27, 27);
-            this.purple_button.TabIndex = 17;
-            this.purple_button.UseVisualStyleBackColor = true;
-            this.purple_button.Visible = false;
+            this.list_contextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.list_contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.list_delete_menu,
+            this.add_task_menu});
+            this.list_contextMenuStrip.Name = "list_contextMenuStrip";
+            this.list_contextMenuStrip.Size = new System.Drawing.Size(152, 60);
+            // 
+            // list_delete_menu
+            // 
+            this.list_delete_menu.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
+            this.list_delete_menu.Name = "list_delete_menu";
+            this.list_delete_menu.Size = new System.Drawing.Size(151, 28);
+            this.list_delete_menu.Text = "删除";
+            this.list_delete_menu.Click += new System.EventHandler(this.list_delete_menu_Click);
+            // 
+            // add_task_menu
+            // 
+            this.add_task_menu.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
+            this.add_task_menu.Name = "add_task_menu";
+            this.add_task_menu.Size = new System.Drawing.Size(151, 28);
+            this.add_task_menu.Text = "添加任务";
+            this.add_task_menu.Click += new System.EventHandler(this.add_task_menu_Click);
             // 
             // Form1
             // 
@@ -526,7 +519,7 @@
             this.Controls.Add(this.file_slide);
             this.Controls.Add(this.Exit_Button);
             this.Controls.Add(this.left_panel);
-            this.Controls.Add(this.left_display_panel);
+            this.Controls.Add(this.left_display_view);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "Form1";
@@ -538,6 +531,8 @@
             this.menu_panel.ResumeLayout(false);
             this.file_slide.ResumeLayout(false);
             this.class_slide.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.list_contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -550,14 +545,10 @@
         private System.Windows.Forms.Button Exit_Button;
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
         private System.Windows.Forms.Panel menu_panel;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel3;
         //private WindowsFormsControlLibrary1.aaa aaa1;
         private System.Windows.Forms.Panel file_slide;
-        private System.Windows.Forms.Button task3;
-        private System.Windows.Forms.Button task2;
-        private System.Windows.Forms.Button task1;
         private System.Windows.Forms.Button person_list_button;
         private System.Windows.Forms.Panel slide_panel;
         private System.Windows.Forms.Button all_task_button;
@@ -566,14 +557,12 @@
         private System.Windows.Forms.Label menu_label;
         private System.Windows.Forms.Button refresh_button;
         private System.Windows.Forms.Button logout_button;
-        private System.Windows.Forms.Button task4;
+        private System.Windows.Forms.Button add_list_button;
         private System.Windows.Forms.Button class_button;
-        private System.Windows.Forms.Panel left_display_panel;
         private System.Windows.Forms.Panel right_display_panel;
         private System.Windows.Forms.Label search_label;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Panel class_slide;
-        private System.Windows.Forms.Button my_class_button;
         private System.Windows.Forms.Button add_class_button;
         private System.Windows.Forms.Button red_button;
         private System.Windows.Forms.Button green_button;
@@ -581,6 +570,14 @@
         private System.Windows.Forms.Button grey_button;
         private System.Windows.Forms.Button blue_button;
         private System.Windows.Forms.Button purple_button;
+        private System.Windows.Forms.ListView left_display_view;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ImageList color_imageList;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem delete_menu;
+        private System.Windows.Forms.ContextMenuStrip list_contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem list_delete_menu;
+        private System.Windows.Forms.ToolStripMenuItem add_task_menu;
     }
 }
 

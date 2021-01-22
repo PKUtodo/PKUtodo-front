@@ -13,10 +13,10 @@ namespace TODO
 {
     class HTTP
     {
-        public static string URL = "http://10.128.169.239:9000";
+        public static string URL = "http://10.128.169.239:5000";
         #region POST请求
         /// <summary>
-        /// POST请求
+        /// POST请求，将json转化为url发过去，得到JObject的返回值
         /// </summary>
         /// <typeparam name="JObject"></typeparam>
         /// <param name="url">请求Url地址</param>

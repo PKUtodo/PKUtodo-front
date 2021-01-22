@@ -13,7 +13,7 @@ namespace TODO
 {
     class HTTP
     {
-        public static string URL = "http://127.0.0.1:1000";
+        public static string URL = "http://10.128.169.239:9000";
         #region POST请求
         /// <summary>
         /// POST请求

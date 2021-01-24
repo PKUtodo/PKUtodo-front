@@ -502,7 +502,7 @@ namespace TODO
             StudentClass cur_class = myuser.classes[get_class_index(all_classes[index].class_id)];
             for (int j = 0; j < cur_class.alltaskIDs.Count; j++)
             {
-                int temp_index = get_all_task_index(cur_class.alltaskIDs[j]);
+                int temp_index = get_task_index(cur_class.alltaskIDs[j]);
                 if (temp_index != -1)
                 {
                     myuser.tasks.RemoveAt(temp_index);
@@ -757,61 +757,6 @@ namespace TODO
         }
         #endregion
 
-        #region 根据ID查找数据
-        private int get_task_index(int task_id)
-        {
-            //通过task_id找到在tasks中的ID
-            for (int i = 0; i < myuser.tasks.Count; i++)
-            {
-                if (myuser.tasks[i].task_id == task_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，返回task_id
-            return -1;
-        }
-        private int get_list_index(int list_id)
-        {
-            //通过list_id找到在lists中的ID
-            for (int i = 0; i < myuser.lists.Count; i++)
-            {
-                if (myuser.lists[i].list_id == list_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，返回list_id
-            return -1;
-        }
-        private int get_class_index(int class_id)
-        {
-            //通过class_id找到在classes中的ID
-            for (int i = 0; i < myuser.classes.Count; i++)
-            {
-                if (myuser.classes[i].class_id == class_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，返回class_id
-            return -1;
-        }
-        private int get_all_task_index(int task_id)
-        {
-            //通过task_id找到在all_tasks中的ID
-            for (int i = 0; i < all_tasks.Count; i++)
-            {
-                if (all_tasks[i].task_id == task_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，task_id
-            return -1;
-        }
-        #endregion
-
         #region 辅助函数
         //退出按钮
         private void Exit_Button_MouseClick(object sender, MouseEventArgs e)
@@ -911,9 +856,11 @@ namespace TODO
     }
 }
 
-//目前没有完成的东西：
+//目前存在的明显问题
 //1.对于管理员，如何增加课程任务
 //2.班级权限的问题
+//3.数据不一致：删除list中的任务，“所有任务”按钮中还是会显示
+//4.课程任务从个人所有任务中删除的时候往往出现问题，断点处就是bug
 
 /// <summary>
 /// 列表：单击左侧表项触发的事件，在右边的显示栏展示列表中的task的内容

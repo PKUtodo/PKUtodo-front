@@ -29,16 +29,6 @@ namespace TODO
         public Form1()
         {
             InitializeComponent();
-            DataManager manager = new DataManager();
-            StudentClass new_class = new StudentClass();
-            new_class.class_id = 0;
-            new_class.name = "软件工程" + 0.ToString();
-            new_class.score = 3;
-            new_class.description = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
-            new_class.description += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
-            //manager.all_classes.Add(new_class);
-            manager.add<StudentClass>("all_classes", new_class);
-
             preprocessing();
         }
         /// <summary>
@@ -764,61 +754,6 @@ namespace TODO
 
             //传输写入数据库
 
-        }
-        #endregion
-
-        #region 根据ID查找数据
-        private int get_task_index(int task_id)
-        {
-            //通过task_id找到在tasks中的ID
-            for (int i = 0; i < myuser.tasks.Count; i++)
-            {
-                if (myuser.tasks[i].task_id == task_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，返回task_id
-            return -1;
-        }
-        private int get_list_index(int list_id)
-        {
-            //通过list_id找到在lists中的ID
-            for (int i = 0; i < myuser.lists.Count; i++)
-            {
-                if (myuser.lists[i].list_id == list_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，返回list_id
-            return -1;
-        }
-        private int get_class_index(int class_id)
-        {
-            //通过class_id找到在classes中的ID
-            for (int i = 0; i < myuser.classes.Count; i++)
-            {
-                if (myuser.classes[i].class_id == class_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，返回class_id
-            return -1;
-        }
-        private int get_all_task_index(int task_id)
-        {
-            //通过task_id找到在all_tasks中的ID
-            for (int i = 0; i < all_tasks.Count; i++)
-            {
-                if (all_tasks[i].task_id == task_id)
-                {
-                    return i;
-                }
-            }
-            //如果没有找到，task_id
-            return -1;
         }
         #endregion
 

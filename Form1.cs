@@ -29,6 +29,16 @@ namespace TODO
         public Form1()
         {
             InitializeComponent();
+            DataManager manager = new DataManager();
+            StudentClass new_class = new StudentClass();
+            new_class.class_id = 0;
+            new_class.name = "软件工程" + 0.ToString();
+            new_class.score = 3;
+            new_class.description = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
+            new_class.description += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+            //manager.all_classes.Add(new_class);
+            manager.add<StudentClass>("all_classes", new_class);
+
             preprocessing();
         }
         /// <summary>
@@ -502,7 +512,7 @@ namespace TODO
             StudentClass cur_class = myuser.classes[get_class_index(all_classes[index].class_id)];
             for (int j = 0; j < cur_class.alltaskIDs.Count; j++)
             {
-                int temp_index = get_all_task_index(cur_class.alltaskIDs[j]);
+                int temp_index = get_task_index(cur_class.alltaskIDs[j]);
                 if (temp_index != -1)
                 {
                     myuser.tasks.RemoveAt(temp_index);

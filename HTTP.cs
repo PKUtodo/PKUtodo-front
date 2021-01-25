@@ -6,17 +6,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-//using System.Net.Http;
+using System.Net.Http;
 using System.Text;
 
 namespace TODO
 {
     class HTTP
     {
-        public static string URL = "http://10.128.169.239:5000";
+        public static string URL = "http://127.0.0.1:1000";
         #region POST请求
         /// <summary>
-        /// POST请求，将json转化为url发过去，得到JObject的返回值
+        /// POST请求
         /// </summary>
         /// <typeparam name="JObject"></typeparam>
         /// <param name="url">请求Url地址</param>
@@ -41,7 +41,7 @@ namespace TODO
                 js = js.Replace(" ", string.Empty);
                 js = js.Replace("\"", string.Empty);
                 js.Trim();
-                
+
                 // request.ContentType = "application/json;charset:utf-8";
                 // js.Trim('\"');
                 // 设置超时时间

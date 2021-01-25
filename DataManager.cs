@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;//反射类
+using Newtonsoft.Json.Linq;
+using System.Net.Mail;
+using System.Diagnostics;
 
 namespace TODO
 {
@@ -14,63 +17,23 @@ namespace TODO
     /// <returns></returns>
     public class DataManager
     {
-        //维护的6张表
+        //维护的5张表
         public List<StudentClass> all_classes = new List<StudentClass>();//所有的学校课程
-        public List<Task> all_class_tasks = new List<Task>();//所有课程中的任务
-
+        public List<Task> class_tasks = new List<Task>();//所有课程中的任务
         public List<StudentList> lists = new List<StudentList>();//所有的用户表单
         public List<int> person_classes = new List<int>();//所有个人的课程,其实只需要存all_class中的主键ID
-        public List<int> person_class_tasks = new List<int>();//所有选课的公有任务，其实只需要存all_class_tasks中的主键ID
         public List<Task> list_tasks= new List<Task>();///所有的私人任务
 
-        # region 添加
-        //public bool add<T>(string table_name, T item)
-        //{
-        //    var type = typeof(T);   //反射对象
-        //    var A = type.GetProperties(); //获取对象属性
-        //    //如果是课程
-        //    if (typeof(T) == typeof(StudentClass))
-        //    {
-        //        StudentClass new_class = new StudentClass();
-        //        new_class.class_id = (int)A[0].GetValue(item);
-        //        new_class.name = (string)A[1].GetValue(item);
-        //        new_class.teacher_name = (string)A[2].GetValue(item);
-        //        new_class.score = (int)A[3].GetValue(item);
-        //        new_class.description = (string)A[4].GetValue(item);
-        //        new_class.alltaskIDs = (List<int>)A[5].GetValue(item);
+        public JObject receiver;//返回json接收器
 
-        //        if (table_name == "all_classes")
-        //        {
-        //            all_classes.Add(new_class); return true;
-        //        }
-        //        else if (table_name == "person_classes")
-        //        {
-        //            person_classes.Add(new_class); return true;
-        //        }
-        //        else
-        //        {
-        //            //出错
-        //            return false;
-        //        }
-        //    }
-        //    //如果是表单
-        //    else if (typeof(T) == typeof(StudentList))
-        //    {
-        //        return true;
-        //    }
-        //    //如果是任务
-        //    else if (typeof(T) == typeof(Task))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        //出错
-        //        return false;
-        //    }
-        //}
+        public UserData myuser_;
+        # region 添加
+
+
+        //加入课程
         public bool add(string table_name,StudentClass item)
         {
+
             StudentClass new_class = new StudentClass();
             new_class.class_id = item.class_id;
             new_class.name = item.name;
@@ -83,10 +46,15 @@ namespace TODO
                 all_classes.Add(new_class); 
                 return true;
             }
+
             else if(table_name == "person_classes")
             {
                 int index = get_class_index(item.class_id);
-                if (index >= 0) { person_classes.Add(index); return true; }
+                if (index >= 0) {
+                    JSONHelper.CreateJson("join_class", myuser_.email, myuser_.password,);
+
+                    person_classes.Add(index); return true; 
+                }
                 else { return false; }
             }
             else
@@ -99,11 +67,26 @@ namespace TODO
         {
             StudentList new_list= new StudentList();
             new_list.name = item.name;
+            //存在list id不匹配的问题
             new_list.list_id = item.list_id;
             new_list.taskIDs = item.taskIDs;//有没有可能是传递指针，造成危险？
             if (table_name == "lists")
             {
-                lists.Add(item); return true;
+                string req=JSONHelper.CreateJson("add_list",myuser_.email,myuser_.user_id,myuser_.password,item.name);
+                try{
+                    receiver=HTTP.HttpPost(req);
+                    if(receiver.Value<int>("success")==1)
+                    {
+                        item.list_id=receiver.Value<int>("list_id");
+                        lists.Add(item); return true;
+                    }
+                    else {return false;}
+                }
+                catch(Exception e)
+                {
+                    return false;
+                }
+
             }
             else
             {
@@ -120,9 +103,28 @@ namespace TODO
             new_task.name = item.name;
             new_task.description = item.description;
             new_task.due_time = item.due_time;
+            //不使用
             if(table_name== "all_class_tasks")
             {
-                all_class_tasks.Add(item);
+                Debug.Assert(false);
+                string req=JSONHelper.CreateJson("add_task",myuser_.email,myuser_.user_id,
+                    myuser_.password,item.parent_id,item.name,item.start_time,item.due_time,
+                    item.description,item.position_x,item.position_y);
+                try{
+                    receiver=HTTP.HttpPost(req);
+                    if(receiver.Value<int>("success")==1)
+                    {
+                        item.task_id=receiver.Value<int>("task_id");
+                        //all_class_tasks.Add(item);
+                        return true;
+                    }
+                    else {return false;}
+                }
+                catch(Exception e)
+                {
+                    return false;
+                }
+
                 //@warning:
                 //服务器需要发信号给所有选了这个课的人让他们更新（这显然是管理员功能）
 
@@ -130,15 +132,57 @@ namespace TODO
             }
             else if (table_name == "person_class_tasks")
             {
-                //这个item必须是all_class_tasks中已经有的，否则没有办法布置
-                int index = get_all_class_task_index(item.task_id);
+                string req=JSONHelper.CreateJson("add_task",myuser_.email, myuser_.user_id,
+                    myuser_.password,item.parent_id,item.name,item.start_time,item.due_time,
+                    item.description,item.position_x,item.position_y);
+                try{
+                    receiver=HTTP.HttpPost(req);
+                    if(receiver.Value<int>("success")==1)
+                    {
+                        item.task_id=receiver.Value<int>("task_id");
+                        //将task加入task列表中
+                        class_tasks.Add(item);
+                        //将task注册到class中
+                        int class_index=get_class_index(item.parent_id);
+                        all_classes[class_index].alltaskIDs.Add(item.task_id);
+                        return true;
+                    }
+                    else {return false;}
+                }
+                catch(Exception e)
+                {
+                    return false;
+                }
+                /*int index = get_all_class_task_index(item.task_id);
                 if (index >= 0)
                 { person_class_tasks.Add(index); return true; }
-                else { return false; }
+                else { return false; }*/
             }
             else if (table_name== "list_tasks")
             {
-                all_class_tasks.Add(item); return true;
+                string req=JSONHelper.CreateJson("add_task",myuser_.email,myuser_.user_id,
+                    myuser_.password,item.parent_id,item.name,item.start_time,item.due_time,
+                    item.description,item.position_x,item.position_y);
+                try{
+                    receiver=HTTP.HttpPost(req);
+                    if(receiver.Value<int>("success")==1)
+                    {
+                        item.task_id=receiver.Value<int>("task_id");
+                        //将task加入task列表中
+                        class_tasks.Add(item);
+                        //将task注册到class中
+                        int list_index=get_list_index(item.parent_id);
+                        lists[list_index].taskIDs.Add(item.task_id);
+                        //将task注册到所有私人事件表
+                        list_tasks.Add(item);
+                        return true;
+                    }
+                    else {return false;}
+                }
+                catch(Exception e)
+                {
+                    return false;
+                }
             }
             else
             {
@@ -151,11 +195,14 @@ namespace TODO
         public bool delete(string table_name, StudentClass item)
         {
             int index = 0;
+            //该功能不存在
             if (table_name=="all_classes")
             {
+                Debug.Assert(false);
                 index = get_class_index(item.class_id);
                 if (index >= 0)
-                { 
+                {
+                    Debug.Assert(false);
                     //删除课程所有作业
                     for(int i=0;i<item.alltaskIDs.Count;i++)
                     {
@@ -172,53 +219,77 @@ namespace TODO
             }
             else if (table_name == "person_classes")
             {
-                index = get_person_class_index(item.class_id);
-                if (index >= 0)
-                {
-                    //删除课程所有作业
-                    for (int i = 0; i < item.alltaskIDs.Count; i++)
+                string req=JSONHelper.CreateJsonDelList("quit_class",myuser_.email,myuser_.user_id,myuser_.password,item.class_id);
+                try{
+                    receiver=HTTP.HttpPost(req);
+                    if(receiver.Value<int>("success")==1)
                     {
-                        int temp = get_all_class_task_index(item.alltaskIDs[i]);
-                        delete("all_classes", temp);
+                        index = get_class_index(item.class_id);
+                        Debug.Assert(index>=0);
+                        //删除课程所有作业
+                        for (int i = 0; i < item.alltaskIDs.Count; i++)
+                        {
+                            int temp_index = get_all_class_task_index(item.alltaskIDs[i]);
+                            class_tasks.RemoveAt(temp_index);
+                        }
+                        person_classes.RemoveAt(index);
+                        return true;
+                        
                     }
-                    delete(table_name, index); 
-                    return true; }
-                else { return false; }
+                    else {return false;}
+                }
+                catch(Exception e)
+                {
+                    return false;
+                }
+
             }
-            else
-            {
-                return false;
-            }
+            Debug.Assert(false);
+            return false;
         }
         public bool delete(string table_name, StudentList item)
         {
             int index = 0;
             if (table_name == "lists")
             {
-                index = get_list_index(item.list_id);
-                if (index >= 0)
+                string req = JSONHelper.CreateJsonDelList("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.list_id);
+                try
                 {
-                    //删除清单中的所有任务
-                    for (int i = 0; i < item.taskIDs.Count; i++)
+                    receiver = HTTP.HttpPost(req);
+                    if (receiver.Value<int>("success") == 1)
                     {
-                        int temp = get_list_task_index(item.taskIDs[i]);
-                        delete("list_tasks", temp);
+                        index = get_list_index(item.list_id);
+                        Debug.Assert(index >= 0);
+                        //删除清单中的所有任务
+                        for (int i = 0; i < item.taskIDs.Count; i++)
+                        {
+                            int temp = get_list_task_index(item.taskIDs[i]);
+                            list_tasks.RemoveAt(temp);
+                        }
+                        //删除清单
+                        lists.RemoveAt(index);
+                        return true;
                     }
-                    //删除清单
-                    delete(table_name, index);
-                    return true; }
-                else { return false; }
+                    else { return false; }
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
             }
             else
             {
+                Debug.Assert(false);
                 return false;
             }
         }
         public bool delete(string table_name, Task item)
         {
             int index = 0;
+            //该功能不存在
             if (table_name == "all_class_tasks")
             {
+                Debug.Assert(false);
                 index = get_all_class_task_index(item.task_id);
                 if (index >= 0)
                 { 
@@ -232,17 +303,47 @@ namespace TODO
             }
             else if (table_name == "person_tasks")
             {
-                index = get_person_class_task_index(item.task_id);
-                if (index >= 0)
-                { delete(table_name, index); return true; }
-                else { return false; }
+                string req = JSONHelper.CreateJsonDelTask("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
+                try
+                {
+                    receiver = HTTP.HttpPost(req);
+                    if (receiver.Value<int>("success") == 1)
+                    {
+                        index = get_person_class_task_index(item.task_id);
+                        Debug.Assert(index >= 0);
+                        //删除清单
+                        class_tasks.RemoveAt(index);
+                        return true;
+                    }
+                    else { return false; }
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+
             }
             else if (table_name == "list_tasks")
             {
-                index = get_list_task_index(item.task_id);
-                if (index >= 0)
-                { delete(table_name, index); return true; }
-                else { return false; }
+                string req = JSONHelper.CreateJsonDelTask("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
+                try
+                {
+                    receiver = HTTP.HttpPost(req);
+                    if (receiver.Value<int>("success") == 1)
+                    {
+                        index = get_list_task_index(item.task_id);
+                        Debug.Assert(index >= 0);
+
+                        //删除清单
+                        list_tasks.RemoveAt(index);
+                        return true;
+                    }
+                    else { return false; }
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
             }
             else
             {
@@ -253,10 +354,10 @@ namespace TODO
         {
             //删除对应表格对应索引处的东西，不进行检查，因为别的函数检查过了
             if(table_name== "all_classes") { all_classes.RemoveAt(index); }
-            else if (table_name == "all_class_tasks") { all_class_tasks.RemoveAt(index); }
+            else if (table_name == "all_class_tasks") { class_tasks.RemoveAt(index); }
             else if (table_name == "lists") { lists.RemoveAt(index); }
             else if (table_name == "person_classes") { person_classes.RemoveAt(index); }
-            else if (table_name == "person_class_tasks") { person_class_tasks.RemoveAt(index); }
+            else if (table_name == "person_class_tasks") { class_tasks.RemoveAt(index); }
             else if (table_name == "list_tasks") { list_tasks.RemoveAt(index); }
         }
         #endregion
@@ -282,9 +383,9 @@ namespace TODO
         public int get_person_class_task_index(int task_id)
         {
             //通过task_id找到在person_class_tasks中的索引
-            for (int i = 0; i < person_class_tasks.Count; i++)
+            for (int i = 0; i < class_tasks.Count; i++)
             {
-                if (person_class_tasks[i] == task_id)
+                if (class_tasks[i].task_id == task_id)
                 {
                     return i;
                 }
@@ -305,7 +406,7 @@ namespace TODO
             //如果没有找到，返回list_id
             return -1;
         }
-        public int get_person_class_index(int class_id)
+        public int get_class_index(int class_id)
         {
             //通过class_id找到在person_classes中的索引
             for (int i = 0; i < person_classes.Count; i++)
@@ -321,9 +422,9 @@ namespace TODO
         public int get_all_class_task_index(int task_id)
         {
             //通过task_id找到在all_class_tasks中的索引
-            for (int i = 0; i < all_class_tasks.Count; i++)
+            for (int i = 0; i <class_tasks.Count; i++)
             {
-                if (all_class_tasks[i].task_id == task_id)
+                if (class_tasks[i].task_id == task_id)
                 {
                     return i;
                 }
@@ -331,7 +432,7 @@ namespace TODO
             //如果没有找到，task_id
             return -1;
         }
-        public int get_class_index(int class_id)
+        public int correct_class_index(int class_id)
         {
             if((class_id>-1)&&(class_id<all_classes.Count))
             {

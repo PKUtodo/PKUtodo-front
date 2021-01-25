@@ -21,6 +21,9 @@ namespace TODO
         public string description;
         public int parent_id;//父辈的class或者list的id
         //public string parent_type;//父辈是class还是list,之所以用它不好，因为和Form的耦合性太强
+
+        public double position_x=0;
+        public double position_y=0;
     }
     public class StudentClass
     {

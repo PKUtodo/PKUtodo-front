@@ -16,6 +16,7 @@ namespace TODO
         public int user_id;
         public string password;
         public string veri_code;
+        public string email;
 
         public List<StudentList> lists = new List<StudentList>();//所有的表单
         public List<StudentClass> classes = new List<StudentClass>();//所有个人的课程
@@ -81,14 +82,13 @@ namespace TODO
 
         static public string finish = "finish";
         static public string find_list = "find_list";
-        static public string join = "join";
         static public string handle = "handle";
         static public string assignment = "assignment";
         static public string find_member = "find_member";
         static public string transfer = "transfer";
         //添加课程和选课
-        static public string add_class = "add_class";
-        static public string del_class = "del_class";
+        static public string join_class = "join";
+        static public string quit_class = "quit_class";
         //增删清单
         static public string add_list = "add_list";
         static public string del_list = "del_list";

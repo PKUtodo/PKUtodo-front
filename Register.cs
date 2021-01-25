@@ -74,6 +74,12 @@ namespace TODO
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //检查是否是北大邮箱
+            if (!textBox1.Text.EndsWith(".pku.edu.cn"))
+            { 
+                MessageBox.Show("请使用北大邮箱注册！");
+                return;
+            }
             JObject obj = HTTP.HttpPost(JSONHelper.CreateJson(MessageType.set_up, textBox1.Text));
             if(obj != null)
             {
@@ -102,7 +108,7 @@ namespace TODO
             {
                 if (textBox4.Text == textBox5.Text)
                 {
-                    JObject obj = HTTP.HttpPost(JSONHelper.CreateJson(MessageType.verify, textBox1.Text, Convert.ToInt32(textBox2.Text), textBox3.Text, textBox4.Text));
+                    JObject obj = HTTP.HttpPost(JSONHelper.CreateJson(MessageType.verify,textBox1.Text, Convert.ToInt32(textBox2.Text), textBox3.Text, textBox4.Text));
                     if (obj != null)
                     {
                         if(obj.Value<int>("success") == 1)
@@ -142,6 +148,18 @@ namespace TODO
             {
                 MessageBox.Show("出错了！", "ERROR");
             }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // Register
+            // 
+            this.ClientSize = new System.Drawing.Size(771, 906);
+            this.Name = "Register";
+            this.ResumeLayout(false);
+
         }
     }
 }

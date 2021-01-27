@@ -14,6 +14,7 @@ namespace TODO
     }
     public class Task
     {
+        public bool is_finished = false;
         public string name;
         public int task_id;//全局唯一索引
         public DateTime start_time;
@@ -32,6 +33,7 @@ namespace TODO
         public string teacher_name;
         public int score;//学分
         public string description;
+        public int admin_id;//管理员id
         public List<int> alltaskIDs = new List<int>();//包含的任务索引
     }
 }

@@ -37,6 +37,31 @@ namespace TODO
             };
             return obj.ToString();
         }
+        //刷新
+        public static string CreateJson(string type, string email, int user_id, string password)
+        {
+            JObject obj = new JObject
+            {
+                { "type", type },
+                { "email", email },
+                { "user_id", user_id },
+                { "password", password }
+            };
+            return obj.ToString();
+        }
+        //加入班级
+        public static string CreateJson(string type, string email, int user_id, string password, int class_id)
+        {
+            JObject obj = new JObject
+            {
+                { "type", type },
+                { "email", email },
+                { "user_id", user_id },
+                { "password", password },
+                { "list_id", class_id }
+            };
+            return obj.ToString();
+        }
         //删除列表
         public static string CreateJsonDelList(string type, string email,int user_id, string password, int id)
         {

@@ -127,8 +127,7 @@ namespace TODO
 
                 //@warning:
                 //服务器需要发信号给所有选了这个课的人让他们更新（这显然是管理员功能）
-
-                return true;
+                
             }
             else if (table_name == "person_class_tasks")
             {
@@ -229,7 +228,7 @@ namespace TODO
                         //删除课程所有作业
                         for (int i = 0; i < item.alltaskIDs.Count; i++)
                         {
-                            int temp_index = get_all_class_task_index(item.alltaskIDs[i]);
+                            int temp_index = get_class_task_index(item.alltaskIDs[i]);
                             class_tasks.RemoveAt(temp_index);
                         }
                         person_classes.RemoveAt(index);
@@ -301,18 +300,29 @@ namespace TODO
                 }
                 else { return false; }
             }
+            //管理员权限
             else if (table_name == "person_tasks")
             {
-                string req = JSONHelper.CreateJsonDelTask("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
+                string req = JSONHelper.CreateJsonDelTask("del_assignment", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
                 try
                 {
                     receiver = HTTP.HttpPost(req);
                     if (receiver.Value<int>("success") == 1)
                     {
-                        index = get_person_class_task_index(item.task_id);
+                        index = get_class_index(item.parent_id);
                         Debug.Assert(index >= 0);
-                        //删除清单
-                        class_tasks.RemoveAt(index);
+                        //删除StudentClass中task记录
+                        for(int i=0;i<all_classes[index].alltaskIDs.Count;i++)
+                        {
+                            if (all_classes[index].alltaskIDs[i] == item.task_id)
+                            {
+                                all_classes[index].alltaskIDs.RemoveAt(i);
+                                break;
+                            }
+                        }
+                        //删除class_tasks中的对应task
+                        int task_index = get_class_task_index(item.task_id);
+                        class_tasks.RemoveAt(task_index);
                         return true;
                     }
                     else { return false; }
@@ -325,17 +335,26 @@ namespace TODO
             }
             else if (table_name == "list_tasks")
             {
-                string req = JSONHelper.CreateJsonDelTask("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
+                string req = JSONHelper.CreateJsonDelTask("del_task", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
                 try
                 {
                     receiver = HTTP.HttpPost(req);
                     if (receiver.Value<int>("success") == 1)
                     {
-                        index = get_list_task_index(item.task_id);
+                        index = get_list_index(item.parent_id);
                         Debug.Assert(index >= 0);
-
-                        //删除清单
-                        list_tasks.RemoveAt(index);
+                        //删除StudentClass中task记录
+                        for (int i = 0; i < lists[index].taskIDs.Count; i++)
+                        {
+                            if (lists[index].taskIDs[i] == item.task_id)
+                            {
+                                lists[index].taskIDs.RemoveAt(i);
+                                break;
+                            }
+                        }
+                        //删除class_tasks中的对应task
+                        int task_index = get_list_task_index(item.task_id);
+                        list_tasks.RemoveAt(task_index);
                         return true;
                     }
                     else { return false; }
@@ -347,6 +366,7 @@ namespace TODO
             }
             else
             {
+                Debug.Assert(false);
                 return false;
             }
         }
@@ -380,9 +400,9 @@ namespace TODO
             //如果没有找到，返回task_id
             return -1;
         }
-        public int get_person_class_task_index(int task_id)
+        public int get_class_task_index(int task_id)
         {
-            //通过task_id找到在person_class_tasks中的索引
+            //通过task_id找到在class_tasks中的索引
             for (int i = 0; i < class_tasks.Count; i++)
             {
                 if (class_tasks[i].task_id == task_id)

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -138,6 +139,13 @@
             this.Text = "Register";
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.SuspendLayout();
+            // 
+            // Register
+            // 
+            this.ClientSize = new System.Drawing.Size(771, 906);
+            this.Name = "Register";
+            this.ResumeLayout(false);
 
         }
 

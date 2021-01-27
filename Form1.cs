@@ -192,7 +192,7 @@ namespace TODO
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.ImageIndex = i;
-                int index = manager.get_person_class_task_index(cur_class.alltaskIDs[i]);
+                int index = manager.get_class_task_index(cur_class.alltaskIDs[i]);
                 if (index != -1)
                 {
                     lvi.Text = manager.class_tasks[index].name;//对应文字

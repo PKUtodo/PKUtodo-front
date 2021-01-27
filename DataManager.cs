@@ -52,11 +52,43 @@ namespace TODO
             {
                 int index = get_class_index(item.class_id);
                 if (index >= 0) {
-                    JSONHelper.CreateJson("join_class", myuser_.email, myuser_.password,);
-
-                    person_classes.Add(index); return true; 
+                    string req=JSONHelper.CreateJson("join", myuser_.email,myuser_.user_id,myuser_.password,item.class_id);
+                    try
+                    {
+                        receiver = HTTP.HttpPost(req);
+                        if(receiver.Value<int>("success")==1)
+                        {
+                            Debug.Assert(receiver["data"].Value<int>("list_id") == item.class_id);
+                            JArray tasks = receiver["data"].Value<JArray>("task_list");
+                            for(int i=0;i<tasks.Count;i++)
+                            {
+                                all_classes[index].alltaskIDs.Add(tasks[i].Value<int>("id"));
+                                Task new_class_task = new Task();
+                                new_class_task.task_id = tasks[i].Value<int>("id");
+                                new_class_task.name= tasks[i].Value<string>("name");
+                                new_class_task.start_time = tasks[i].Value<DateTime>("create_date");
+                                new_class_task.due_time= tasks[i].Value<DateTime>("due_date");
+                                new_class_task.position_x= tasks[i].Value<double>("pos_x");
+                                new_class_task.position_x = tasks[i].Value<double>("pos_y");
+                                new_class_task.description= tasks[i].Value<string>("content");
+                                new_class_task.is_finished = tasks[i].Value<bool>("is_finished");
+                                new_class_task.parent_id = item.class_id;
+                            }
+                            person_classes.Add(item.class_id); 
+                            return true;
+                        }
+                        else { return false; }
+                    }
+                    catch(Exception e)
+                    {
+                        return false;
+                    }
+                    
                 }
-                else { return false; }
+                else {
+                    Debug.Assert(false);
+                    return false; 
+                }
             }
             else
             {
@@ -128,8 +160,7 @@ namespace TODO
 
                 //@warning:
                 //服务器需要发信号给所有选了这个课的人让他们更新（这显然是管理员功能）
-
-                return true;
+                
             }
             else if (table_name == "person_class_tasks")
             {
@@ -230,7 +261,7 @@ namespace TODO
                         //删除课程所有作业
                         for (int i = 0; i < item.alltaskIDs.Count; i++)
                         {
-                            int temp_index = get_all_class_task_index(item.alltaskIDs[i]);
+                            int temp_index = get_class_task_index(item.alltaskIDs[i]);
                             class_tasks.RemoveAt(temp_index);
                         }
                         person_classes.RemoveAt(index);
@@ -302,18 +333,29 @@ namespace TODO
                 }
                 else { return false; }
             }
+            //管理员权限
             else if (table_name == "person_tasks")
             {
-                string req = JSONHelper.CreateJsonDelTask("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
+                string req = JSONHelper.CreateJsonDelTask("del_assignment", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
                 try
                 {
                     receiver = HTTP.HttpPost(req);
                     if (receiver.Value<int>("success") == 1)
                     {
-                        index = get_person_class_task_index(item.task_id);
+                        index = get_class_index(item.parent_id);
                         Debug.Assert(index >= 0);
-                        //删除清单
-                        class_tasks.RemoveAt(index);
+                        //删除StudentClass中task记录
+                        for(int i=0;i<all_classes[index].alltaskIDs.Count;i++)
+                        {
+                            if (all_classes[index].alltaskIDs[i] == item.task_id)
+                            {
+                                all_classes[index].alltaskIDs.RemoveAt(i);
+                                break;
+                            }
+                        }
+                        //删除class_tasks中的对应task
+                        int task_index = get_class_task_index(item.task_id);
+                        class_tasks.RemoveAt(task_index);
                         return true;
                     }
                     else { return false; }
@@ -326,17 +368,26 @@ namespace TODO
             }
             else if (table_name == "list_tasks")
             {
-                string req = JSONHelper.CreateJsonDelTask("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
+                string req = JSONHelper.CreateJsonDelTask("del_task", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
                 try
                 {
                     receiver = HTTP.HttpPost(req);
                     if (receiver.Value<int>("success") == 1)
                     {
-                        index = get_list_task_index(item.task_id);
+                        index = get_list_index(item.parent_id);
                         Debug.Assert(index >= 0);
-
-                        //删除清单
-                        list_tasks.RemoveAt(index);
+                        //删除StudentClass中task记录
+                        for (int i = 0; i < lists[index].taskIDs.Count; i++)
+                        {
+                            if (lists[index].taskIDs[i] == item.task_id)
+                            {
+                                lists[index].taskIDs.RemoveAt(i);
+                                break;
+                            }
+                        }
+                        //删除class_tasks中的对应task
+                        int task_index = get_list_task_index(item.task_id);
+                        list_tasks.RemoveAt(task_index);
                         return true;
                     }
                     else { return false; }
@@ -348,6 +399,7 @@ namespace TODO
             }
             else
             {
+                Debug.Assert(false);
                 return false;
             }
         }
@@ -381,9 +433,9 @@ namespace TODO
             //如果没有找到，返回task_id
             return -1;
         }
-        public int get_person_class_task_index(int task_id)
+        public int get_class_task_index(int task_id)
         {
-            //通过task_id找到在person_class_tasks中的索引
+            //通过task_id找到在class_tasks中的索引
             for (int i = 0; i < class_tasks.Count; i++)
             {
                 if (class_tasks[i].task_id == task_id)
@@ -449,9 +501,95 @@ namespace TODO
         #endregion
 
         # region 远端下载
+        //下载所有用户数据
         public bool update_all()
         {
-            //下载所有用户数据
+            string req=JSONHelper.CreateJson("refresh", myuser_.email, myuser_.user_id, myuser_.password);
+            try
+            {
+                receiver = HTTP.HttpPost(req);
+                if(receiver.Value<int>("success")==1)
+                {
+                    all_classes.Clear();
+                    class_tasks.Clear();
+                    list_tasks.Clear();
+                    lists.Clear();
+                    person_classes.Clear();
+                    JArray classes = receiver["data"].Value<JArray>("class");
+                    for (int i = 0; i < all_classes.Count; i++)
+                    {
+                        Debug.Assert(classes[i].Value<bool>("is_public") == true);
+                        StudentClass new_class = new StudentClass();
+                        new_class.class_id = classes[i].Value<int>("list_id");
+                        new_class.name = classes[i].Value<string>("list_name");
+                        //new_class.description = classes[i].Value<string>("content");
+                        new_class.admin_id = classes[i].Value<int>("admin_id");
+
+
+                    }
+                    JArray new_lists = receiver["data"].Value<JArray>("list");
+                    for (int i = 0; i < new_lists.Count; i++)
+                    {
+                        if(new_lists[i].Value<bool>("is_public")==true)
+                        {
+                            //TODO：检查是否满足外码条件
+                            person_classes.Add(new_lists[i].Value<int>("list_id"));
+
+                        }
+                        else
+                        {
+                            StudentList new_list = new StudentList();
+                            new_list.list_id = new_lists[i].Value<int>("list_id");
+                            new_list.name = new_lists[i].Value<string>("list_name");
+                        }
+                    }
+                    JArray tasks = receiver["data"].Value<JArray>("task");
+                    for (int i = 0; i < tasks.Count; i++)
+                    {
+                        Task new_task = new Task();
+                        new_task.task_id = tasks[i].Value<int>("task_id");
+                        new_task.name = tasks[i].Value<string>("task_name");
+                        new_task.start_time = tasks[i].Value<DateTime>("create_date");
+                        new_task.due_time = tasks[i].Value<DateTime>("due_date");
+                        new_task.position_x = tasks[i].Value<double>("position_x");
+                        new_task.position_x = tasks[i].Value<double>("position_y");
+                        new_task.description = tasks[i].Value<string>("content");
+                        new_task.is_finished = tasks[i].Value<bool>("is_finished");
+                        new_task.parent_id = tasks[i].Value<int>("list_id");
+
+                        bool find = false;
+                        for(int j=0;j<all_classes.Count;j++)
+                        {
+                            if(all_classes[j].class_id==new_task.parent_id)
+                            {
+                                Debug.Assert(find == false);
+                                all_classes[j].alltaskIDs.Add(new_task.task_id);
+                                find = true;
+                                break;
+                            }
+                        }
+                        for(int j=0;j<lists.Count;j++)
+                        {
+                            if(lists[j].list_id==new_task.parent_id)
+                            {
+                                Debug.Assert(find == false);
+                                lists[j].taskIDs.Add(new_task.task_id);
+                                break;
+                            }
+                        }
+                        Debug.Assert(find == false);
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
         }
         public bool update(string table_name)
         {
@@ -460,6 +598,7 @@ namespace TODO
             //如果更新的是person_classes,同时要更新class_tasks
             //如果更新list_tasks，lists也要更新（因为taskID会变）
             //如果更新class_tasks，也要更新person_classes和all_classes
+            return false;
 
         }
         #endregion

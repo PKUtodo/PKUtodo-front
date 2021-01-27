@@ -17,10 +17,6 @@ namespace TODO
         public string password;
         public string veri_code;
 
-        public List<StudentList> lists = new List<StudentList>();//所有的表单
-        public List<StudentClass> classes = new List<StudentClass>();//所有个人的课程
-        public List<Task> tasks = new List<Task>();//所有的私人任务和选课的公有任务（拷贝到本地）
-
         //表示是哪些课程的管理员，这个值等于课程号，列表为空表示不是管理员
         public List<int> administrator_list = new List<int>();
 

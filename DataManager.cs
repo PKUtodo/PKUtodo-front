@@ -14,13 +14,12 @@ namespace TODO
     /// <returns></returns>
     public class DataManager
     {
-        //维护的6张表
+        //维护的5张表
         public List<StudentClass> all_classes = new List<StudentClass>();//所有的学校课程
-        public List<Task> all_class_tasks = new List<Task>();//所有课程中的任务
+        public List<Task> class_tasks = new List<Task>();//个人课程中的任务，不需要存所有任务
 
         public List<StudentList> lists = new List<StudentList>();//所有的用户表单
         public List<int> person_classes = new List<int>();//所有个人的课程,其实只需要存all_class中的主键ID
-        public List<int> person_class_tasks = new List<int>();//所有选课的公有任务，其实只需要存all_class_tasks中的主键ID
         public List<Task> list_tasks= new List<Task>();///所有的私人任务
 
         # region 添加
@@ -347,7 +346,19 @@ namespace TODO
         #endregion
 
         # region 远端下载
+        public bool update_all()
+        {
+            //下载所有用户数据
+        }
+        public bool update(string table_name)
+        {
+            /*更新某个表*/
+            //如果更新的是lists，同时要更新list_tasks
+            //如果更新的是person_classes,同时要更新class_tasks
+            //如果更新list_tasks，lists也要更新（因为taskID会变）
+            //如果更新class_tasks，也要更新person_classes和all_classes
 
+        }
         #endregion
     }
 }

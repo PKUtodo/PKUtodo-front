@@ -23,12 +23,12 @@ namespace TODO
         public int choose_list_index = -1;//被选中的列表，用于删除
         public int choose_list_index2 = -1;//选中的class
 
-        public List<StudentClass> all_classes = new List<StudentClass>();//所有的学校课程
-        public List<Task> all_tasks = new List<Task>();//所有课程中的任务
+        public DataManager manager = new DataManager();//全局唯一数据库对象
 
         public Form1()
         {
             InitializeComponent();
+            //预处理，导入初始数据
             preprocessing();
         }
         /// <summary>
@@ -37,31 +37,32 @@ namespace TODO
         /// <returns></returns>
         private void preprocessing()
         {
+            manager.update_all();
             //第一步：导入所有课程数据
-            for (int i = 0; i < 10; i++)
-            {
-                StudentClass new_class = new StudentClass();
-                new_class.class_id = i;
-                new_class.name = "软件工程" + i.ToString();
-                new_class.score = 3;
-                new_class.description = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
-                new_class.description += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
-                Task new_task = new Task();
-                new_task.description = "软件工程作业对学习很有帮助。";
-                new_task.due_time = DateTime.Now;
-                new_task.start_time = DateTime.Now;
-                new_task.name = "软件工程" + i.ToString() + "作业" + i.ToString();
-                new_task.parent_type = "class";
-                new_task.parent_id = i;
-                if (all_tasks.Count > 0)
-                {
-                    new_task.task_id = all_tasks[all_tasks.Count - 1].task_id + 1;
-                }
-                else { new_task.task_id = 0; }
-                all_tasks.Add(new_task);
-                new_class.alltaskIDs.Add(new_task.task_id);
-                all_classes.Add(new_class);
-            }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    StudentClass new_class = new StudentClass();
+            //    new_class.class_id = i;
+            //    new_class.name = "软件工程" + i.ToString();
+            //    new_class.score = 3;
+            //    new_class.description = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
+            //    new_class.description += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+            //    Task new_task = new Task();
+            //    new_task.description = "软件工程作业对学习很有帮助。";
+            //    new_task.due_time = DateTime.Now;
+            //    new_task.start_time = DateTime.Now;
+            //    new_task.name = "软件工程" + i.ToString() + "作业" + i.ToString();
+            //    new_task.parent_type = "class";
+            //    new_task.parent_id = i;
+            //    if (all_tasks.Count > 0)
+            //    {
+            //        new_task.task_id = all_tasks[all_tasks.Count - 1].task_id + 1;
+            //    }
+            //    else { new_task.task_id = 0; }
+            //    all_tasks.Add(new_task);
+            //    new_class.alltaskIDs.Add(new_task.task_id);
+            //    all_classes.Add(new_class);
+            //}
             //第二步：导入用户个人清单，连同清单中的任务
             //第三步：导入用户个人课程，连同个人课程中的任务
             //
@@ -157,11 +158,11 @@ namespace TODO
             this.color_imageList.ImageSize = new Size(10, 30); // 这实际上是图片的占位，可能导致图片无法显示
             this.left_display_view.BeginUpdate();
 
-            for (int i = 0; i < all_classes.Count; i++)
+            for (int i = 0; i < manager.all_classes.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.ImageIndex = i;
-                lvi.Text = all_classes[i].name;//对应文字
+                lvi.Text = manager.all_classes[i].name;//对应文字
                 lvi.ImageIndex = 0;
                 this.left_display_view.Items.Add(lvi);
             }
@@ -178,7 +179,8 @@ namespace TODO
         private void show_class_tasks(object sender, EventArgs e)
         {
             //listview展示所有的课程任务
-            StudentClass cur_class = myuser.classes[choose_list_index2 - 1];
+            int temp_index = manager.get_class_index(manager.person_classes[choose_list_index2 - 1]);
+            StudentClass cur_class = manager.all_classes[temp_index]; 
             refresh();//清空显示栏
             this.left_display_view.View = View.List;
 
@@ -190,10 +192,10 @@ namespace TODO
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.ImageIndex = i;
-                int index = get_all_task_index(cur_class.alltaskIDs[i]);
+                int index = manager.get_person_class_task_index(cur_class.alltaskIDs[i]);
                 if (index != -1)
                 {
-                    lvi.Text = all_tasks[index].name;//对应文字
+                    lvi.Text = manager.class_tasks[index].name;//对应文字
                 }
                 else
                 {
@@ -221,12 +223,21 @@ namespace TODO
             this.left_display_view.SmallImageList = this.color_imageList;
             this.color_imageList.ImageSize = new Size(10, 30); // 这实际上是图片的占位，可能导致图片无法显示
             this.left_display_view.BeginUpdate();
-
-            for (int i = 0; i < myuser.tasks.Count; i++)
+            //显示列表任务
+            for (int i = 0; i < manager.list_tasks.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.ImageIndex = i;
-                lvi.Text = myuser.tasks[i].name;//对应文字
+                lvi.Text = manager.list_tasks[i].name;//对应文字
+                lvi.ImageIndex = 0;
+                this.left_display_view.Items.Add(lvi);
+            }
+            //显示课程任务
+            for (int i = 0; i < manager.class_tasks.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.ImageIndex = manager.list_tasks.Count+i;
+                lvi.Text = manager.class_tasks[i].name;//对应文字
                 lvi.ImageIndex = 0;
                 this.left_display_view.Items.Add(lvi);
             }
@@ -301,7 +312,7 @@ namespace TODO
         /// <returns></returns>
         private void show_list_info(object sender, MouseEventArgs e)
         {
-            StudentList cur_list = myuser.lists[choose_list_index - 1];
+            StudentList cur_list = manager.lists[choose_list_index - 1];
             refresh();//清空显示栏
             this.left_display_view.View = View.List;
 
@@ -313,10 +324,10 @@ namespace TODO
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.ImageIndex = i;
-                int index = get_task_index(cur_list.taskIDs[i]);
+                int index = manager.get_list_task_index(cur_list.taskIDs[i]);
                 if (index != -1)
                 {
-                    lvi.Text = myuser.tasks[index].name;//对应文字
+                    lvi.Text = manager.list_tasks[index].name;//对应文字
                 }
                 else
                 {
@@ -354,9 +365,9 @@ namespace TODO
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             //判断是否选了那门课
-            for (int i = 0; i < myuser.classes.Count; i++)
+            for (int i = 0; i < manager.person_classes.Count; i++)
             {
-                if (myuser.classes[i].name == all_classes[index].name) { class_exists = true; break; }
+                if (manager.person_classes[i]== manager.all_classes[index].class_id) { class_exists = true; break; }
             }
             if (!button.Enabled) { button.Enabled = true; }
             if (!class_exists)
@@ -369,8 +380,6 @@ namespace TODO
                 button.Text = "删除课程";
                 button.MouseClick += this.del_new_class;
             }
-
-
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = new Font("微软雅黑", 11);
             //位置和大小
@@ -392,6 +401,7 @@ namespace TODO
             this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 90, this.right_display_panel.Width, 90);
 
             //课程介绍：label2
+            //@warning:需要更改内容
             Label label2 = new Label();
             label2.Name = "label2";
             label2.Text = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
@@ -447,41 +457,23 @@ namespace TODO
             //加入新课程
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
-            myuser.classes.Add(all_classes[index]);
-            //讲新课程中的所有task从all_tasks放入tasks
-            for (int i = 0; i < all_classes[index].alltaskIDs.Count; i++)
-            {
-                int temp_index = get_all_task_index(all_classes[index].alltaskIDs[i]);
-                Task temp_task = all_tasks[temp_index];
-                //重新生成task放入tasks
-                Task new_task = new Task();
-                new_task.description = temp_task.description;
-                new_task.due_time = temp_task.due_time;
-                new_task.start_time = temp_task.start_time;
-                new_task.parent_type = "class";
-                new_task.name = temp_task.name;
-                if (myuser.tasks.Count > 0)
-                {
-                    new_task.task_id = myuser.tasks[myuser.tasks.Count - 1].task_id + 1;
-                }
-                else { new_task.task_id = 0; }
-                new_task.parent_id = all_classes[index].class_id;
-                myuser.tasks.Add(new_task);
-            }
+            manager.add("person_classes", manager.all_classes[index]);//加入课程
+            manager.update("person_classes");//更新个人课程表，同时也完成了更新课程任务
+           
             Button temp_button = (Button)sender;
             temp_button.Text = "删除课程";
             temp_button.Enabled = false;//不能再点
 
             this.class_slide.Size = new Size(this.class_slide.Size.Width, this.class_slide.Size.Height + this.add_list_button.Height);
             Button button = new Button();
-            button.Name = "button" + myuser.classes.Count.ToString();
+            button.Name = "button" + manager.person_classes.Count.ToString();
             //文字
-            button.Text = all_classes[index].name;
+            button.Text = manager.all_classes[index].name;
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = this.add_class_button.Font;
             button.ForeColor = this.add_class_button.ForeColor;
             //位置和大小
-            button.Location = new Point(0, this.add_list_button.Location.Y + myuser.classes.Count * this.add_list_button.Height);
+            button.Location = new Point(0, this.add_list_button.Location.Y + manager.person_classes.Count * this.add_list_button.Height);
             button.Size = this.add_class_button.Size;
             //背景
             button.BackColor = this.add_class_button.BackColor;
@@ -499,16 +491,9 @@ namespace TODO
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             //清掉所有任务
-            StudentClass cur_class = myuser.classes[get_class_index(all_classes[index].class_id)];
-            for (int j = 0; j < cur_class.alltaskIDs.Count; j++)
-            {
-                int temp_index = get_task_index(cur_class.alltaskIDs[j]);
-                if (temp_index != -1)
-                {
-                    myuser.tasks.RemoveAt(temp_index);
-                }
-            }
-            myuser.classes.RemoveAt(get_class_index(all_classes[index].class_id));
+            StudentClass cur_class = manager.all_classes[index];
+            manager.delete("person_classes", cur_class);
+            manager.update("person_classes");//更新表和表里面的任务
 
             Button button1 = (Button)sender;
             button1.Text = "加入课程";
@@ -519,12 +504,15 @@ namespace TODO
             this.class_slide.Controls.Add(this.add_class_button);
 
             //放入其他组件
-            for (int i = 0; i < myuser.classes.Count; i++)
+            for (int i = 0; i < manager.person_classes.Count; i++)
             {
+                //遍历课程
+                StudentClass curclass = manager.all_classes[manager.get_class_index(manager.person_classes[i])];//如果index<0，可能会有错
+                
                 Button button = new Button();
                 button.Name = "button" + (i + 1).ToString();
                 //文字
-                button.Text = myuser.classes[i].name;
+                button.Text = curclass.name;
                 button.TextAlign = ContentAlignment.MiddleCenter;
                 button.Font = this.add_class_button.Font;
                 button.ForeColor = this.add_class_button.ForeColor;
@@ -561,6 +549,7 @@ namespace TODO
                     {
                         this.left_display_view.Items.Remove(item);
                     }
+                    //@warning:
                     refresh();//刷新左右两个显示栏
                     //更改数据库
                 }
@@ -574,31 +563,24 @@ namespace TODO
 
         private void list_delete_menu_Click(object sender, EventArgs e)
         {
-            //删除对应的list
-            //删除对应的task
-            StudentList cur_list = myuser.lists[choose_list_index - 1];
-            for (int j = 0; j < cur_list.taskIDs.Count; j++)
-            {
-                int index = get_task_index(cur_list.taskIDs[j]);
-                if (index != -1)
-                {
-                    myuser.tasks.RemoveAt(index);
-                }
-            }
+            /*删除对应的list*/
+            StudentList cur_list = manager.lists[choose_list_index - 1];
+            manager.delete("lists", cur_list);//所有任务都交给manager
+            manager.update("lists");//更新lists这个表（包含了对list_tasks的更新）
+
             this.file_slide.Controls.Clear();
             this.file_slide.Size = new Size(this.add_list_button.Size.Width, file_slide.Size.Height - this.add_list_button.Height);
             list_num -= 1;
             this.add_list_button.Location = new Point(0, this.add_list_button.Location.Y - this.add_list_button.Height);
             this.file_slide.Controls.Add(this.add_list_button);
-            myuser.lists.RemoveAt(choose_list_index - 1);
 
             //放入其他组件
-            for (int i = 0; i < myuser.lists.Count; i++)
+            for (int i = 0; i < manager.lists.Count; i++)
             {
                 Button button = new Button();
                 button.Name = "button" + (i + 1).ToString();
                 //文字
-                button.Text = myuser.lists[i].name;
+                button.Text = manager.lists[i].name;
                 button.TextAlign = ContentAlignment.MiddleCenter;
                 button.Font = this.add_class_button.Font;
                 button.ForeColor = this.add_class_button.ForeColor;
@@ -641,20 +623,21 @@ namespace TODO
             DateTime temp_time;
             //DateTime.TryParse(temp_str[1], out temp_time);//这对时间字符串有要求
             //new_task.due_time = temp_time;
+
+            //@warning: 到达时间需要改正
             new_task.due_time = DateTime.Now;
             new_task.description = temp_str[2];
-            new_task.parent_type = "list";
-            new_task.parent_id = myuser.lists[choose_list_index - 1].list_id;
+            new_task.parent_id = manager.lists[choose_list_index - 1].list_id;
 
-            if (myuser.tasks.Count > 0)
-            { new_task.task_id = myuser.tasks[myuser.tasks.Count - 1].task_id + 1; }
+            if (manager.list_tasks.Count > 0)
+            { new_task.task_id = manager.list_tasks[manager.list_tasks.Count - 1].task_id + 1; }
             else
             {
                 new_task.task_id = 0;
             }
-            myuser.tasks.Add(new_task);
-            myuser.lists[choose_list_index - 1].taskIDs.Add(new_task.task_id);//目前所在的清单加入新的编号
-            StudentList cur_list = myuser.lists[choose_list_index - 1];//当前列表
+            manager.add("list_tasks", new_task);
+            manager.update("list_tasks");
+            StudentList cur_list = manager.lists[choose_list_index - 1];//当前列表
 
             //点击加入课程
             refresh();//清除原有内容
@@ -668,10 +651,10 @@ namespace TODO
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.ImageIndex = i;
-                int index = get_task_index(cur_list.taskIDs[i]);
+                int index = manager.get_list_task_index(cur_list.taskIDs[i]);
                 if (index != -1)
                 {
-                    lvi.Text = myuser.tasks[index].name;//对应文字
+                    lvi.Text = manager.list_tasks[index].name;//对应文字
                 }
                 else
                 {
@@ -684,8 +667,6 @@ namespace TODO
             this.left_display_view.EndUpdate();
             //更改显示内容
             this.left_content = "task";
-
-            //传输写入数据库
         }
         /// <summary>
         /// 列表：点击”+“号，增加新的列表
@@ -711,18 +692,19 @@ namespace TODO
             //创建新的StudentList
             StudentList new_list = new StudentList();
             new_list.name = temp;
-            if (myuser.lists.Count != 0)
+            if (manager.lists.Count != 0)
             {
-                new_list.list_id = myuser.lists[myuser.lists.Count - 1].list_id + 1;
+                new_list.list_id = manager.lists[manager.lists.Count - 1].list_id + 1;
             }
             else
             {
                 new_list.list_id = 1;
             }
-            myuser.lists.Add(new_list);
+            manager.add("lists", new_list);
+            manager.update("lists");
 
             Button button = new Button();
-            button.Name = "button" + myuser.lists.Count.ToString();
+            button.Name = "button" + manager.lists.Count.ToString();
             //文字
             button.Text = temp; temp = "";
             button.TextAlign = ContentAlignment.MiddleCenter;
@@ -751,9 +733,6 @@ namespace TODO
 
             //更新+号的位置
             this.add_list_button.Location = new Point(0, add_list_button.Location.Y + add_list_button.Size.Height);
-
-            //传输写入数据库
-
         }
         #endregion
 
@@ -798,14 +777,12 @@ namespace TODO
         }
         private void refresh()
         {
-            //刷新左右两个显示栏
+            //刷新左右两个显示栏,不负责和数据库交互
             //清除原有内容
             this.left_display_view.Clear();
             this.right_display_panel.Controls.Clear();
             this.right_display_panel.CreateGraphics().Clear(Color.White);
-            //导入新内容
         }
-
 
         private void left_display_view_MouseClick(object sender, MouseEventArgs e)
         {

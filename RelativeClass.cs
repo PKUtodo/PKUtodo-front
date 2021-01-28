@@ -35,5 +35,6 @@ namespace TODO
         public string description;
         public int admin_id;//管理员id
         public List<int> alltaskIDs = new List<int>();//包含的任务索引
+        public bool isSelected = false;//是否被选课
     }
 }

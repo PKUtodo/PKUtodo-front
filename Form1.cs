@@ -19,7 +19,8 @@ namespace TODO
         public string temp="";//list创建的时候公用的字符串对象
         public string temp_task_str="";//任务创建的时候传输的公共字符串
         public string left_content;//左边显示栏显示的内容，有class，task两种
-        public int list_num = 0;//初始化列表数目
+        public int list_num = 0;//展示到了第几个list button
+        public int class_num = 0;//展示到了第几个class button
         public int choose_list_index = -1;//被选中的列表，用于删除
         public int choose_list_index2 = -1;//选中的class
 
@@ -40,36 +41,24 @@ namespace TODO
         /// <returns></returns>
         private void preprocessing()
         {
-
+            //更新所有个人信息
             manager.update_all();
-            //第一步：导入所有课程数据
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    StudentClass new_class = new StudentClass();
-            //    new_class.class_id = i;
-            //    new_class.name = "软件工程" + i.ToString();
-            //    new_class.score = 3;
-            //    new_class.description = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
-            //    new_class.description += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
-            //    Task new_task = new Task();
-            //    new_task.description = "软件工程作业对学习很有帮助。";
-            //    new_task.due_time = DateTime.Now;
-            //    new_task.start_time = DateTime.Now;
-            //    new_task.name = "软件工程" + i.ToString() + "作业" + i.ToString();
-            //    new_task.parent_type = "class";
-            //    new_task.parent_id = i;
-            //    if (all_tasks.Count > 0)
-            //    {
-            //        new_task.task_id = all_tasks[all_tasks.Count - 1].task_id + 1;
-            //    }
-            //    else { new_task.task_id = 0; }
-            //    all_tasks.Add(new_task);
-            //    new_class.alltaskIDs.Add(new_task.task_id);
-            //    all_classes.Add(new_class);
-            //}
-            //第二步：导入用户个人清单，连同清单中的任务
-            //第三步：导入用户个人课程，连同个人课程中的任务
-            //
+            //对已有的list进行可视化
+            for(int i=0;i<manager.lists.Count;i++)
+            {
+                temp = manager.lists[i].name;
+                add_list_show();
+            }
+            //对已有的课程进行可视化
+            for(int i=0;i<manager.person_classes.Count;i++)
+            {
+                int temp_index = manager.get_class_index(manager.person_classes[i]);
+                if(temp_index>=0)
+                {
+                    manager.all_classes[temp_index].isSelected = true;
+                    add_class_show(temp_index);
+                }
+            }
         }
         #region 系统基础配置
         //鼠标拖动整体窗口函数（由于去除了边框）
@@ -365,16 +354,11 @@ namespace TODO
             Button button = new Button();
             button.Name = "button1";
             //文字
-            bool class_exists = false;
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             //判断是否选了那门课
-            for (int i = 0; i < manager.person_classes.Count; i++)
-            {
-                if (manager.person_classes[i]== manager.all_classes[index].class_id) { class_exists = true; break; }
-            }
             if (!button.Enabled) { button.Enabled = true; }
-            if (!class_exists)
+            if (!manager.all_classes[index].isSelected)
             {
                 button.Text = "加入课程";
                 button.MouseClick += this.add_new_class;
@@ -462,22 +446,53 @@ namespace TODO
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             manager.add("person_classes", manager.all_classes[index]);//加入课程
-            manager.update("person_classes");//更新个人课程表，同时也完成了更新课程任务
-           
             Button temp_button = (Button)sender;
             temp_button.Text = "删除课程";
             temp_button.Enabled = false;//不能再点
+            //展示加入的新课程
+            add_class_show(index);
+        }
+        private void del_new_class(object sender, MouseEventArgs e)
+        {
+            //删除已有的课程
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
+            int index = indexes[0];
+            //清掉所有任务
+            StudentClass cur_class = manager.all_classes[index];
+            bool temp=manager.delete("person_classes", cur_class);//此处要求删除的时候HTTP总是返回失败
 
-            this.class_slide.Size = new Size(this.class_slide.Size.Width, this.class_slide.Size.Height + this.add_list_button.Height);
+            Button button1 = (Button)sender;
+            button1.Text = "加入课程";
+
+            this.class_slide.Controls.Clear();
+            this.class_slide.Size = new Size(this.add_list_button.Size.Width, class_slide.Size.Height - this.add_list_button.Height);
+            this.add_class_button.Location = new Point(0, 0);
+            this.class_slide.Controls.Add(this.add_class_button);
+
+            class_num = 0;
+            //放入其他组件
+            for (int i = 0; i < manager.person_classes.Count; i++)
+            {
+                int temp_index = manager.get_class_index(manager.person_classes[i]);
+                if (temp_index >= 0)
+                {
+                    add_class_show(temp_index);
+                }
+            }
+        }
+        public void add_class_show(int index)
+        {
+            class_num += 1;
+            this.class_slide.Size = new Size(this.class_slide.Size.Width, (manager.person_classes.Count+1)*this.add_list_button.Height);
             Button button = new Button();
-            button.Name = "button" + manager.person_classes.Count.ToString();
+            button.Name = "button" + class_num.ToString();
             //文字
             button.Text = manager.all_classes[index].name;
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = this.add_class_button.Font;
             button.ForeColor = this.add_class_button.ForeColor;
             //位置和大小
-            button.Location = new Point(0, this.add_list_button.Location.Y + manager.person_classes.Count * this.add_list_button.Height);
+            button.Location = new Point(0, class_num* this.add_list_button.Height);
             button.Size = this.add_class_button.Size;
             //背景
             button.BackColor = this.add_class_button.BackColor;
@@ -488,50 +503,6 @@ namespace TODO
             button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_class_tasks);
             button.MouseEnter += new System.EventHandler(this.classbuttonEnter);
             this.class_slide.Controls.Add(button);
-        }
-        private void del_new_class(object sender, MouseEventArgs e)
-        {
-            //删除已有的课程
-            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
-            int index = indexes[0];
-            //清掉所有任务
-            StudentClass cur_class = manager.all_classes[index];
-            manager.delete("person_classes", cur_class);
-            manager.update("person_classes");//更新表和表里面的任务
-
-            Button button1 = (Button)sender;
-            button1.Text = "加入课程";
-
-            this.class_slide.Controls.Clear();
-            this.class_slide.Size = new Size(this.add_list_button.Size.Width, class_slide.Size.Height - this.add_list_button.Height);
-            this.add_class_button.Location = new Point(0, 0);
-            this.class_slide.Controls.Add(this.add_class_button);
-
-            //放入其他组件
-            for (int i = 0; i < manager.person_classes.Count; i++)
-            {
-                //遍历课程
-                StudentClass curclass = manager.all_classes[manager.get_class_index(manager.person_classes[i])];//如果index<0，可能会有错
-                
-                Button button = new Button();
-                button.Name = "button" + (i + 1).ToString();
-                //文字
-                button.Text = curclass.name;
-                button.TextAlign = ContentAlignment.MiddleCenter;
-                button.Font = this.add_class_button.Font;
-                button.ForeColor = this.add_class_button.ForeColor;
-                //位置和大小
-                button.Location = new Point(0, (i + 1) * this.add_class_button.Height);
-                button.Size = this.add_list_button.Size;
-                //背景
-                button.BackColor = this.add_class_button.BackColor;
-                //按钮边缘
-                button.FlatAppearance.BorderSize = 0;
-                button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-                button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_class_tasks);
-                button.MouseEnter += new System.EventHandler(this.classbuttonEnter);
-                this.class_slide.Controls.Add(button);
-            }
         }
         #endregion
 
@@ -570,37 +541,15 @@ namespace TODO
             /*删除对应的list*/
             StudentList cur_list = manager.lists[choose_list_index - 1];
             manager.delete("lists", cur_list);//所有任务都交给manager
-            manager.update("lists");//更新lists这个表（包含了对list_tasks的更新）
-
+            list_num= 0;
+            //清空所有组件
             this.file_slide.Controls.Clear();
-            this.file_slide.Size = new Size(this.add_list_button.Size.Width, file_slide.Size.Height - this.add_list_button.Height);
-            list_num -= 1;
-            this.add_list_button.Location = new Point(0, this.add_list_button.Location.Y - this.add_list_button.Height);
+            this.add_list_button.Location = new Point(0, 0);
             this.file_slide.Controls.Add(this.add_list_button);
-
-            //放入其他组件
             for (int i = 0; i < manager.lists.Count; i++)
             {
-                Button button = new Button();
-                button.Name = "button" + (i + 1).ToString();
-                //文字
-                button.Text = manager.lists[i].name;
-                button.TextAlign = ContentAlignment.MiddleCenter;
-                button.Font = this.add_class_button.Font;
-                button.ForeColor = this.add_class_button.ForeColor;
-                //位置和大小
-                button.Location = new Point(0, i * 50);
-                button.Size = this.add_list_button.Size;
-                //背景
-                button.BackColor = this.add_class_button.BackColor;
-                //按钮边缘
-                button.FlatAppearance.BorderSize = 0;
-                button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-                button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_list_info);
-                button.MouseEnter += new System.EventHandler(this.listbuttonEnter);
-                //右键删除事件
-                button.ContextMenuStrip = this.list_contextMenuStrip;
-                this.file_slide.Controls.Add(button);
+                temp = manager.lists[i].name;
+                add_list_show();
             }
         }
         
@@ -640,7 +589,6 @@ namespace TODO
                 new_task.task_id = 0;
             }
             manager.add("list_tasks", new_task);
-            manager.update("list_tasks");
             StudentList cur_list = manager.lists[choose_list_index - 1];//当前列表
 
             //点击加入课程
@@ -689,10 +637,7 @@ namespace TODO
             {
                 return;//没有输入则返回
             }
-            //创建新的列表
-            list_num += 1;
-            this.file_slide.Size = new Size(file_slide.Width, add_list_button.Size.Height * (list_num + 1));
-
+            
             //创建新的StudentList
             StudentList new_list = new StudentList();
             new_list.name = temp;
@@ -705,17 +650,28 @@ namespace TODO
                 new_list.list_id = 1;
             }
             manager.add("lists", new_list);
-            manager.update("lists");
+            //将新的list button展示出来
+            add_list_show();
+        }
+        /// <summary>
+        /// 列表：增加列表对应的可视化效果
+        /// </summary>
+        /// <returns></returns>
+        public void add_list_show()
+        {
+            //更新大小
+            list_num += 1;
+            this.file_slide.Size = new Size(file_slide.Width, add_list_button.Size.Height * (manager.lists.Count+1));
 
             Button button = new Button();
-            button.Name = "button" + manager.lists.Count.ToString();
+            button.Name = "button" + list_num.ToString();
             //文字
             button.Text = temp; temp = "";
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = this.add_class_button.Font;
             button.ForeColor = this.add_class_button.ForeColor;
             //位置和大小
-            button.Location = new Point(0, this.add_list_button.Location.Y);
+            button.Location = new Point(0, (list_num-1)* add_list_button.Size.Height);
             button.Size = this.add_list_button.Size;
             //背景
             button.BackColor = this.add_class_button.BackColor;
@@ -726,17 +682,11 @@ namespace TODO
             button.MouseEnter += new System.EventHandler(this.listbuttonEnter);
             //右键删除事件
             button.ContextMenuStrip = this.list_contextMenuStrip;
-            //ContextMenuStrip cms = new ContextMenuStrip();//创建菜单对象
-            //ToolStripMenuItem tsmi = new ToolStripMenuItem("删除");
-            //tsmi.Click += delete_list_Clickevent;//指定单击事件要执行额方法
-            //cms.Items.Add(tsmi);//将子菜单与主菜单绑定
-            //button.ContextMenuStrip = cms;//将主菜单与控件绑定
-
 
             this.file_slide.Controls.Add(button);
 
             //更新+号的位置
-            this.add_list_button.Location = new Point(0, add_list_button.Location.Y + add_list_button.Size.Height);
+            this.add_list_button.Location = new Point(0, this.file_slide.Height-add_list_button.Size.Height);
         }
         #endregion
 
@@ -839,9 +789,7 @@ namespace TODO
 
 //目前存在的明显问题
 //1.对于管理员，如何增加课程任务
-//2.班级权限的问题
-//3.数据不一致：删除list中的任务，“所有任务”按钮中还是会显示
-//4.课程任务从个人所有任务中删除的时候往往出现问题，断点处就是bug
+//2.选课有时候选不上，HTTP返回的结果会报错
 
 /// <summary>
 /// 列表：单击左侧表项触发的事件，在右边的显示栏展示列表中的task的内容

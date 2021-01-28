@@ -153,7 +153,7 @@ namespace TODO
             };
             return obj.ToString();
         }
-        public static string CreateJson(string type, string email,int user_id, string password, int task_id, DateTime creat_date, DateTime due_date, string content, double position_x=0, double position_y=0)
+        public static string CreateJson(string type, string email,int user_id, string password, int task_id, DateTime create_date, DateTime due_date, string content, double position_x=0, double position_y=0)
         {
             JObject obj = new JObject
             {
@@ -162,15 +162,15 @@ namespace TODO
                 { "user_id", user_id },
                 { "password", password },
                 { "task_id", task_id },
-                { "creat_date", creat_date.ToString() },
-                { "due_date", due_date.ToString() },
+                { "create_date", create_date.ToString("yyyyMMdd HH:mm:ss") },
+                { "due_date", due_date.ToString("yyyyMMdd HH:mm:ss") },
                 { "position_x", position_x },
                 { "position_y", position_y },
                 { "content", content }
             };
             return obj.ToString();
         }
-        public static string CreateJson(string type, string email,int user_id, string password, int list_id, string task_name, DateTime creat_date, DateTime due_date, string content, double position_x=0, double position_y=0)
+        public static string CreateJson(string type, string email,int user_id, string password, int list_id, string task_name, DateTime create_date, DateTime due_date, string content, double position_x=0, double position_y=0)
         {
             JObject obj = new JObject
             {
@@ -178,10 +178,10 @@ namespace TODO
                 { "email", email },
                 { "user_id", user_id },
                 { "password", password },
-                { "task_id", list_id },
+                { "list_id", list_id },
                 { "task_name", task_name },
-                { "creat_date", creat_date.ToString() },
-                { "due_date", due_date.ToString() },
+                { "create_date", create_date.ToString("yyyyMMdd HH:mm:ss") },
+                { "due_date", due_date.ToString("yyyyMMdd HH:mm:ss")},
                 { "position_x", position_x },
                 { "position_y", position_y },
                 { "content", content }

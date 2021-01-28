@@ -52,7 +52,7 @@ namespace TODO
             //对已有的课程进行可视化
             for(int i=0;i<manager.person_classes.Count;i++)
             {
-                int temp_index = manager.get_class_index(manager.person_classes[i]);
+                int temp_index = manager.get_all_class_index(manager.person_classes[i]);
                 if(temp_index>=0)
                 {
                     manager.all_classes[temp_index].isSelected = true;
@@ -172,7 +172,7 @@ namespace TODO
         private void show_class_tasks(object sender, EventArgs e)
         {
             //listview展示所有的课程任务
-            int temp_index = manager.get_class_index(manager.person_classes[choose_list_index2 - 1]);
+            int temp_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
             StudentClass cur_class = manager.all_classes[temp_index]; 
             refresh();//清空显示栏
             this.left_display_view.View = View.List;
@@ -459,7 +459,7 @@ namespace TODO
             int index = indexes[0];
             //清掉所有任务
             StudentClass cur_class = manager.all_classes[index];
-            bool temp=manager.delete("person_classes", cur_class);//此处要求删除的时候HTTP总是返回失败
+            bool temp=manager.delete("person_classes", cur_class);
 
             Button button1 = (Button)sender;
             button1.Text = "加入课程";
@@ -473,7 +473,7 @@ namespace TODO
             //放入其他组件
             for (int i = 0; i < manager.person_classes.Count; i++)
             {
-                int temp_index = manager.get_class_index(manager.person_classes[i]);
+                int temp_index = manager.get_all_class_index(manager.person_classes[i]);
                 if (temp_index >= 0)
                 {
                     add_class_show(temp_index);

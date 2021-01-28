@@ -42,12 +42,12 @@ namespace TODO
         private void button1_Click(object sender, EventArgs e)
         {
             //为了调试代码使用的临时代码，可以直接进入
-            Form1 form = new Form1();
-            UserData myuser = new UserData();
-            form.myuser = myuser;
-            this.Hide();
-            form.ShowDialog();
-            Application.ExitThread();
+            //Form1 form = new Form1();
+            //UserData myuser = new UserData();
+            //form.myuser = myuser;
+            //this.Hide();
+            //form.ShowDialog();
+            //Application.ExitThread();
             
             //正常使用的代码，可以利用上次登陆记录
             try
@@ -63,8 +63,10 @@ namespace TODO
                     {
                         //生成用户对象
                         UserData user = new UserData();
-                        user.user_id = obj.Value<int>("user_id");
+                        user.user_id = obj["data"].Value<int>("user_id");
                         user.password = textBox2.Text;
+                        user.email = obj["data"].Value<string>("email");
+                        user.name = obj["data"].Value<string>("name");
 
                         //保存记录到本地
                         using (StreamWriter sw = new StreamWriter(path))
@@ -74,8 +76,7 @@ namespace TODO
                         }
 
                         //点击登录
-                        Form1 form1 = new Form1();
-                        form1.myuser = user;
+                        Form1 form1 = new Form1(user);
                         this.Hide();
                         form1.ShowDialog();
                         Application.ExitThread();

@@ -73,7 +73,8 @@ namespace TODO
                                 new_class_task.is_finished = tasks[i].Value<bool>("is_finished");
                                 new_class_task.parent_id = item.class_id;
                             }
-                            person_classes.Add(item.class_id); 
+                            person_classes.Add(item.class_id);
+                            all_classes[index].isSelected = true;
                             return true;
                         }
                         else { return false; }
@@ -135,7 +136,7 @@ namespace TODO
             new_task.name = item.name;
             new_task.description = item.description;
             new_task.due_time = item.due_time;
-            //不使用
+            //事实上不会使用
             if(table_name== "all_class_tasks")
             {
                 Debug.Assert(false);
@@ -184,10 +185,6 @@ namespace TODO
                 {
                     return false;
                 }
-                /*int index = get_all_class_task_index(item.task_id);
-                if (index >= 0)
-                { person_class_tasks.Add(index); return true; }
-                else { return false; }*/
             }
             else if (table_name== "list_tasks")
             {
@@ -256,6 +253,7 @@ namespace TODO
                     if(receiver.Value<int>("success")==1)
                     {
                         index = get_class_index(item.class_id);
+                        all_classes[index].isSelected = false;
                         Debug.Assert(index>=0);
                         //删除课程所有作业
                         for (int i = 0; i < item.alltaskIDs.Count; i++)
@@ -461,9 +459,9 @@ namespace TODO
         public int get_class_index(int class_id)
         {
             //通过class_id找到在person_classes中的索引
-            for (int i = 0; i < person_classes.Count; i++)
+            for (int i = 0; i < all_classes.Count; i++)
             {
-                if (person_classes[i]== class_id)
+                if (all_classes[i].class_id== class_id)
                 {
                     return i;
                 }

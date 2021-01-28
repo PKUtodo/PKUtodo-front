@@ -516,7 +516,7 @@ namespace TODO
                     lists.Clear();
                     person_classes.Clear();
                     JArray classes = receiver["data"].Value<JArray>("class");
-                    for (int i = 0; i < all_classes.Count; i++)
+                    for (int i = 0; i < classes.Count; i++)
                     {
                         Debug.Assert(classes[i].Value<bool>("is_public") == true);
                         StudentClass new_class = new StudentClass();
@@ -524,7 +524,7 @@ namespace TODO
                         new_class.name = classes[i].Value<string>("list_name");
                         //new_class.description = classes[i].Value<string>("content");
                         new_class.admin_id = classes[i].Value<int>("admin_id");
-
+                        all_classes.Add(new_class);
 
                     }
                     JArray new_lists = receiver["data"].Value<JArray>("list");
@@ -541,6 +541,7 @@ namespace TODO
                             StudentList new_list = new StudentList();
                             new_list.list_id = new_lists[i].Value<int>("list_id");
                             new_list.name = new_lists[i].Value<string>("list_name");
+                            lists.Add(new_list);
                         }
                     }
                     JArray tasks = receiver["data"].Value<JArray>("task");

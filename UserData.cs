@@ -17,6 +17,7 @@ namespace TODO
         public string password;
         public string veri_code;
         public string email;
+        public string name;
 
         //表示是哪些课程的管理员，这个值等于课程号，列表为空表示不是管理员
         public List<int> administrator_list = new List<int>();

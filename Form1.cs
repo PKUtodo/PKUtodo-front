@@ -25,8 +25,11 @@ namespace TODO
 
         public DataManager manager = new DataManager();//全局唯一数据库对象
 
-        public Form1()
+
+        public Form1(UserData user)
         {
+            manager.myuser_ = user;
+            myuser = user;
             InitializeComponent();
             //预处理，导入初始数据
             preprocessing();
@@ -37,6 +40,7 @@ namespace TODO
         /// <returns></returns>
         private void preprocessing()
         {
+
             manager.update_all();
             //第一步：导入所有课程数据
             //for (int i = 0; i < 10; i++)

@@ -115,10 +115,12 @@ namespace TODO
                         {
                             //生成用户对象
                             UserData myuser = new UserData();
-                            myuser.user_id = obj.Value<int>("user_id");
+                            myuser.email = obj["data"].Value<string>("email");
+                            myuser.name = obj["data"].Value<string>("name");
+                            myuser.user_id = obj["data"].Value<int>("user_id");
                             myuser.password = textBox5.Text;
                             //点击登录
-                            Form1 form1 = new Form1();
+                            Form1 form1 = new Form1(myuser);
                             this.Hide();
                             form1.ShowDialog();
                             Application.ExitThread();

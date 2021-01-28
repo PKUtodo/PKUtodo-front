@@ -34,7 +34,6 @@ namespace TODO
         //加入课程
         public bool add(string table_name,StudentClass item)
         {
-
             StudentClass new_class = new StudentClass();
             new_class.class_id = item.class_id;
             new_class.name = item.name;
@@ -44,7 +43,7 @@ namespace TODO
             new_class.alltaskIDs = item.alltaskIDs;
             if (table_name == "all_classes")
             {
-                all_classes.Add(new_class); 
+                //这段代码不会用到，仅仅为了扩展
                 return true;
             }
 

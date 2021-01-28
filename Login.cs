@@ -41,14 +41,6 @@ namespace TODO
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //为了调试代码使用的临时代码，可以直接进入
-            //Form1 form = new Form1();
-            //UserData myuser = new UserData();
-            //form.myuser = myuser;
-            //this.Hide();
-            //form.ShowDialog();
-            //Application.ExitThread();
-            
             //正常使用的代码，可以利用上次登陆记录
             try
             {

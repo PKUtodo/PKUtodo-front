@@ -75,7 +75,7 @@ namespace TODO
         private void button1_Click(object sender, EventArgs e)
         {
             //检查是否是北大邮箱
-            if (!textBox1.Text.EndsWith(".pku.edu.cn"))
+            if (!textBox1.Text.EndsWith("@pku.edu.cn"))
             { 
                 MessageBox.Show("请使用北大邮箱注册！");
                 return;

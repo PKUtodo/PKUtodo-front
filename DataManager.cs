@@ -49,7 +49,7 @@ namespace TODO
 
             else if(table_name == "person_classes")
             {
-                int index = get_class_index(item.class_id);
+                int index = get_all_class_index(item.class_id);
                 if (index >= 0) {
                     string req=JSONHelper.CreateJson("join", myuser_.email,myuser_.user_id,myuser_.password,item.class_id);
                     try
@@ -72,6 +72,7 @@ namespace TODO
                                 new_class_task.description= tasks[i].Value<string>("content");
                                 new_class_task.is_finished = tasks[i].Value<bool>("is_finished");
                                 new_class_task.parent_id = item.class_id;
+                                class_tasks.Add(new_class_task);
                             }
                             person_classes.Add(item.class_id);
                             all_classes[index].isSelected = true;
@@ -175,7 +176,7 @@ namespace TODO
                         //将task加入task列表中
                         class_tasks.Add(item);
                         //将task注册到class中
-                        int class_index=get_class_index(item.parent_id);
+                        int class_index=get_all_class_index(item.parent_id);
                         all_classes[class_index].alltaskIDs.Add(item.task_id);
                         return true;
                     }
@@ -227,7 +228,7 @@ namespace TODO
             if (table_name=="all_classes")
             {
                 Debug.Assert(false);
-                index = get_class_index(item.class_id);
+                index = get_person_class_index(item.class_id);
                 if (index >= 0)
                 {
                     Debug.Assert(false);
@@ -252,16 +253,19 @@ namespace TODO
                     receiver=HTTP.HttpPost(req);
                     if(receiver.Value<int>("success")==1)
                     {
-                        index = get_class_index(item.class_id);
-                        all_classes[index].isSelected = false;
+                        int all_class_index = get_all_class_index(item.class_id);
+                        index=get_person_class_index(item.class_id);
+                        all_classes[all_class_index].isSelected = false;
                         Debug.Assert(index>=0);
                         //删除课程所有作业
                         for (int i = 0; i < item.alltaskIDs.Count; i++)
                         {
                             int temp_index = get_class_task_index(item.alltaskIDs[i]);
                             class_tasks.RemoveAt(temp_index);
+                            item.alltaskIDs.RemoveAt(i);
                         }
                         person_classes.RemoveAt(index);
+                        
                         return true;
                         
                     }
@@ -281,7 +285,7 @@ namespace TODO
             int index = 0;
             if (table_name == "lists")
             {
-                string req = JSONHelper.CreateJsonDelList("quit_class", myuser_.email, myuser_.user_id, myuser_.password, item.list_id);
+                string req = JSONHelper.CreateJsonDelList("del_list", myuser_.email, myuser_.user_id, myuser_.password, item.list_id);
                 try
                 {
                     receiver = HTTP.HttpPost(req);
@@ -339,7 +343,7 @@ namespace TODO
                     receiver = HTTP.HttpPost(req);
                     if (receiver.Value<int>("success") == 1)
                     {
-                        index = get_class_index(item.parent_id);
+                        index = get_all_class_index(item.parent_id);
                         Debug.Assert(index >= 0);
                         //删除StudentClass中task记录
                         for(int i=0;i<all_classes[index].alltaskIDs.Count;i++)
@@ -456,7 +460,7 @@ namespace TODO
             //如果没有找到，返回list_id
             return -1;
         }
-        public int get_class_index(int class_id)
+        public int get_all_class_index(int class_id)
         {
             //通过class_id找到在person_classes中的索引
             for (int i = 0; i < all_classes.Count; i++)
@@ -480,6 +484,19 @@ namespace TODO
                 }
             }
             //如果没有找到，task_id
+            return -1;
+        }
+        public int get_person_class_index(int class_id)
+        {
+            //通过class_id找到在person_classes中的索引
+            for (int i = 0; i < person_classes.Count; i++)
+            {
+                if (person_classes[i] == class_id)
+                {
+                    return i;
+                }
+            }
+            //如果没有找到，返回class_id
             return -1;
         }
         public int correct_class_index(int class_id)
@@ -562,6 +579,7 @@ namespace TODO
                             {
                                 Debug.Assert(find == false);
                                 all_classes[j].alltaskIDs.Add(new_task.task_id);
+                                class_tasks.Add(new_task);
                                 find = true;
                                 break;
                             }
@@ -572,10 +590,11 @@ namespace TODO
                             {
                                 Debug.Assert(find == false);
                                 lists[j].taskIDs.Add(new_task.task_id);
+                                list_tasks.Add(new_task);
                                 break;
                             }
                         }
-                        Debug.Assert(find == false);
+                        Debug.Assert(find == true);
                     }
                     return true;
                 }

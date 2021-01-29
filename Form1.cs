@@ -441,6 +441,7 @@ namespace TODO
         /// <returns></returns>
         private void show_task_info(object sender, EventArgs e)
         {
+            right_display_panel.Controls.Clear();
             //展示任务信息
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             //划分线1

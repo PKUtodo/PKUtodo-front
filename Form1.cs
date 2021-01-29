@@ -294,6 +294,33 @@ namespace TODO
 
                 }
             }
+
+            //左边显示栏是“管理员的课程”
+            else if (left_content == "admin")
+            {
+                //选中list_view当中的行变化
+                try
+                {
+                    ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+                    if (indexes.Count > 0)
+                    {
+                        int index = indexes[0];
+                        string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+                        //点击进入管理员界面
+                        AdministratorForm admin_form = new AdministratorForm(index);
+                        admin_form.user = myuser;//传递管理员信息
+                        this.Hide();
+                        admin_form.ShowDialog();
+                        this.Show();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("操作失败！\n" + ex.Message, "提示", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+
+                }
+            }
         }
         #endregion
 
@@ -454,6 +481,7 @@ namespace TODO
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             manager.add("person_classes", manager.all_classes[index]);//加入课程
+
             Button temp_button = (Button)sender;
             temp_button.Text = "删除课程";
             temp_button.Enabled = false;//不能再点
@@ -465,6 +493,21 @@ namespace TODO
             //删除已有的课程
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
+            //判断是否可以删除，如果是课程管理员，不能删除
+            if(manager.all_classes[index].admin_id==this.myuser.user_id)
+            {
+                //产生弹窗
+                try
+                {
+                    MessageBox.Show("管理员不能删除本课程！");
+                }
+                catch (Exception msg) //异常处理
+                {
+                    MessageBox.Show(msg.Message);
+                }
+                return;
+            }
+
             //清掉所有任务
             StudentClass cur_class = manager.all_classes[index];
             bool temp=manager.delete("person_classes", cur_class);
@@ -785,16 +828,32 @@ namespace TODO
         /// <returns></returns>
         private void admin_button_Click(object sender, EventArgs e)
         {
-            //点击进入管理员界面
-            if(myuser.administrator_list.Count!=0)
+            //显示所有任务
+            refresh();//清空显示栏
+            this.left_display_view.View = View.List;
+
+            this.left_display_view.SmallImageList = this.color_imageList;
+            this.color_imageList.ImageSize = new Size(10, 30); // 这实际上是图片的占位，可能导致图片无法显示
+            this.left_display_view.BeginUpdate();
+            
+            //显示管理的课程
+            for (int i = 0; i < myuser.administrator_list.Count; i++)
             {
-                AdministratorForm admin_form = new AdministratorForm();
-                admin_form.user = myuser;//传递管理员信息
-                this.Hide();
-                admin_form.ShowDialog();
-                //Application.ExitThread();
-                this.Show();
+                ListViewItem lvi = new ListViewItem();
+                lvi.ImageIndex = manager.list_tasks.Count + i;
+                int temp_index = manager.get_all_class_index(myuser.administrator_list[i]);
+                if (temp_index >= 0)
+                {
+                    lvi.Text = manager.all_classes[temp_index].name;//对应文字
+                }
+                else { lvi.Text = "没有这门课"; }
+                lvi.ImageIndex = 0;
+                this.left_display_view.Items.Add(lvi);
             }
+
+            this.left_display_view.EndUpdate();
+            //更改显示内容
+            this.left_content = "admin";
         }
         #endregion
 
@@ -814,7 +873,7 @@ namespace TODO
 
 //目前存在的明显问题
 //1.对于管理员，如何增加课程任务
-//2.选课有时候选不上，HTTP返回的结果会报错
+//2.初始化数据的时候要读取管理员ID
 
 /// <summary>
 /// 列表：单击左侧表项触发的事件，在右边的显示栏展示列表中的task的内容

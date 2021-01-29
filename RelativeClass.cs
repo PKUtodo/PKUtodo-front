@@ -33,7 +33,7 @@ namespace TODO
         public string teacher_name;
         public int score;//学分
         public string description;
-        public int admin_id;//管理员id
+        public int admin_id=-1;//管理员id（为-1表示没有管理员，第一个加入的就是管理员），这里假设只有一个管理员，所以这里有点偏颇
         public List<int> alltaskIDs = new List<int>();//包含的任务索引
         public bool isSelected = false;//是否被选课
     }

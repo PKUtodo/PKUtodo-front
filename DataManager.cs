@@ -41,6 +41,7 @@ namespace TODO
             new_class.score = item.score;
             new_class.description = item.description;
             new_class.alltaskIDs = item.alltaskIDs;
+            new_class.admin_id = item.admin_id;
             if (table_name == "all_classes")
             {
                 //这段代码不会用到，仅仅为了扩展
@@ -76,6 +77,11 @@ namespace TODO
                             }
                             person_classes.Add(item.class_id);
                             all_classes[index].isSelected = true;
+                            //判断是否需要更新管理员信息
+                            if (all_classes[index].admin_id == -1) {
+                                all_classes[index].admin_id = myuser_.user_id;
+                                myuser_.administrator_list.Add(all_classes[index].class_id);
+                            }
                             return true;
                         }
                         else { return false; }

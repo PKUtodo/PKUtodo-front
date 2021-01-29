@@ -14,10 +14,9 @@ namespace TODO
     {
         public UserData user;//当前用户
 
-        public AdministratorForm()
+        public AdministratorForm(int index)//index表示在对应用户管理的课程中的顺序
         {
             InitializeComponent();
         }
-
     }
 }

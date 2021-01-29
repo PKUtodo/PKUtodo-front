@@ -18,6 +18,8 @@ namespace TODO
 
         public string temp="";//list创建的时候公用的字符串对象
         public string temp_task_str="";//任务创建的时候传输的公共字符串
+        public string temp_admin_str = "";//传递转移管理员权限传输的公共字符串
+
         public string left_content;//左边显示栏显示的内容，有class，task两种
         public int list_num = 0;//展示到了第几个list button
         public int class_num = 0;//展示到了第几个class button
@@ -282,7 +284,6 @@ namespace TODO
                     {
                         int index = indexes[0];
                         string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
-                                                                                              //string sPartName = this.left_display_view.Items[index].SubItems[1].Text;//获取第二列的值
 
                         //右侧生成对应任务的内容
                         show_task_info(sender, e);
@@ -294,6 +295,38 @@ namespace TODO
                         MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
 
                 }
+            }
+
+            //左边显示栏是“管理员的课程”
+            else if (left_content == "admin")
+            {
+                //选中list_view当中的行变化
+                //try
+                //{
+                //    ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+                //    if (indexes.Count > 0)
+                //    {
+                //        int index = indexes[0];
+                //        string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+                //        //点击进入管理员界面
+                //        AdministratorForm admin_form = new AdministratorForm(index);
+                //        //@warning:其实传递的数据大多是不需要用的，如果可以通过一个公有池集成这些数据集最好
+                //        admin_form.user = myuser;//传递管理员信息
+                //        admin_form.manager = manager;//传递数据
+                //        this.Hide();
+                //        admin_form.ShowDialog();
+                        
+                //        this.Show();
+                //        //更新所有信息(@warning：也许只要更改class_tasks，这里应该可以优化)
+                //        this.manager.update_all();
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show("操作失败！\n" + ex.Message, "提示", MessageBoxButtons.OK,
+                //        MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+
+                //}
             }
         }
         #endregion
@@ -392,8 +425,9 @@ namespace TODO
             //@warning:需要更改内容
             Label label2 = new Label();
             label2.Name = "label2";
-            label2.Text = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
-            label2.Text += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+            //label2.Text = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
+            //label2.Text += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+            label2.Text = manager.all_classes[index].description;
             label2.TextAlign = ContentAlignment.TopLeft;
             label2.Font = new Font("微软雅黑", 11);
             label2.Location = new Point(0, 95);
@@ -424,12 +458,20 @@ namespace TODO
 
             //划分线2
             this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 80, this.right_display_panel.Width, 80);
+            
+            //确定选中的task
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
+            int index = indexes[0];//对应该list中的索引
+            StudentList cur_list = manager.lists[choose_list_index - 1];
+            int temp_index=manager.get_list_task_index(cur_list.taskIDs[index]);//list_tasks中的索引
 
             //任务介绍：label2
             Label label2 = new Label();
             label2.Name = "label2";
-            label2.Text = "任务介绍：\r\n\r\n任务开始时间：2020.11.25\r\n\r\n任务到期时间：2021.01.24\r\n\r\n任务描述：软件工程大作业是一个非常有挑战的工作，";
-            label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
+            //label2.Text = "任务介绍：\r\n\r\n任务开始时间：2020.11.25\r\n\r\n任务到期时间：2021.01.24\r\n\r\n任务描述：软件工程大作业是一个非常有挑战的工作，";
+            //label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
+            if (temp_index < 0) { label2.Text = "任务出错"; }
+            else { label2.Text = manager.list_tasks[temp_index].description; }
             label2.TextAlign = ContentAlignment.TopLeft;
             label2.Font = new Font("微软雅黑", 11);
             label2.Location = new Point(0, 85);
@@ -446,6 +488,7 @@ namespace TODO
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
             manager.add("person_classes", manager.all_classes[index]);//加入课程
+
             Button temp_button = (Button)sender;
             temp_button.Text = "删除课程";
             temp_button.Enabled = false;//不能再点
@@ -457,6 +500,21 @@ namespace TODO
             //删除已有的课程
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
+            //判断是否可以删除，如果是课程管理员，不能删除
+            if(manager.all_classes[index].admin_id==this.myuser.user_id)
+            {
+                //产生弹窗
+                try
+                {
+                    MessageBox.Show("管理员不能删除本课程！");
+                }
+                catch (Exception msg) //异常处理
+                {
+                    MessageBox.Show(msg.Message);
+                }
+                return;
+            }
+
             //清掉所有任务
             StudentClass cur_class = manager.all_classes[index];
             bool temp=manager.delete("person_classes", cur_class);
@@ -687,6 +745,18 @@ namespace TODO
         #endregion
 
         #region 辅助函数
+
+        /// <summary>
+        /// 用户：点击注销，回到登陆界面
+        /// </summary>
+        /// <returns></returns>
+        private void logout_button_Click(object sender, EventArgs e)
+        {
+            Login login = new Login();
+            this.Hide();
+            login.ShowDialog();
+            Application.ExitThread();
+        }
         //将字符串转化为Datetime
         public DateTime str2date(string str)
         {
@@ -721,11 +791,16 @@ namespace TODO
         }
         public void AfterTxtChange2(object sender, EventArgs e)
         {
-            //拿到addlist传来的文本，强转数据类型
+            //拿到addtask传来的文本，强转数据类型
             TextBoxMsgChangeEventArg arg = e as TextBoxMsgChangeEventArg;
             this.temp_task_str = arg.Text;//交给公共变量
         }
-
+        public void AfterTxtChange3(object sender, EventArgs e)
+        {
+            //拿到transferform传来的文本，强转数据类型
+            TextBoxMsgChangeEventArg arg = e as TextBoxMsgChangeEventArg;
+            this.temp_admin_str = arg.Text;//交给公共变量
+        }
         public void listbuttonEnter(object sender, EventArgs e)
         {
             //为了确定选中的是谁
@@ -759,13 +834,14 @@ namespace TODO
         {
             //禁止多选
             this.left_display_view.MultiSelect = false;
-            //鼠标右键
-            if (e.Button == MouseButtons.Right)
+            //鼠标右键,使用菜单，发布作业或者转让管理权
+            if ((e.Button == MouseButtons.Right)&&(this.left_content=="admin"))
             {
                 //选中列表中数据才显示 空白处不显示
+                int index = this.left_display_view.SelectedIndices[0];//选中的编号
                 String itemName = this.left_display_view.SelectedItems[0].Text; //获取选中课程名
                 Point p = new Point(e.X, e.Y);
-                contextMenuStrip1.Show(this.left_display_view, p);
+                this.contextMenuStrip3.Show(this.left_display_view, p);
             }
         }
         #endregion
@@ -777,36 +853,99 @@ namespace TODO
         /// <returns></returns>
         private void admin_button_Click(object sender, EventArgs e)
         {
-            //点击进入管理员界面
-            if(myuser.administrator_list.Count!=0)
+            //显示所有任务
+            refresh();//清空显示栏
+            this.left_display_view.View = View.List;
+
+            this.left_display_view.SmallImageList = this.color_imageList;
+            this.color_imageList.ImageSize = new Size(10, 30); // 这实际上是图片的占位，可能导致图片无法显示
+            this.left_display_view.BeginUpdate();
+            
+            //显示管理的课程
+            for (int i = 0; i < myuser.administrator_list.Count; i++)
             {
-                AdministratorForm admin_form = new AdministratorForm();
-                admin_form.user = myuser;//传递管理员信息
-                this.Hide();
-                admin_form.ShowDialog();
-                //Application.ExitThread();
-                this.Show();
+                ListViewItem lvi = new ListViewItem();
+                lvi.ImageIndex = manager.list_tasks.Count + i;
+                int temp_index = manager.get_all_class_index(myuser.administrator_list[i]);
+                if (temp_index >= 0)
+                {
+                    lvi.Text = manager.all_classes[temp_index].name;//对应文字
+                }
+                else { lvi.Text = "没有这门课"; }
+                lvi.ImageIndex = 0;
+                this.left_display_view.Items.Add(lvi);
             }
+
+            this.left_display_view.EndUpdate();
+            //更改显示内容
+            this.left_content = "admin";
+        }
+        /// <summary>
+        /// 管理员：右键管理课程，进入发布作业的界面
+        /// </summary>
+        /// <returns></returns>
+        private void SendTaskToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //右键管理课程，进入发布作业的界面
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+            int index = indexes[0];
+            string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+
+            AddTask addtask = new AddTask();
+            addtask.AfterMsgChange += this.AfterTxtChange2;
+            addtask.ShowDialog();
+
+            if (temp_task_str.Length == 0)
+            {
+                return;//没有输入则返回
+            }
+            //创建新的task
+            string[] temp_str = temp_task_str.Split('*'); temp_task_str = "";
+            Task new_task = new Task();
+            new_task.name = temp_str[0];
+            new_task.start_time = DateTime.Now;
+            new_task.due_time = str2date(temp_str[1]);
+
+            new_task.description = temp_str[2];
+            new_task.parent_id = myuser.administrator_list[index];
+            manager.add("person_class_tasks", new_task);
+        }
+        /// <summary>
+        /// 管理员：右键“转让管理员权限”
+        /// </summary>
+        /// <returns></returns>
+        private void TransferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //右键“转让管理员权限”
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+            int index = indexes[0];
+            string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+            //获取所有选课用户
+            List<UserData> users = manager.get_class_user(myuser.administrator_list[index]);
+            TransferForm transfer = new TransferForm();
+            transfer.users = users;
+            transfer.myid = myuser.user_id;
+            transfer.AfterMsgChange += this.AfterTxtChange3;
+            transfer.ShowDialog();
+
+            if (temp_admin_str.Length == 0)
+            {
+                return;//没有输入则返回
+            }
+            int user_index = Convert.ToInt32(temp_admin_str);//选择的用户索引
+            temp_admin_str = "";
+
+            manager.tranfer_admin(myuser.user_id, users[user_index].user_id, myuser.administrator_list[index]);
         }
         #endregion
 
-        /// <summary>
-        /// 用户：点击注销，回到登陆界面
-        /// </summary>
-        /// <returns></returns>
-        private void logout_button_Click(object sender, EventArgs e)
-        {
-            Login login = new Login();
-            this.Hide();
-            login.ShowDialog();
-            Application.ExitThread();
-        }
+
     }
 }
 
 //目前存在的明显问题
 //1.对于管理员，如何增加课程任务
-//2.选课有时候选不上，HTTP返回的结果会报错
+//2.初始化数据的时候要读取管理员ID
 
 /// <summary>
 /// 列表：单击左侧表项触发的事件，在右边的显示栏展示列表中的task的内容

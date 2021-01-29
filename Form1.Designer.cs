@@ -66,12 +66,16 @@
             this.list_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.list_delete_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.add_task_menu = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.SendTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TransferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.left_panel.SuspendLayout();
             this.menu_panel.SuspendLayout();
             this.file_slide.SuspendLayout();
             this.class_slide.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.list_contextMenuStrip.SuspendLayout();
+            this.contextMenuStrip3.SuspendLayout();
             this.SuspendLayout();
             // 
             // left_panel
@@ -448,7 +452,7 @@
             // 
             this.left_display_view.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.left_display_view.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.left_display_view.ContextMenuStrip = this.contextMenuStrip1;
+            this.left_display_view.ContextMenuStrip = this.contextMenuStrip3;
             this.left_display_view.Font = new System.Drawing.Font("微软雅黑", 11F);
             this.left_display_view.HideSelection = false;
             this.left_display_view.Location = new System.Drawing.Point(266, 78);
@@ -517,6 +521,29 @@
             this.add_task_menu.Text = "添加任务";
             this.add_task_menu.Click += new System.EventHandler(this.add_task_menu_Click);
             // 
+            // contextMenuStrip3
+            // 
+            this.contextMenuStrip3.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SendTaskToolStripMenuItem,
+            this.TransferToolStripMenuItem});
+            this.contextMenuStrip3.Name = "contextMenuStrip3";
+            this.contextMenuStrip3.Size = new System.Drawing.Size(184, 52);
+            // 
+            // SendTaskToolStripMenuItem
+            // 
+            this.SendTaskToolStripMenuItem.Name = "SendTaskToolStripMenuItem";
+            this.SendTaskToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.SendTaskToolStripMenuItem.Text = "发布作业";
+            this.SendTaskToolStripMenuItem.Click += new System.EventHandler(this.SendTaskToolStripMenuItem_Click);
+            // 
+            // TransferToolStripMenuItem
+            // 
+            this.TransferToolStripMenuItem.Name = "TransferToolStripMenuItem";
+            this.TransferToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.TransferToolStripMenuItem.Text = "转让管理员身份";
+            this.TransferToolStripMenuItem.Click += new System.EventHandler(this.TransferToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -546,6 +573,7 @@
             this.class_slide.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.list_contextMenuStrip.ResumeLayout(false);
+            this.contextMenuStrip3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -591,6 +619,9 @@
         private System.Windows.Forms.ContextMenuStrip list_contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem list_delete_menu;
         private System.Windows.Forms.ToolStripMenuItem add_task_menu;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip3;
+        private System.Windows.Forms.ToolStripMenuItem SendTaskToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem TransferToolStripMenuItem;
     }
 }
 

@@ -61,11 +61,11 @@
     <Compile Include="AddTask.Designer.cs">
       <DependentUpon>AddTask.cs</DependentUpon>
     </Compile>
-    <Compile Include="AdministratorForm.cs">
+    <Compile Include="TransferForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AdministratorForm.Designer.cs">
-      <DependentUpon>AdministratorForm.cs</DependentUpon>
+    <Compile Include="TransferForm.Designer.cs">
+      <DependentUpon>TransferForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataManager.cs" />
     <Compile Include="Form1.cs">
@@ -96,8 +96,8 @@
     <EmbeddedResource Include="AddTask.resx">
       <DependentUpon>AddTask.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AdministratorForm.resx">
-      <DependentUpon>AdministratorForm.cs</DependentUpon>
+    <EmbeddedResource Include="TransferForm.resx">
+      <DependentUpon>TransferForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

@@ -143,7 +143,7 @@ namespace TODO
             new_task.name = item.name;
             new_task.description = item.description;
             new_task.due_time = item.due_time;
-            //事实上不会使用
+            //管理员会使用
             if(table_name== "all_class_tasks")
             {
                 Debug.Assert(false);
@@ -422,11 +422,9 @@ namespace TODO
         }
         #endregion
 
-        #region 修改
-        //暂时先不动
-        #endregion
 
         #region 查询
+        
         public int get_list_task_index(int task_id)
         {
             //通过task_id找到在list_task中的索引
@@ -632,17 +630,19 @@ namespace TODO
                 return false;
             }
         }
-        public bool update(string table_name)
-        {
-            /*更新某个表*/
-            //如果更新的是lists，同时要更新list_tasks
-            //如果更新的是person_classes,同时要更新class_tasks
-            //如果更新list_tasks，lists也要更新（因为taskID会变）
-            //如果更新class_tasks，也要更新person_classes和all_classes
-            return false;
 
-        }
         #endregion
+
+        //新增的函数
+        public List<UserData> get_class_user(int class_id)
+        {
+            //获取所有选择某一门课的人,第一个应该是管理员
+        }
+
+        public bool tranfer_admin(int from_user_id,int to_user_id,int class_id)
+        {
+            //将管理员权限从from_user_id转移到to_user_id的手中
+        }
     }
 }
 

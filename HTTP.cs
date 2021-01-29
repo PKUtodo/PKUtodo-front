@@ -40,6 +40,8 @@ namespace TODO
                 js = js.Replace("\n", string.Empty);
                 js = js.Replace(" ", string.Empty);
                 js = js.Replace("\"", string.Empty);
+                js = js.Replace("~", " ");
+                js = js.Replace("!", ":");
                 js.Trim();
 
                 // request.ContentType = "application/json;charset:utf-8";

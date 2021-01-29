@@ -162,8 +162,8 @@ namespace TODO
                 { "user_id", user_id },
                 { "password", password },
                 { "task_id", task_id },
-                { "create_date", create_date.ToString("yyyyMMdd HH:mm:ss") },
-                { "due_date", due_date.ToString("yyyyMMdd HH:mm:ss") },
+                { "create_date", create_date.ToString("yyyy-MM-dd~HH!mm!ss") },
+                { "due_date", due_date.ToString("yyyy-MM-dd~HH!mm!ss") },
                 { "position_x", position_x },
                 { "position_y", position_y },
                 { "content", content }
@@ -180,8 +180,8 @@ namespace TODO
                 { "password", password },
                 { "list_id", list_id },
                 { "task_name", task_name },
-                { "create_date", create_date.ToString("yyyyMMdd HH:mm:ss") },
-                { "due_date", due_date.ToString("yyyyMMdd HH:mm:ss")},
+                { "create_date", create_date.ToString("yyyy-MM-dd~HH!mm!ss") },
+                { "due_date", due_date.ToString("yyyy-MM-dd~HH!mm!ss")},
                 { "position_x", position_x },
                 { "position_y", position_y },
                 { "content", content }

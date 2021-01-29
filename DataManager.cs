@@ -117,7 +117,7 @@ namespace TODO
                     receiver=HTTP.HttpPost(req);
                     if(receiver.Value<int>("success")==1)
                     {
-                        item.list_id=receiver.Value<int>("list_id");
+                        item.list_id=receiver["data"].Value<int>("list_id");
                         lists.Add(item); return true;
                     }
                     else {return false;}
@@ -154,7 +154,7 @@ namespace TODO
                     receiver=HTTP.HttpPost(req);
                     if(receiver.Value<int>("success")==1)
                     {
-                        item.task_id=receiver.Value<int>("task_id");
+                        item.task_id= receiver["data"].Value<int>("task_id"); ;
                         //all_class_tasks.Add(item);
                         return true;
                     }
@@ -178,7 +178,7 @@ namespace TODO
                     receiver=HTTP.HttpPost(req);
                     if(receiver.Value<int>("success")==1)
                     {
-                        item.task_id=receiver.Value<int>("task_id");
+                        item.task_id= receiver["data"].Value<int>("task_id");
                         //将task加入task列表中
                         class_tasks.Add(item);
                         //将task注册到class中
@@ -202,7 +202,7 @@ namespace TODO
                     receiver=HTTP.HttpPost(req);
                     if(receiver.Value<int>("success")==1)
                     {
-                        item.task_id=receiver.Value<int>("task_id");
+                        item.task_id=receiver["data"].Value<int>("task_id");
                         //将task加入task列表中
                         class_tasks.Add(item);
                         //将task注册到class中
@@ -572,8 +572,25 @@ namespace TODO
                         new_task.name = tasks[i].Value<string>("task_name");
                         new_task.start_time = tasks[i].Value<DateTime>("create_date");
                         new_task.due_time = tasks[i].Value<DateTime>("due_date");
-                        new_task.position_x = tasks[i].Value<double>("position_x");
-                        new_task.position_x = tasks[i].Value<double>("position_y");
+                        //new_task.position_x = tasks[i]["position_x"]==null?0:tasks[i].Value<double>("position_x");
+                        JToken test = tasks[i]["position_x"];
+                        if (test.HasValues==false)
+                        {
+                            new_task.position_x = 0;
+                        }
+                        else
+                        {
+                            new_task.position_x = tasks[i].Value<double>("position_x");
+                        }
+                        test= tasks[i]["position_y"];
+                        if (test.HasValues == false)
+                        {
+                            new_task.position_y = 0;
+                        }
+                        else
+                        {
+                            new_task.position_y = tasks[i].Value<double>("position_y");
+                        }
                         new_task.description = tasks[i].Value<string>("content");
                         new_task.is_finished = tasks[i].Value<bool>("is_finished");
                         new_task.parent_id = tasks[i].Value<int>("list_id");
@@ -597,6 +614,7 @@ namespace TODO
                                 Debug.Assert(find == false);
                                 lists[j].taskIDs.Add(new_task.task_id);
                                 list_tasks.Add(new_task);
+                                find = true;
                                 break;
                             }
                         }

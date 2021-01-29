@@ -573,12 +573,8 @@ namespace TODO
             Task new_task = new Task();
             new_task.name = temp_str[0];
             new_task.start_time = DateTime.Now;
-            DateTime temp_time;
-            //DateTime.TryParse(temp_str[1], out temp_time);//这对时间字符串有要求
-            //new_task.due_time = temp_time;
+            new_task.due_time = str2date(temp_str[1]);
 
-            //@warning: 到达时间需要改正
-            new_task.due_time = DateTime.Now;
             new_task.description = temp_str[2];
             new_task.parent_id = manager.lists[choose_list_index - 1].list_id;
 
@@ -691,6 +687,27 @@ namespace TODO
         #endregion
 
         #region 辅助函数
+        //将字符串转化为Datetime
+        public DateTime str2date(string str)
+        {
+            string[] temp = str.Split('.');
+            //@warning:此处可以增加检查代码，否则有漏洞
+            string dateString = temp[0] + temp[1];
+            if (temp[1].Length == 1)
+            {
+                dateString = temp[0] + "0" + temp[1];
+            }
+            if(temp[2].Length == 1)
+            {
+                dateString += "0"+temp[2];
+            }
+            else
+            {
+                dateString += temp[2];
+            }
+            DateTime dt = DateTime.ParseExact(dateString, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+            return dt;
+        }
         //退出按钮
         private void Exit_Button_MouseClick(object sender, MouseEventArgs e)
         {

@@ -18,6 +18,8 @@ namespace TODO
 
         public string temp="";//list创建的时候公用的字符串对象
         public string temp_task_str="";//任务创建的时候传输的公共字符串
+        public string temp_admin_str = "";//传递转移管理员权限传输的公共字符串
+
         public string left_content;//左边显示栏显示的内容，有class，task两种
         public int list_num = 0;//展示到了第几个list button
         public int class_num = 0;//展示到了第几个class button
@@ -299,27 +301,32 @@ namespace TODO
             else if (left_content == "admin")
             {
                 //选中list_view当中的行变化
-                try
-                {
-                    ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
-                    if (indexes.Count > 0)
-                    {
-                        int index = indexes[0];
-                        string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
-                        //点击进入管理员界面
-                        AdministratorForm admin_form = new AdministratorForm(index);
-                        admin_form.user = myuser;//传递管理员信息
-                        this.Hide();
-                        admin_form.ShowDialog();
-                        this.Show();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("操作失败！\n" + ex.Message, "提示", MessageBoxButtons.OK,
-                        MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                //try
+                //{
+                //    ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+                //    if (indexes.Count > 0)
+                //    {
+                //        int index = indexes[0];
+                //        string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+                //        //点击进入管理员界面
+                //        AdministratorForm admin_form = new AdministratorForm(index);
+                //        //@warning:其实传递的数据大多是不需要用的，如果可以通过一个公有池集成这些数据集最好
+                //        admin_form.user = myuser;//传递管理员信息
+                //        admin_form.manager = manager;//传递数据
+                //        this.Hide();
+                //        admin_form.ShowDialog();
+                        
+                //        this.Show();
+                //        //更新所有信息(@warning：也许只要更改class_tasks，这里应该可以优化)
+                //        this.manager.update_all();
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show("操作失败！\n" + ex.Message, "提示", MessageBoxButtons.OK,
+                //        MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
 
-                }
+                //}
             }
         }
         #endregion
@@ -738,6 +745,18 @@ namespace TODO
         #endregion
 
         #region 辅助函数
+
+        /// <summary>
+        /// 用户：点击注销，回到登陆界面
+        /// </summary>
+        /// <returns></returns>
+        private void logout_button_Click(object sender, EventArgs e)
+        {
+            Login login = new Login();
+            this.Hide();
+            login.ShowDialog();
+            Application.ExitThread();
+        }
         //将字符串转化为Datetime
         public DateTime str2date(string str)
         {
@@ -772,11 +791,16 @@ namespace TODO
         }
         public void AfterTxtChange2(object sender, EventArgs e)
         {
-            //拿到addlist传来的文本，强转数据类型
+            //拿到addtask传来的文本，强转数据类型
             TextBoxMsgChangeEventArg arg = e as TextBoxMsgChangeEventArg;
             this.temp_task_str = arg.Text;//交给公共变量
         }
-
+        public void AfterTxtChange3(object sender, EventArgs e)
+        {
+            //拿到transferform传来的文本，强转数据类型
+            TextBoxMsgChangeEventArg arg = e as TextBoxMsgChangeEventArg;
+            this.temp_admin_str = arg.Text;//交给公共变量
+        }
         public void listbuttonEnter(object sender, EventArgs e)
         {
             //为了确定选中的是谁
@@ -810,13 +834,14 @@ namespace TODO
         {
             //禁止多选
             this.left_display_view.MultiSelect = false;
-            //鼠标右键
-            if (e.Button == MouseButtons.Right)
+            //鼠标右键,使用菜单，发布作业或者转让管理权
+            if ((e.Button == MouseButtons.Right)&&(this.left_content=="admin"))
             {
                 //选中列表中数据才显示 空白处不显示
+                int index = this.left_display_view.SelectedIndices[0];//选中的编号
                 String itemName = this.left_display_view.SelectedItems[0].Text; //获取选中课程名
                 Point p = new Point(e.X, e.Y);
-                contextMenuStrip1.Show(this.left_display_view, p);
+                this.contextMenuStrip3.Show(this.left_display_view, p);
             }
         }
         #endregion
@@ -855,19 +880,66 @@ namespace TODO
             //更改显示内容
             this.left_content = "admin";
         }
-        #endregion
-
         /// <summary>
-        /// 用户：点击注销，回到登陆界面
+        /// 管理员：右键管理课程，进入发布作业的界面
         /// </summary>
         /// <returns></returns>
-        private void logout_button_Click(object sender, EventArgs e)
+        private void SendTaskToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Login login = new Login();
-            this.Hide();
-            login.ShowDialog();
-            Application.ExitThread();
+            //右键管理课程，进入发布作业的界面
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+            int index = indexes[0];
+            string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+
+            AddTask addtask = new AddTask();
+            addtask.AfterMsgChange += this.AfterTxtChange2;
+            addtask.ShowDialog();
+
+            if (temp_task_str.Length == 0)
+            {
+                return;//没有输入则返回
+            }
+            //创建新的task
+            string[] temp_str = temp_task_str.Split('*'); temp_task_str = "";
+            Task new_task = new Task();
+            new_task.name = temp_str[0];
+            new_task.start_time = DateTime.Now;
+            new_task.due_time = str2date(temp_str[1]);
+
+            new_task.description = temp_str[2];
+            new_task.parent_id = myuser.administrator_list[index];
+            manager.add("person_class_tasks", new_task);
         }
+        /// <summary>
+        /// 管理员：右键“转让管理员权限”
+        /// </summary>
+        /// <returns></returns>
+        private void TransferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //右键“转让管理员权限”
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+            int index = indexes[0];
+            string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+            //获取所有选课用户
+            List<UserData> users = manager.get_class_user(myuser.administrator_list[index]);
+            TransferForm transfer = new TransferForm();
+            transfer.users = users;
+            transfer.myid = myuser.user_id;
+            transfer.AfterMsgChange += this.AfterTxtChange3;
+            transfer.ShowDialog();
+
+            if (temp_admin_str.Length == 0)
+            {
+                return;//没有输入则返回
+            }
+            int user_index = Convert.ToInt32(temp_admin_str);//选择的用户索引
+            temp_admin_str = "";
+
+            manager.tranfer_admin(myuser.user_id, users[user_index].user_id, myuser.administrator_list[index]);
+        }
+        #endregion
+
+
     }
 }
 

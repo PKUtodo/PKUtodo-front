@@ -53,9 +53,9 @@
             this.label2.Font = new System.Drawing.Font("微软雅黑", 11F);
             this.label2.Location = new System.Drawing.Point(114, 147);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 25);
+            this.label2.Size = new System.Drawing.Size(263, 25);
             this.label2.TabIndex = 1;
-            this.label2.Text = "截止时间";
+            this.label2.Text = "截止时间 (年、月、日用.分隔)";
             // 
             // label3
             // 

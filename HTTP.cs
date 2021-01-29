@@ -31,21 +31,21 @@ namespace TODO
                 request.ProtocolVersion = HttpVersion.Version11;
                 request.Method = "POST";
                 Console.WriteLine(js);
-                request.ContentType = "application/x-www-form-urlencoded;charset:utf-8";
-                js = js.Replace(":", "=");
-                js = js.Replace(",", "&");
-                js = js.Replace("{", string.Empty);
-                js = js.Replace("}", string.Empty);
-                js = js.Replace("\r", string.Empty);
-                js = js.Replace("\n", string.Empty);
-                js = js.Replace(" ", string.Empty);
-                js = js.Replace("\"", string.Empty);
-                js = js.Replace("~", " ");
-                js = js.Replace("!", ":");
-                js.Trim();
+                //request.ContentType = "application/x-www-form-urlencoded;charset:utf-8";
+                //js = js.Replace(":", "=");
+                //js = js.Replace(",", "&");
+                //js = js.Replace("{", string.Empty);
+                //js = js.Replace("}", string.Empty);
+                //js = js.Replace("\r", string.Empty);
+                //js = js.Replace("\n", string.Empty);
+                //js = js.Replace(" ", string.Empty);
+                //js = js.Replace("\"", string.Empty);
+                //js = js.Replace("~", " ");
+                //js = js.Replace("!", ":");
+                //js.Trim();
 
-                // request.ContentType = "application/json;charset:utf-8";
-                // js.Trim('\"');
+                request.ContentType = "application/json;charset:utf-8";
+                js.Trim('\"');
                 // 设置超时时间
                 request.Timeout = 3000;
                 request.KeepAlive = false;

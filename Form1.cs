@@ -470,7 +470,7 @@ namespace TODO
             label2.Name = "label2";
             //label2.Text = "任务介绍：\r\n\r\n任务开始时间：2020.11.25\r\n\r\n任务到期时间：2021.01.24\r\n\r\n任务描述：软件工程大作业是一个非常有挑战的工作，";
             //label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
-            if (temp_index < 0) { label2.Text = "任务出错"; }
+            if (temp_index < 0) { label2.Text = "任务索引出错"; }
             else { label2.Text = manager.list_tasks[temp_index].description; }
             label2.TextAlign = ContentAlignment.TopLeft;
             label2.Font = new Font("微软雅黑", 11);

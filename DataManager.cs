@@ -7,6 +7,7 @@ using System.Reflection;//反射类
 using Newtonsoft.Json.Linq;
 using System.Net.Mail;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace TODO
 {
@@ -636,12 +637,68 @@ namespace TODO
         //新增的函数
         public List<UserData> get_class_user(int class_id)
         {
+            List<UserData> class_members = new List<UserData>();
             //获取所有选择某一门课的人,第一个应该是管理员
+            string req = JSONHelper.CreateJson("find_member", myuser_.email, myuser_.user_id, myuser_.password,class_id);
+            try
+            {
+                receiver = HTTP.HttpPost(req);
+                if (receiver.Value<int>("success") == 1)
+                {
+                    JArray members_info = receiver.Value<JArray>("data");
+                    for (int i=0;i<members_info.Count;i++)
+                    {
+                        UserData class_member = new UserData();
+                        class_member.user_id = members_info[i].Value<int>("user_id");
+                        class_members.Add(class_member);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("后端操作失败");
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(receiver.Value<string>("error_msg"));
+            }
+            return class_members;
         }
-
+                
+                
         public bool tranfer_admin(int from_user_id,int to_user_id,int class_id)
         {
             //将管理员权限从from_user_id转移到to_user_id的手中
+            string req = JSONHelper.CreateJson("transfer", myuser_.email, myuser_.user_id, myuser_.password,class_id,to_user_id);
+            try
+            {
+                receiver = HTTP.HttpPost(req);
+                if (receiver.Value<int>("success") == 1)
+                {
+                    int index=get_all_class_index(class_id);
+                    all_classes[index].admin_id = to_user_id;
+                    if(myuser_.tranferAdministrator(class_id)==false)
+                    {
+                        MessageBox.Show("您不是该课程管理员");
+                        return false;
+                    }
+                    else
+                    {
+                        MessageBox.Show("管理员权限转让成功");
+                        return true;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("后端操作失败");
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(receiver.Value<string>("error_msg"));
+                return false;
+            }
         }
     }
 }

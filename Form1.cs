@@ -282,7 +282,6 @@ namespace TODO
                     {
                         int index = indexes[0];
                         string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
-                                                                                              //string sPartName = this.left_display_view.Items[index].SubItems[1].Text;//获取第二列的值
 
                         //右侧生成对应任务的内容
                         show_task_info(sender, e);
@@ -392,8 +391,9 @@ namespace TODO
             //@warning:需要更改内容
             Label label2 = new Label();
             label2.Name = "label2";
-            label2.Text = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
-            label2.Text += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+            //label2.Text = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
+            //label2.Text += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+            label2.Text = manager.all_classes[index].description;
             label2.TextAlign = ContentAlignment.TopLeft;
             label2.Font = new Font("微软雅黑", 11);
             label2.Location = new Point(0, 95);
@@ -424,12 +424,20 @@ namespace TODO
 
             //划分线2
             this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 80, this.right_display_panel.Width, 80);
+            
+            //确定选中的task
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
+            int index = indexes[0];//对应该list中的索引
+            StudentList cur_list = manager.lists[choose_list_index - 1];
+            int temp_index=manager.get_list_task_index(cur_list.taskIDs[index]);//list_tasks中的索引
 
             //任务介绍：label2
             Label label2 = new Label();
             label2.Name = "label2";
-            label2.Text = "任务介绍：\r\n\r\n任务开始时间：2020.11.25\r\n\r\n任务到期时间：2021.01.24\r\n\r\n任务描述：软件工程大作业是一个非常有挑战的工作，";
-            label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
+            //label2.Text = "任务介绍：\r\n\r\n任务开始时间：2020.11.25\r\n\r\n任务到期时间：2021.01.24\r\n\r\n任务描述：软件工程大作业是一个非常有挑战的工作，";
+            //label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
+            if (temp_index < 0) { label2.Text = "任务出错"; }
+            else { label2.Text = manager.list_tasks[temp_index].description; }
             label2.TextAlign = ContentAlignment.TopLeft;
             label2.Font = new Font("微软雅黑", 11);
             label2.Location = new Point(0, 85);

@@ -47,7 +47,7 @@ namespace TODO
             }
         }
         //转让管理员身份给另一个人
-        public bool tranferAdministrator(UserData other, int class_id)
+        public bool tranferAdministrator(int class_id)
         {
             if ((!administrator_list.Contains(class_id)) || (administrator_list.Count == 0))
             {
@@ -62,10 +62,6 @@ namespace TODO
                 }
             }
             administrator_list.RemoveAt(index);
-            if (!other.administrator_list.Contains(class_id))
-            {
-                other.administrator_list.Add(class_id);
-            }
             return true;
         }
     }

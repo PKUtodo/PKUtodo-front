@@ -500,20 +500,20 @@ namespace TODO
             //删除已有的课程
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];
-            //判断是否可以删除，如果是课程管理员，不能删除
-            if(manager.all_classes[index].admin_id==this.myuser.user_id)
-            {
-                //产生弹窗
-                try
-                {
-                    MessageBox.Show("管理员不能删除本课程！");
-                }
-                catch (Exception msg) //异常处理
-                {
-                    MessageBox.Show(msg.Message);
-                }
-                return;
-            }
+            ////判断是否可以删除，如果是课程管理员，不能删除
+            //if(manager.all_classes[index].admin_id==this.myuser.user_id)
+            //{
+            //    //产生弹窗
+            //    try
+            //    {
+            //        MessageBox.Show("管理员不能删除本课程！");
+            //    }
+            //    catch (Exception msg) //异常处理
+            //    {
+            //        MessageBox.Show(msg.Message);
+            //    }
+            //    return;
+            //}
 
             //清掉所有任务
             StudentClass cur_class = manager.all_classes[index];

@@ -140,6 +140,7 @@ namespace TODO
             };
             return obj.ToString();
         }
+        //转让权限
         public static string CreateJson(string type, string email,int user_id, string password, int list_id, int target_user_id)
         {
             JObject obj = new JObject

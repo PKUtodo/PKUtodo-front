@@ -700,6 +700,19 @@ namespace TODO
                 return false;
             }
         }
+
+        public bool modify(string table_name,Task new_task)
+        {
+            //修改某个表中的任务
+            //task_id没有变化，可以用于检索
+            return true;
+        }
+        public bool modify(string table_name, StudentList new_list)
+        {
+            //修改lists表中的任务
+            //list_id没有变化，可以用于检索
+            return true;
+        }
     }
 }
 

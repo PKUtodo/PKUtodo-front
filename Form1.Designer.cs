@@ -59,6 +59,9 @@
             this.class_slide = new System.Windows.Forms.Panel();
             this.add_class_button = new System.Windows.Forms.Button();
             this.left_display_view = new System.Windows.Forms.ListView();
+            this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.SendTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TransferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.delete_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -66,16 +69,14 @@
             this.list_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.list_delete_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.add_task_menu = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.SendTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.TransferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listRenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.left_panel.SuspendLayout();
             this.menu_panel.SuspendLayout();
             this.file_slide.SuspendLayout();
             this.class_slide.SuspendLayout();
+            this.contextMenuStrip3.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.list_contextMenuStrip.SuspendLayout();
-            this.contextMenuStrip3.SuspendLayout();
             this.SuspendLayout();
             // 
             // left_panel
@@ -173,7 +174,7 @@
             this.refresh_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.refresh_button.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.refresh_button.Location = new System.Drawing.Point(128, 570);
-            this.refresh_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.refresh_button.Margin = new System.Windows.Forms.Padding(4);
             this.refresh_button.Name = "refresh_button";
             this.refresh_button.Size = new System.Drawing.Size(56, 56);
             this.refresh_button.TabIndex = 11;
@@ -188,7 +189,7 @@
             this.logout_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.logout_button.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.logout_button.Location = new System.Drawing.Point(42, 570);
-            this.logout_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.logout_button.Margin = new System.Windows.Forms.Padding(4);
             this.logout_button.Name = "logout_button";
             this.logout_button.Size = new System.Drawing.Size(56, 56);
             this.logout_button.TabIndex = 10;
@@ -232,7 +233,7 @@
             this.class_button.Image = ((System.Drawing.Image)(resources.GetObject("class_button.Image")));
             this.class_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.class_button.Location = new System.Drawing.Point(8, 208);
-            this.class_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.class_button.Margin = new System.Windows.Forms.Padding(4);
             this.class_button.Name = "class_button";
             this.class_button.Size = new System.Drawing.Size(219, 50);
             this.class_button.TabIndex = 11;
@@ -250,7 +251,7 @@
             this.all_task_button.Image = ((System.Drawing.Image)(resources.GetObject("all_task_button.Image")));
             this.all_task_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.all_task_button.Location = new System.Drawing.Point(8, 150);
-            this.all_task_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.all_task_button.Margin = new System.Windows.Forms.Padding(4);
             this.all_task_button.Name = "all_task_button";
             this.all_task_button.Size = new System.Drawing.Size(219, 50);
             this.all_task_button.TabIndex = 10;
@@ -269,7 +270,7 @@
             this.foot_button.Image = ((System.Drawing.Image)(resources.GetObject("foot_button.Image")));
             this.foot_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.foot_button.Location = new System.Drawing.Point(8, 100);
-            this.foot_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.foot_button.Margin = new System.Windows.Forms.Padding(4);
             this.foot_button.Name = "foot_button";
             this.foot_button.Size = new System.Drawing.Size(219, 50);
             this.foot_button.TabIndex = 9;
@@ -287,7 +288,7 @@
             this.admin_button.Image = ((System.Drawing.Image)(resources.GetObject("admin_button.Image")));
             this.admin_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.admin_button.Location = new System.Drawing.Point(8, 50);
-            this.admin_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.admin_button.Margin = new System.Windows.Forms.Padding(4);
             this.admin_button.Name = "admin_button";
             this.admin_button.Size = new System.Drawing.Size(219, 50);
             this.admin_button.TabIndex = 8;
@@ -301,7 +302,7 @@
             this.slide_panel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(145)))), ((int)(((byte)(231)))), ((int)(((byte)(229)))));
             this.slide_panel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.slide_panel.Location = new System.Drawing.Point(0, 0);
-            this.slide_panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.slide_panel.Margin = new System.Windows.Forms.Padding(4);
             this.slide_panel.Name = "slide_panel";
             this.slide_panel.Size = new System.Drawing.Size(8, 50);
             this.slide_panel.TabIndex = 7;
@@ -316,7 +317,7 @@
             this.person_list_button.Image = ((System.Drawing.Image)(resources.GetObject("person_list_button.Image")));
             this.person_list_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.person_list_button.Location = new System.Drawing.Point(8, 0);
-            this.person_list_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.person_list_button.Margin = new System.Windows.Forms.Padding(4);
             this.person_list_button.Name = "person_list_button";
             this.person_list_button.Size = new System.Drawing.Size(219, 50);
             this.person_list_button.TabIndex = 0;
@@ -365,7 +366,7 @@
             this.file_slide.BackColor = System.Drawing.Color.Transparent;
             this.file_slide.Controls.Add(this.add_list_button);
             this.file_slide.Location = new System.Drawing.Point(226, 162);
-            this.file_slide.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.file_slide.Margin = new System.Windows.Forms.Padding(4);
             this.file_slide.Name = "file_slide";
             this.file_slide.Size = new System.Drawing.Size(206, 50);
             this.file_slide.TabIndex = 7;
@@ -382,7 +383,7 @@
             this.add_list_button.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.add_list_button.Image = ((System.Drawing.Image)(resources.GetObject("add_list_button.Image")));
             this.add_list_button.Location = new System.Drawing.Point(-2, 0);
-            this.add_list_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.add_list_button.Margin = new System.Windows.Forms.Padding(4);
             this.add_list_button.Name = "add_list_button";
             this.add_list_button.Size = new System.Drawing.Size(208, 50);
             this.add_list_button.TabIndex = 3;
@@ -392,7 +393,7 @@
             // right_display_panel
             // 
             this.right_display_panel.AutoScroll = true;
-            this.right_display_panel.BackColor = System.Drawing.Color.LightCyan;
+            this.right_display_panel.BackColor = System.Drawing.Color.White;
             this.right_display_panel.Location = new System.Drawing.Point(648, 78);
             this.right_display_panel.Margin = new System.Windows.Forms.Padding(2);
             this.right_display_panel.Name = "right_display_panel";
@@ -452,8 +453,7 @@
             // 
             this.left_display_view.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.left_display_view.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.left_display_view.ContextMenuStrip = this.contextMenuStrip3;
-            this.left_display_view.Font = new System.Drawing.Font("微软雅黑", 11F);
+            this.left_display_view.Font = new System.Drawing.Font("微软雅黑", 15F);
             this.left_display_view.HideSelection = false;
             this.left_display_view.Location = new System.Drawing.Point(266, 78);
             this.left_display_view.Margin = new System.Windows.Forms.Padding(2);
@@ -463,6 +463,29 @@
             this.left_display_view.UseCompatibleStateImageBehavior = false;
             this.left_display_view.SelectedIndexChanged += new System.EventHandler(this.left_display_view_SelectedIndexChanged);
             this.left_display_view.MouseClick += new System.Windows.Forms.MouseEventHandler(this.left_display_view_MouseClick);
+            // 
+            // contextMenuStrip3
+            // 
+            this.contextMenuStrip3.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SendTaskToolStripMenuItem,
+            this.TransferToolStripMenuItem});
+            this.contextMenuStrip3.Name = "contextMenuStrip3";
+            this.contextMenuStrip3.Size = new System.Drawing.Size(184, 52);
+            // 
+            // SendTaskToolStripMenuItem
+            // 
+            this.SendTaskToolStripMenuItem.Name = "SendTaskToolStripMenuItem";
+            this.SendTaskToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.SendTaskToolStripMenuItem.Text = "发布作业";
+            this.SendTaskToolStripMenuItem.Click += new System.EventHandler(this.SendTaskToolStripMenuItem_Click);
+            // 
+            // TransferToolStripMenuItem
+            // 
+            this.TransferToolStripMenuItem.Name = "TransferToolStripMenuItem";
+            this.TransferToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.TransferToolStripMenuItem.Text = "转让管理员身份";
+            this.TransferToolStripMenuItem.Click += new System.EventHandler(this.TransferToolStripMenuItem_Click);
             // 
             // contextMenuStrip1
             // 
@@ -501,9 +524,10 @@
             this.list_contextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.list_contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.list_delete_menu,
-            this.add_task_menu});
+            this.add_task_menu,
+            this.listRenameToolStripMenuItem});
             this.list_contextMenuStrip.Name = "list_contextMenuStrip";
-            this.list_contextMenuStrip.Size = new System.Drawing.Size(152, 60);
+            this.list_contextMenuStrip.Size = new System.Drawing.Size(152, 88);
             // 
             // list_delete_menu
             // 
@@ -521,28 +545,13 @@
             this.add_task_menu.Text = "添加任务";
             this.add_task_menu.Click += new System.EventHandler(this.add_task_menu_Click);
             // 
-            // contextMenuStrip3
+            // listRenameToolStripMenuItem
             // 
-            this.contextMenuStrip3.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.SendTaskToolStripMenuItem,
-            this.TransferToolStripMenuItem});
-            this.contextMenuStrip3.Name = "contextMenuStrip3";
-            this.contextMenuStrip3.Size = new System.Drawing.Size(184, 52);
-            // 
-            // SendTaskToolStripMenuItem
-            // 
-            this.SendTaskToolStripMenuItem.Name = "SendTaskToolStripMenuItem";
-            this.SendTaskToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.SendTaskToolStripMenuItem.Text = "发布作业";
-            this.SendTaskToolStripMenuItem.Click += new System.EventHandler(this.SendTaskToolStripMenuItem_Click);
-            // 
-            // TransferToolStripMenuItem
-            // 
-            this.TransferToolStripMenuItem.Name = "TransferToolStripMenuItem";
-            this.TransferToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.TransferToolStripMenuItem.Text = "转让管理员身份";
-            this.TransferToolStripMenuItem.Click += new System.EventHandler(this.TransferToolStripMenuItem_Click);
+            this.listRenameToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
+            this.listRenameToolStripMenuItem.Name = "listRenameToolStripMenuItem";
+            this.listRenameToolStripMenuItem.Size = new System.Drawing.Size(151, 28);
+            this.listRenameToolStripMenuItem.Text = "重命名";
+            this.listRenameToolStripMenuItem.Click += new System.EventHandler(this.listRenameToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -571,9 +580,9 @@
             this.menu_panel.ResumeLayout(false);
             this.file_slide.ResumeLayout(false);
             this.class_slide.ResumeLayout(false);
+            this.contextMenuStrip3.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.list_contextMenuStrip.ResumeLayout(false);
-            this.contextMenuStrip3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -622,6 +631,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip3;
         private System.Windows.Forms.ToolStripMenuItem SendTaskToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem TransferToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem listRenameToolStripMenuItem;
     }
 }
 

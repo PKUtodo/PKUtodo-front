@@ -21,11 +21,12 @@ namespace TODO
         {
             InitializeComponent();
         }
-        public AddList(string str1, string str2)
+        public AddList(string content)
         {
-            this.str1 = str1;
-            this.str2 = str2;
+            //传了字符串就是修改模式
             InitializeComponent();
+            button1.Text = "修改";
+            textBox1.Text = content;
         }
         private void button1_MouseClick(object sender, MouseEventArgs e)
         {

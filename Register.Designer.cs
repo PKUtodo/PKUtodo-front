@@ -143,7 +143,6 @@
             // 
             // Register
             // 
-            this.ClientSize = new System.Drawing.Size(771, 906);
             this.Name = "Register";
             this.ResumeLayout(false);
 

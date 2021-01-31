@@ -108,7 +108,7 @@ namespace TODO
             {
                 if (textBox4.Text == textBox5.Text)
                 {
-                    JObject obj = HTTP.HttpPost(JSONHelper.CreateJson(MessageType.verify,textBox1.Text, Convert.ToInt32(textBox2.Text), textBox3.Text, textBox4.Text));
+                    JObject obj = HTTP.HttpPost(JSONHelper.CreateJsonSetup(MessageType.verify,textBox1.Text, Convert.ToInt32(textBox2.Text), textBox3.Text, textBox4.Text));
                     if (obj != null)
                     {
                         if(obj.Value<int>("success") == 1)
@@ -152,5 +152,6 @@ namespace TODO
             }
         }
 
+        
     }
 }

@@ -70,6 +70,9 @@
             this.list_delete_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.add_task_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.listRenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.finished = new System.Windows.Forms.Label();
+            this.not_finish_late = new System.Windows.Forms.Label();
+            this.not_finish_not_late = new System.Windows.Forms.Label();
             this.left_panel.SuspendLayout();
             this.menu_panel.SuspendLayout();
             this.file_slide.SuspendLayout();
@@ -82,6 +85,9 @@
             // left_panel
             // 
             this.left_panel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(55)))), ((int)(((byte)(67)))));
+            this.left_panel.Controls.Add(this.not_finish_not_late);
+            this.left_panel.Controls.Add(this.not_finish_late);
+            this.left_panel.Controls.Add(this.finished);
             this.left_panel.Controls.Add(this.purple_button);
             this.left_panel.Controls.Add(this.blue_button);
             this.left_panel.Controls.Add(this.grey_button);
@@ -546,6 +552,41 @@
             this.listRenameToolStripMenuItem.Text = "重命名";
             this.listRenameToolStripMenuItem.Click += new System.EventHandler(this.listRenameToolStripMenuItem_Click);
             // 
+            // finished
+            // 
+            this.finished.AutoSize = true;
+            this.finished.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.finished.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.finished.Location = new System.Drawing.Point(64, 374);
+            this.finished.Name = "finished";
+            this.finished.Size = new System.Drawing.Size(41, 12);
+            this.finished.TabIndex = 18;
+            this.finished.Text = "已完成";
+            this.finished.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // not_finish_late
+            // 
+            this.not_finish_late.AutoSize = true;
+            this.not_finish_late.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.not_finish_late.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.not_finish_late.Location = new System.Drawing.Point(64, 396);
+            this.not_finish_late.Name = "not_finish_late";
+            this.not_finish_late.Size = new System.Drawing.Size(65, 12);
+            this.not_finish_late.TabIndex = 19;
+            this.not_finish_late.Text = "逾期未完成";
+            this.not_finish_late.Click += new System.EventHandler(this.label1_Click_1);
+            // 
+            // not_finish_not_late
+            // 
+            this.not_finish_not_late.AutoSize = true;
+            this.not_finish_not_late.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.not_finish_not_late.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.not_finish_not_late.Location = new System.Drawing.Point(64, 421);
+            this.not_finish_not_late.Name = "not_finish_not_late";
+            this.not_finish_not_late.Size = new System.Drawing.Size(77, 12);
+            this.not_finish_not_late.TabIndex = 20;
+            this.not_finish_not_late.Text = "未逾期未完成";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -625,6 +666,9 @@
         private System.Windows.Forms.ToolStripMenuItem SendTaskToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem TransferToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem listRenameToolStripMenuItem;
+        private System.Windows.Forms.Label finished;
+        private System.Windows.Forms.Label not_finish_not_late;
+        private System.Windows.Forms.Label not_finish_late;
     }
 }
 

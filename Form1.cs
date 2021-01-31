@@ -97,6 +97,7 @@ namespace TODO
         private void file_slide_MouseLeave(object sender, EventArgs e)
         {
             if (file_slide.Visible) this.file_slide.Visible = false;
+            if (class_slide.Visible) class_slide.Visible = false;
         }
 
         //选择指示
@@ -166,7 +167,7 @@ namespace TODO
                 lvi.Tag = index;
                 if (index != -1)
                 {
-                    //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是黄色（索引为2）
+                    //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是蓝色（索引为2）
                     if (manager.list_tasks[index].is_finished == true)
                     { lvi.ImageIndex = 3; }
                     else
@@ -216,10 +217,10 @@ namespace TODO
                 ListViewItem lvi = new ListViewItem();
                 lvi.Tag = i;
                 lvi.Text ="     " +manager.all_classes[i].name;//对应文字
-                //没选的是黄色（索引为5），选了的是红色（索引为1）
+                //没选的是黄色（索引为5），选了的是红色（索引为4）
                 if(manager.all_classes[i].isSelected)
                 {
-                    lvi.ImageIndex =1 ;
+                    lvi.ImageIndex =6 ;
                 }
                 else { lvi.ImageIndex = 5; }
                 this.left_display_view.Items.Add(lvi);
@@ -891,25 +892,39 @@ namespace TODO
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = new Font("微软雅黑", 11);
             //位置和大小
-            button.Location = new Point(this.right_display_panel.Width - width - 40, 300);
+            button.Location = new Point(this.right_display_panel.Width - width - 40, 280);
             button.Size = new Size(width, height);
 
             //删除按钮
             Button button1 = new Button();
-            button1.Name = "button_finish" + manager.class_tasks[task_index].task_id.ToString();//通过按钮名字传递参数
+            button1.Name = "button_delete" + manager.class_tasks[task_index].task_id.ToString();//通过按钮名字传递参数
             button1.Text = "删除作业";
             button1.MouseClick += this.delete_class_task;
 
             button1.TextAlign = ContentAlignment.MiddleCenter;
             button1.Font = new Font("微软雅黑", 11);
             //位置和大小
-            button1.Location = new Point(40, 300);
+            button1.Location = new Point(40, 280);
             button1.Size = new Size(width, height);
+
+            //下载作业
+            Button button2 = new Button();
+            button2.Name = "button_download" + manager.class_tasks[task_index].task_id.ToString(); ;//传递在manager.list_tasks中的索引
+            button2.Text = "下载作业";
+            button2.MouseClick += this.download_homework;
+
+            button2.TextAlign = ContentAlignment.MiddleCenter;
+            button2.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button2.Location = new Point(40, 350);
+            button2.Size = new Size(220, height);
 
             this.right_display_panel.Controls.Add(button);
             this.right_display_panel.Controls.Add(button1);
+            this.right_display_panel.Controls.Add(button2);
             button.BringToFront();
             button1.BringToFront();
+            button2.BringToFront();
         }
 
         /// <summary>
@@ -1648,8 +1663,8 @@ namespace TODO
             //管理员下载作业
             Button button = (Button)sender;
             //string url = "http://10.128.169.239:5000/filesubmit?taskid=";
-            string url = "http://aliyun.xiaotianxt.com:5000/filesubmit?taskid=";
-            url += button.Name.Substring(6);
+            string url = "http://aliyun.xiaotianxt.com:5888/fileupload?taskid=";
+            url+=left_display_view.SelectedItems[0].Tag.ToString();
             Process.Start(url);//在浏览器打开链接
         }
         private void finish_personal_task(object sender, EventArgs e)
@@ -1685,6 +1700,16 @@ namespace TODO
         private void foot_button_Click(object sender, EventArgs e)
         {
             MessageBox.Show("抱歉，功能逻辑仍在研究中，敬请期待！");
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

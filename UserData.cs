@@ -76,9 +76,9 @@ namespace TODO
         static public string finish = "finish";
         static public string find_list = "find_list";
         static public string handle = "handle";
-        static public string assignment = "assignment";
-        static public string find_member = "find_member";
-        static public string transfer = "transfer";
+
+
+
         //添加课程和选课
         static public string join_class = "join";
         static public string quit_class = "quit_class";
@@ -88,7 +88,12 @@ namespace TODO
         //增删任务
         static public string add_task = "add_task";
         static public string del_task = "del_task";
+        //修改
+        static public string modify_task = "modify_task";
+        static public string modify_list = "modify_list";
         //管理员功能
-
+        static public string assignment = "assignment";
+        static public string find_member = "find_member";
+        static public string transfer = "transfer";
     }
 }

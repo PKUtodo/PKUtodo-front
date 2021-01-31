@@ -84,7 +84,7 @@ namespace TODO
                     MessageBox.Show("登陆失败！", "ERROR");
                 }
             }
-            catch
+            catch(Exception error)
             {
                 MessageBox.Show("出现未知错误", "ERROR");
             }

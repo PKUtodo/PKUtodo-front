@@ -87,7 +87,7 @@ namespace TODO
         #endregion
 
         #region 左侧菜单显示
-        //文件菜单
+        //
         private void File_Button_MouseEnter(object sender, EventArgs e)
         {
             this.file_slide.Visible = true;
@@ -146,10 +146,13 @@ namespace TODO
         /// 列表：左侧表展示list中的task
         /// </summary>
         /// <returns></returns>
-        private void show_list_info(object sender, MouseEventArgs e)
+        private void show_list_info(int list_index)
         {
-            StudentList cur_list = manager.lists[choose_list_index - 1];
-            refresh();//清空显示栏
+            left_display_view.Tag = list_index;
+            StudentList cur_list = manager.lists[list_index];
+            refresh();
+            right_display_panel.Show();
+
             this.left_display_view.View = View.List;
 
             this.left_display_view.SmallImageList = this.color_imageList;//图片不知道为什么只能显示在左边
@@ -160,13 +163,21 @@ namespace TODO
             {
                 ListViewItem lvi = new ListViewItem();
                 int index = manager.get_list_task_index(cur_list.taskIDs[i]);
+                lvi.Tag = index;
                 if (index != -1)
                 {
-                    lvi.Text = "     "+manager.list_tasks[index].name;//对应文字
-                    //完成了是绿色(索引为3)，未完成是红色（索引为1）
-                    if (manager.list_tasks[index].due_time > DateTime.Now)
-                    { lvi.ImageIndex = 1; }
-                    else { lvi.ImageIndex = 3; }
+                    //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是黄色（索引为2）
+                    if (manager.list_tasks[index].is_finished == true)
+                    { lvi.ImageIndex = 3; }
+                    else
+                    {
+                        if (manager.list_tasks[index].due_time > DateTime.Now)
+                        {
+                            lvi.ImageIndex = 2;
+                        }
+                        else lvi.ImageIndex = 1;
+                    }
+                    lvi.Text = "     " + manager.list_tasks[index].name;//对应文字
                 }
                 else
                 {
@@ -178,6 +189,14 @@ namespace TODO
             this.left_display_view.EndUpdate();
             //更改显示内容
             this.left_content = "task";
+        }
+        private void show_list_info_click(object sender, MouseEventArgs e)
+        {
+            //为了确定选中的是谁
+            Button btn = (Button)sender;
+            string name = btn.Name.Substring(6);
+            choose_list_index = Convert.ToInt32(name);
+            show_list_info(choose_list_index - 1);
         }
         /// <summary>
         /// 课程：点击“加入课程"按钮，左边显示栏显示所有的课程
@@ -195,7 +214,7 @@ namespace TODO
             for (int i = 0; i < manager.all_classes.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
-                
+                lvi.Tag = i;
                 lvi.Text ="     " +manager.all_classes[i].name;//对应文字
                 //没选的是黄色（索引为5），选了的是红色（索引为1）
                 if(manager.all_classes[i].isSelected)
@@ -211,15 +230,12 @@ namespace TODO
             this.left_content = "class";
         }
 
-        /// <summary>
-        /// 课程：左侧listview显示课程的任务
-        /// </summary>
-        /// <returns></returns>
-        private void show_class_tasks(object sender, EventArgs e)
+        // 课程：左侧listview显示课程的任务
+        private void show_class_tasks(int class_index)
         {
-            //listview展示所有的课程任务
-            int temp_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
-            StudentClass cur_class = manager.all_classes[temp_index]; 
+            //记录班级index
+            left_display_view.Tag = class_index;
+            StudentClass cur_class = manager.all_classes[class_index]; 
             refresh();//清空显示栏
             this.left_display_view.View = View.List;
 
@@ -232,12 +248,20 @@ namespace TODO
                 ListViewItem lvi = new ListViewItem();
                 
                 int index = manager.get_class_task_index(cur_class.alltaskIDs[i]);
+                lvi.Tag = index;
                 if (index != -1)
                 {
-                    //完成了是绿色(索引为3)，未完成是红色（索引为1）
-                    if (manager.class_tasks[index].due_time > DateTime.Now)
-                    { lvi.ImageIndex = 1; }
-                    else { lvi.ImageIndex = 3; }
+                    //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是黄色（索引为2）
+                    if (manager.class_tasks[index].is_finished == true)
+                    { lvi.ImageIndex = 3; }
+                    else
+                    {
+                        if (manager.class_tasks[index].due_time > DateTime.Now)
+                        {
+                            lvi.ImageIndex = 2;
+                        }
+                        else lvi.ImageIndex = 1;
+                    }
                     lvi.Text = "     "+manager.class_tasks[index].name;//对应文字
                 }
                 else
@@ -251,12 +275,72 @@ namespace TODO
             //更改显示内容
             this.left_content = "class_task";
         }
+        private void show_class_tasks_click(object sender, EventArgs e)
+        {
+            //为了确定选中的是谁
+            Button btn = (Button)sender;
+            string name = btn.Name.Substring(6);
+            choose_list_index2 = Convert.ToInt32(name);
+            //listview展示所有的课程任务
+            int class_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
+            show_class_tasks(class_index);
+        }
+        //左侧列表显示课程管理页面
+        private void show_admin_class_tasks(int class_index)
+        {
+            //记录班级index
+            left_display_view.Tag = class_index;
+            StudentClass cur_class = manager.all_classes[class_index];
+            refresh();//清空显示栏
+            this.left_display_view.View = View.List;
 
+            this.left_display_view.BeginUpdate();
+
+            for (int i = 0; i < cur_class.alltaskIDs.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem();
+
+                int index = manager.get_class_task_index(cur_class.alltaskIDs[i]);
+                if (index != -1)
+                {
+                    lvi.Tag = index;
+                    //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是黄色（索引为2）
+                    if (manager.class_tasks[index].is_finished == true)
+                    { lvi.ImageIndex = 3; }
+                    else
+                    {
+                        if (manager.class_tasks[index].due_time > DateTime.Now)
+                        {
+                            lvi.ImageIndex = 2;
+                        }
+                        else lvi.ImageIndex = 1;
+                    }
+                    lvi.Text = "     " + manager.class_tasks[index].name;//对应文字
+                }
+                else
+                {
+                    lvi.Text = "没有任务";//对应文字
+                }
+                this.left_display_view.Items.Add(lvi);
+            }
+
+            this.left_display_view.EndUpdate();
+            //更改显示内容
+            this.left_content = "admin_class_task";
+        }
+        private void show_admin_class_tasks_click(object sender, EventArgs e)
+        {
+
+            Button btn = (Button)sender;
+            int class_index = Convert.ToInt32(btn.Tag);
+            //记录班级index
+            show_admin_class_tasks(class_index);
+        }
         /// <summary>
         /// 点击“所有任务”按钮：左侧listview显示用户所有的任务
         /// </summary>
         /// <returns></returns>
-        private void all_task_button_MouseClick(object sender, MouseEventArgs e)
+        private void show_all_tasks()
         {
             //显示所有任务
             refresh();//清空显示栏
@@ -269,24 +353,38 @@ namespace TODO
             for (int i = 0; i < manager.list_tasks.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
-                //完成了是绿色(索引为3)，未完成是红色（索引为1）
-                if (manager.list_tasks[i].due_time > DateTime.Now)
-                { lvi.ImageIndex = 1; }
-                else { lvi.ImageIndex = 3; }
+                //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是黄色（索引为2）
+                if (manager.list_tasks[i].is_finished == true)
+                { lvi.ImageIndex = 3; }
+                else
+                {
+                    if (manager.list_tasks[i].due_time > DateTime.Now)
+                    {
+                        lvi.ImageIndex = 2;
+                    }
+                    else lvi.ImageIndex = 1;
+                }
 
-                lvi.Text ="     "+ manager.list_tasks[i].name;//对应文字
+                lvi.Text = "     " + manager.list_tasks[i].name;//对应文字
                 this.left_display_view.Items.Add(lvi);
             }
             //显示课程任务
             for (int i = 0; i < manager.class_tasks.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
-                //完成了是绿色(索引为3)，未完成是红色（索引为1）
-                if (manager.class_tasks[i].due_time > DateTime.Now)
-                { lvi.ImageIndex = 1; }
-                else { lvi.ImageIndex = 3; }
+                //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是黄色（索引为2）
+                if (manager.class_tasks[i].is_finished == true)
+                { lvi.ImageIndex = 3; }
+                else
+                {
+                    if (manager.class_tasks[i].due_time > DateTime.Now)
+                    {
+                        lvi.ImageIndex = 2;
+                    }
+                    else lvi.ImageIndex = 1;
+                }
 
-                lvi.Text = "     "+manager.class_tasks[i].name;//对应文字
+                lvi.Text = "     " + manager.class_tasks[i].name;//对应文字
 
                 this.left_display_view.Items.Add(lvi);
             }
@@ -294,6 +392,11 @@ namespace TODO
             this.left_display_view.EndUpdate();
             //更改显示内容
             this.left_content = "all_task";
+        }
+
+        private void all_task_button_MouseClick(object sender, MouseEventArgs e)
+        {
+            show_all_tasks();
         }
 
         /// <summary>
@@ -317,6 +420,10 @@ namespace TODO
 
                         //右侧生成对应课程的内容
                         show_class_info(sender, e);
+                    }
+                    else
+                    {
+                        right_display_panel.Controls.Clear();
                     }
                 }
                 catch (Exception ex)
@@ -342,6 +449,10 @@ namespace TODO
                         //右侧生成对应任务的内容
                         show_task_info(sender, e);
                     }
+                    else
+                    {
+                        right_display_panel.Controls.Clear();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -354,7 +465,28 @@ namespace TODO
             //左边显示栏是“管理员的课程”
             else if (left_content == "admin")
             {
-                //什么都不用干
+                //left_view当中的选中的行变化
+                try
+                {
+                    ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+                    if (indexes.Count > 0)
+                    {
+                        int index = indexes[0];
+                        string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+
+                        //右侧生成对应课程的内容
+                        show_admin_class_info(sender, e);
+                    }
+                    else {
+                        right_display_panel.Controls.Clear();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("操作失败！\n" + ex.Message, "提示", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+
+                }
             }
             //左边显示栏是“课程作业”
             else if(left_content=="class_task")
@@ -369,7 +501,17 @@ namespace TODO
                         string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
 
                         //右侧生成对应任务的内容
-                        show_class_task_info(sender, e);
+                        //确定选中的task
+                        index = indexes[0] - class_task_show_bios;//对应该class中的索引,此处class_task_show_bios没有用
+                        class_task_show_bios = 0;
+                        int temp_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
+                        StudentClass cur_class = manager.all_classes[temp_index];
+                        int task_index = manager.get_class_task_index(cur_class.alltaskIDs[index]);//class_tasks中的索引
+                        show_class_task_info(sender, e,task_index);
+                    }
+                    else
+                    {
+                        right_display_panel.Controls.Clear();
                     }
                 }
                 catch (Exception ex)
@@ -397,9 +539,15 @@ namespace TODO
                         {
                             //右侧生成对应课程任务的内容
                             class_task_show_bios = manager.list_tasks.Count;//结束之后会自动恢复0
-                            show_class_task_info(sender, e);
+                            index = indexes[0] - class_task_show_bios;//对应该class中的索引,此处class_task_show_bios没有用
+                            class_task_show_bios = 0;
+                            show_class_task_info(sender, e, index);
                         }
                         
+                    }
+                    else
+                    {
+                        right_display_panel.Controls.Clear();
                     }
                 }
                 catch (Exception ex)
@@ -409,11 +557,135 @@ namespace TODO
 
                 }
             }
+            //左边显示栏对应进入课程管理状态的课程的作业
+            else if(left_content=="admin_class_task")
+            {
+                //选中list_view当中的行变化
+                try
+                {
+                    ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+                    if (indexes.Count > 0)
+                    {
+                        int index = indexes[0];
+                        string sPartNo = this.left_display_view.Items[index].SubItems[0].Text;//获取第一列的值
+
+                        //右侧生成对应任务的内容
+                        //确定选中的task
+                        int task_index = Convert.ToInt32(left_display_view.SelectedItems[0].Tag);
+                        show_admin_class_task_info(sender, e, task_index);
+                    }
+                    else
+                    {
+                        right_display_panel.Controls.Clear();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("操作失败！\n" + ex.Message, "提示", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+
+                }
+            }
+            else
+            {
+                Debug.Assert(false);
+            }
         }
         #endregion
 
         #region 右边的显示栏
-        
+
+        /// <summary>
+        /// 课程：右侧label显示作为管理员的课程的信息
+        /// </summary>
+        /// <returns></returns>
+        private void show_admin_class_info(object sender, EventArgs e)
+        {
+            //清除已有内容
+            right_display_panel.Controls.Clear();
+            //展示课程信息
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            //划分线1
+            this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 20, this.right_display_panel.Width, 20);
+            //选课按钮
+            int width =200;
+            int height = 50;
+            Button button = new Button();
+            button.Name = "button_admin";
+            //文字
+            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
+            //int index = indexes[0];
+            int index = Convert.ToInt32(this.left_display_view.SelectedItems[0].Tag);
+
+            button.Text = "进入作业管理页面";
+            button.Tag = index;
+            button.MouseClick += this.show_admin_class_tasks_click;
+
+            button.TextAlign = ContentAlignment.MiddleCenter;
+            button.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button.Location = new Point(50, 350);
+            button.Size = new Size(width, height);
+
+            Button button1 = new Button();
+            button1.Name = "button_admin1";
+            button1.Text = "发布作业";
+            button1.Tag = index;
+            button1.MouseClick += this.SendTaskToolStripMenuItem_Click;
+            button1.TextAlign = ContentAlignment.MiddleCenter;
+            button1.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button1.Location = new Point(50, 280);
+            button1.Size = new Size(95, height);
+
+            Button button2= new Button();
+            button2.Name = "button_admin1";
+            button2.Text = "转让管理员";
+            button2.Tag = index;
+            button2.MouseClick += this.TransferToolStripMenuItem_Click;
+            button2.TextAlign = ContentAlignment.MiddleCenter;
+            button2.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button2.Location = new Point(155, 280);
+            button2.Size = new Size(95, height);
+
+
+            this.right_display_panel.Controls.Add(button);
+            this.right_display_panel.Controls.Add(button1);
+            this.right_display_panel.Controls.Add(button2);
+            //label
+            Label label = new Label();
+            label.Name = "label1";
+            label.Text = manager.all_classes[Convert.ToInt32(this.left_display_view.SelectedItems[0].Tag)].name;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.Font = new Font("微软雅黑", 11);
+            label.Location = new Point(10, 40);
+            label.AutoSize = true;
+            this.right_display_panel.Controls.Add(label);
+
+            //划分线2
+            this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 90, this.right_display_panel.Width, 90);
+
+            //课程介绍：label2
+            //@warning:需要更改内容
+            Label label2 = new Label();
+            label2.Name = "label2";
+            //label2.Text = "课程介绍：\r\n\r\n课程教师：黄舟老师\r\n\r\n课程学分：2学分\r\n\r\n课程描述：软件工程是一门非常有用的课程，";
+            //label2.Text += "它使得软件开发变得专业化，规范化，使得大型软件开发成为可能。\r\n\r\n课程难度：适中";
+            label2.Text = "课程介绍：\r\n\r\n课程教师：";
+            if (manager.all_classes[index].teacher_name != null) { label2.Text += manager.all_classes[index].teacher_name + "老师"; }
+            else { label2.Text += "无"; }
+            label2.Text += "\r\n\r\n课程学分：";
+            if (manager.all_classes[index].score != 0) { label2.Text += manager.all_classes[index].score.ToString() + "学分"; }
+            else { label2.Text += "无"; }
+            label2.Text += "\r\n\r\n课程描述：" + manager.all_classes[index].description;
+
+            label2.TextAlign = ContentAlignment.TopLeft;
+            label2.Font = new Font("微软雅黑", 11);
+            label2.Location = new Point(0, 95);
+            label2.Size = new Size(this.right_display_panel.Width - 20, this.right_display_panel.Height - 100);
+            this.right_display_panel.Controls.Add(label2);
+        }
 
         /// <summary>
         /// 课程：右侧label显示课程的信息
@@ -494,16 +766,9 @@ namespace TODO
         /// 课程：右侧label显示课程的任务
         /// </summary>
         /// <returns></returns>
-        private void show_class_task_info(object sender, EventArgs e)
+        private void show_class_task_info(object sender, EventArgs e, int task_index)
         {
-            //确定选中的task
-            ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
-            int index = indexes[0]-class_task_show_bios;//对应该class中的索引
-            class_task_show_bios = 0;
-            int temp_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
-            StudentClass cur_class= manager.all_classes[temp_index];
-            
-            temp_index = manager.get_class_task_index(cur_class.alltaskIDs[index]);//class_tasks中的索引
+
             //清空原有内容
             right_display_panel.Controls.Clear();
             //展示任务信息
@@ -514,28 +779,12 @@ namespace TODO
             //label
             Label label = new Label();
             label.Name = "label1";
-            label.Text = "任务名：" + manager.class_tasks[temp_index].name;
+            label.Text = "任务名：" + manager.class_tasks[task_index].name;
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font("微软雅黑", 11);
-            label.Location = new Point(10, 40);
-            label.Size = new Size(150, 20);
+            label.Location = new Point(5, 40);
+            label.Size = new Size(200, 20);
             this.right_display_panel.Controls.Add(label);
-
-            //修改按钮
-            int width = 80;
-            int height = 30;
-            Button button = new Button();
-            button.Name = "button"+ manager.class_tasks[temp_index].task_id.ToString();//通过按钮名字传递参数
-            button.Text = "上交作业";
-            button.MouseClick += this.submit_homework;
-
-            button.TextAlign = ContentAlignment.MiddleCenter;
-            button.Font = new Font("微软雅黑", 11);
-            //位置和大小
-            button.Location = new Point(this.right_display_panel.Width - width - 10, 35);
-            button.Size = new Size(width, height);
-
-            this.right_display_panel.Controls.Add(button);
 
             //划分线2
             this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 80, this.right_display_panel.Width, 80);
@@ -545,19 +794,124 @@ namespace TODO
             label2.Name = "label2";
             //label2.Text = "任务介绍：\r\n\r\n任务开始时间：2020.11.25\r\n\r\n任务到期时间：2021.01.24\r\n\r\n任务描述：软件工程大作业是一个非常有挑战的工作，";
             //label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
-            if (temp_index < 0) { label2.Text = "任务索引出错"; }
+            if (task_index < 0) { label2.Text = "任务索引出错"; }
             else
             {
-                label2.Text = "任务介绍：\r\n\r\n任务开始时间：" + manager.list_tasks[temp_index].start_time.ToString();
-                label2.Text += "\r\n\r\n任务到期时间：" + manager.list_tasks[temp_index].due_time.ToString();
-                label2.Text += "\r\n\r\n任务描述：" + manager.list_tasks[temp_index].description;
+                label2.Text = "任务介绍：\r\n\r\n任务开始时间：" + manager.class_tasks[task_index].start_time.ToString();
+                label2.Text += "\r\n\r\n任务到期时间：" + manager.class_tasks[task_index].due_time.ToString();
+                label2.Text += "\r\n\r\n任务描述：" + manager.class_tasks[task_index].description;
             }
             label2.TextAlign = ContentAlignment.TopLeft;
             label2.Font = new Font("微软雅黑", 11);
             label2.Location = new Point(0, 85);
             label2.Size = new Size(this.right_display_panel.Width - 20, this.right_display_panel.Height - 100);
             this.right_display_panel.Controls.Add(label2);
+
+            //提交按钮
+            int width = 100;
+            int height = 50;
+            Button button = new Button();
+            button.Name = "button" + manager.class_tasks[task_index].task_id.ToString();//通过按钮名字传递参数
+            button.Text = "上交作业";
+            button.MouseClick += this.submit_homework;
+
+            button.TextAlign = ContentAlignment.MiddleCenter;
+            button.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button.Location = new Point(this.right_display_panel.Width - width - 40, 300);
+            button.Size = new Size(width, height);
+
+            //完成按钮
+            Button button1 = new Button();
+            button1.Name = "button_finish" + manager.class_tasks[task_index].task_id.ToString();//通过按钮名字传递参数
+            button1.Text = "作业完成";
+            button1.MouseClick += this.finish_class_task;
+
+            button1.TextAlign = ContentAlignment.MiddleCenter;
+            button1.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button1.Location = new Point(40, 300);
+            button1.Size = new Size(width, height);
+
+            this.right_display_panel.Controls.Add(button);
+            this.right_display_panel.Controls.Add(button1);
+            button.BringToFront();
+            button1.BringToFront();
         }
+        //课程管理页面右边栏显示
+        private void show_admin_class_task_info(object sender, EventArgs e, int task_index)
+        {
+
+            //清空原有内容
+            right_display_panel.Controls.Clear();
+            //展示任务信息
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            //划分线1
+            this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 20, this.right_display_panel.Width, 20);
+
+            //label
+            Label label = new Label();
+            label.Name = "label1";
+            label.Text = "任务名：" + manager.class_tasks[task_index].name;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.Font = new Font("微软雅黑", 11);
+            label.Location = new Point(5, 40);
+            label.Size = new Size(200, 20);
+            this.right_display_panel.Controls.Add(label);
+
+            //划分线2
+            this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 80, this.right_display_panel.Width, 80);
+
+            //任务介绍：label2
+            Label label2 = new Label();
+            label2.Name = "label2";
+            //label2.Text = "任务介绍：\r\n\r\n任务开始时间：2020.11.25\r\n\r\n任务到期时间：2021.01.24\r\n\r\n任务描述：软件工程大作业是一个非常有挑战的工作，";
+            //label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
+            if (task_index < 0) { label2.Text = "任务索引出错"; }
+            else
+            {
+                label2.Text = "任务介绍：\r\n\r\n任务开始时间：" + manager.class_tasks[task_index].start_time.ToString();
+                label2.Text += "\r\n\r\n任务到期时间：" + manager.class_tasks[task_index].due_time.ToString();
+                label2.Text += "\r\n\r\n任务描述：" + manager.class_tasks[task_index].description;
+            }
+            label2.TextAlign = ContentAlignment.TopLeft;
+            label2.Font = new Font("微软雅黑", 11);
+            label2.Location = new Point(0, 85);
+            label2.Size = new Size(this.right_display_panel.Width - 20, this.right_display_panel.Height - 100);
+            this.right_display_panel.Controls.Add(label2);
+
+            //修改按钮
+            int width = 100;
+            int height = 50;
+            Button button = new Button();
+            button.Name = "button" + manager.class_tasks[task_index].task_id.ToString();//通过按钮名字传递参数
+            button.Text = "修改作业";
+            button.MouseClick += this.modify_class_task_info;
+
+            button.TextAlign = ContentAlignment.MiddleCenter;
+            button.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button.Location = new Point(this.right_display_panel.Width - width - 40, 300);
+            button.Size = new Size(width, height);
+
+            //删除按钮
+            Button button1 = new Button();
+            button1.Name = "button_finish" + manager.class_tasks[task_index].task_id.ToString();//通过按钮名字传递参数
+            button1.Text = "删除作业";
+            button1.MouseClick += this.delete_class_task;
+
+            button1.TextAlign = ContentAlignment.MiddleCenter;
+            button1.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button1.Location = new Point(40, 300);
+            button1.Size = new Size(width, height);
+
+            this.right_display_panel.Controls.Add(button);
+            this.right_display_panel.Controls.Add(button1);
+            button.BringToFront();
+            button1.BringToFront();
+        }
+
         /// <summary>
         /// 列表：右侧label显示清单的任务
         /// </summary>
@@ -567,20 +921,23 @@ namespace TODO
             //确定选中的task
             ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中课程的index
             int index = indexes[0];//对应该list中的索引
+            int temp_index=-1;
             Task cur_task=new Task();
             //如果是task的情况
             if (this.left_content=="task")
             {
                 StudentList cur_list = manager.lists[choose_list_index - 1];
-                int temp_index = manager.get_list_task_index(cur_list.taskIDs[index]);//list_tasks中的索引
+                temp_index = manager.get_list_task_index(cur_list.taskIDs[index]);//list_tasks中的索引
                 cur_task = manager.list_tasks[temp_index];
             }
 
             //如果是all_task的情况
             else if(this.left_content=="all_task")
             {
-                cur_task = manager.list_tasks[index];
+                temp_index = index;
+                cur_task = manager.list_tasks[temp_index];
             }
+            else { Debug.Assert(false); }
             right_display_panel.Controls.Clear();
             //展示任务信息
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
@@ -594,12 +951,12 @@ namespace TODO
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font("微软雅黑", 11);
             label.Location = new Point(10, 40);
-            label.Size = new Size(150, 20);
+            label.Size = new Size(200, 20);
             this.right_display_panel.Controls.Add(label);
 
             //修改按钮
-            int width = 80;
-            int height = 30;
+            int width = 100;
+            int height = 50;
             Button button = new Button();
             button.Name = "button" + cur_task.task_id.ToString();//传递在manager.list_tasks中的索引
             button.Text = "修改";
@@ -608,10 +965,38 @@ namespace TODO
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = new Font("微软雅黑", 11);
             //位置和大小
-            button.Location = new Point(this.right_display_panel.Width - width - 10, 35);
+            button.Location = new Point(40, 290);
             button.Size = new Size(width, height);
 
+            Button button2 = new Button();
+            button2.Name = "button" + cur_task.task_id.ToString();//传递在manager.list_tasks中的索引
+            button2.Text = "删除";
+            button2.MouseClick += this.delete_task;
+
+            button2.TextAlign = ContentAlignment.MiddleCenter;
+            button2.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button2.Location = new Point(160, 290);
+            button2.Size = new Size(width, height);
+
+            //完成按钮
+            Button button1 = new Button();
+            Debug.Assert(temp_index!=-1);
+            button1.Name = "button_finish" + manager.list_tasks[temp_index].task_id.ToString();//通过按钮名字传递参数
+            button1.Text = "完成";
+            button1.MouseClick += this.finish_personal_task;
+
+            button1.TextAlign = ContentAlignment.MiddleCenter;
+            button1.Font = new Font("微软雅黑", 11);
+            //位置和大小
+            button1.Location = new Point(40, 350);
+            button1.Size = new Size(220, height);
+
             this.right_display_panel.Controls.Add(button);
+            this.right_display_panel.Controls.Add(button1);
+            this.right_display_panel.Controls.Add(button2);
+            button.BringToFront();
+            button1.BringToFront();
 
             //划分线2
             this.right_display_panel.CreateGraphics().DrawLine(new Pen(Color.Black), 0, 80, this.right_display_panel.Width, 80);
@@ -648,6 +1033,7 @@ namespace TODO
             temp_button.Enabled = false;//不能再点
             //展示加入的新课程
             add_class_show(index);
+            this.left_display_view.SelectedItems[0].ImageIndex = 1;
         }
         private void del_new_class(object sender, MouseEventArgs e)
         {
@@ -691,6 +1077,8 @@ namespace TODO
                     add_class_show(temp_index);
                 }
             }
+
+            this.left_display_view.SelectedItems[0].ImageIndex = 5;
         }
         public void add_class_show(int index)
         {
@@ -712,13 +1100,33 @@ namespace TODO
             button.FlatAppearance.BorderSize = 0;
             button.Padding = this.add_class_button.Padding;
             button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_class_tasks);
+            button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_class_tasks_click);
             button.MouseEnter += new System.EventHandler(this.classbuttonEnter);
             this.class_slide.Controls.Add(button);
         }
         #endregion
 
         #region 添加、删除清单或者清单任务
+
+        private void delete_task(object sender, EventArgs e)
+        {
+            int index = Convert.ToInt32(left_display_view.SelectedItems[0].Tag);
+            if (manager.delete("list_tasks", manager.list_tasks[index]) == true)
+            {
+                show_list_info(Convert.ToInt32(left_display_view.Tag));
+                return;
+            }
+        }
+        private void delete_class_task(object sender, EventArgs e)
+        {
+            int index = Convert.ToInt32(left_display_view.SelectedItems[0].Tag);
+            if(manager.delete("person_tasks", manager.class_tasks[index])==true)
+            {
+                show_admin_class_tasks(Convert.ToInt32(left_display_view.Tag));
+                return;
+            }
+        }
+        //删除task
         private void delete_menu_Click(object sender, EventArgs e)
         {
             if (this.left_display_view.SelectedItems.Count == 0)
@@ -731,6 +1139,11 @@ namespace TODO
                             System.Windows.Forms.MessageBoxIcon.Question) ==
                             System.Windows.Forms.DialogResult.Yes)
                 {
+                    int index = Convert.ToInt32(left_display_view.SelectedItems[0].Tag);
+                    if(manager.delete("person_tasks", manager.class_tasks[index])==false)
+                    {
+                        return;
+                    }
                     //移除对应项
                     foreach (ListViewItem item in this.left_display_view.SelectedItems)
                     {
@@ -752,17 +1165,21 @@ namespace TODO
         {
             /*删除对应的list*/
             StudentList cur_list = manager.lists[choose_list_index - 1];
-            manager.delete("lists", cur_list);//所有任务都交给manager
-            list_num= 0;
-            //清空所有组件
-            this.file_slide.Controls.Clear();
-            this.add_list_button.Location = new Point(0, 0);
-            this.file_slide.Controls.Add(this.add_list_button);
-            for (int i = 0; i < manager.lists.Count; i++)
+            if (manager.delete("lists", cur_list) == true)
             {
-                temp = manager.lists[i].name;
-                add_list_show();
+                //所有任务都交给manager
+                list_num = 0;
+                //清空所有组件
+                this.file_slide.Controls.Clear();
+                this.add_list_button.Location = new Point(0, 0);
+                this.file_slide.Controls.Add(this.add_list_button);
+                for (int i = 0; i < manager.lists.Count; i++)
+                {
+                    temp = manager.lists[i].name;
+                    add_list_show();
+                }
             }
+
         }
         
         /// <summary>
@@ -810,17 +1227,27 @@ namespace TODO
             for (int i = 0; i < cur_list.taskIDs.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
-                lvi.ImageIndex = i;
                 int index = manager.get_list_task_index(cur_list.taskIDs[i]);
                 if (index != -1)
                 {
+                    //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是蓝色（索引为2）
+                    if (manager.list_tasks[index].is_finished == true)
+                    { lvi.ImageIndex = 3; }
+                    else
+                    {
+                        if (manager.list_tasks[index].due_time > DateTime.Now)
+                        {
+                            lvi.ImageIndex = 2;
+                        }
+                        else lvi.ImageIndex = 1;
+                    }
                     lvi.Text = "  "+manager.list_tasks[index].name;//对应文字
                 }
                 else
                 {
                     lvi.Text = "不存在的任务";//对应文字
+                    lvi.ImageIndex = 0;
                 }
-                lvi.ImageIndex = 0;
                 this.left_display_view.Items.Add(lvi);
             }
 
@@ -886,7 +1313,7 @@ namespace TODO
             //按钮边缘
             button.FlatAppearance.BorderSize = 0;
             button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_list_info);
+            button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_list_info_click);
             button.MouseEnter += new System.EventHandler(this.listbuttonEnter);
             //右键删除事件
             button.ContextMenuStrip = this.list_contextMenuStrip;
@@ -957,18 +1384,18 @@ namespace TODO
         }
         public void listbuttonEnter(object sender, EventArgs e)
         {
-            //为了确定选中的是谁
-            Button btn = (Button)sender;
-            string name = btn.Name.Substring(6);
-            choose_list_index = Convert.ToInt32(name);
+            ////为了确定选中的是谁
+            //Button btn = (Button)sender;
+            //string name = btn.Name.Substring(6);
+            //choose_list_index = Convert.ToInt32(name);
         }
 
         public void classbuttonEnter(object sender, EventArgs e)
         {
-            //为了确定选中的是谁
-            Button btn = (Button)sender;
-            string name = btn.Name.Substring(6);
-            choose_list_index2 = Convert.ToInt32(name);
+            ////为了确定选中的是谁
+            //Button btn = (Button)sender;
+            //string name = btn.Name.Substring(6);
+            //choose_list_index2 = Convert.ToInt32(name);
         }
         
         private void refresh_button_MouseClick(object sender, MouseEventArgs e)
@@ -981,7 +1408,7 @@ namespace TODO
             //清除原有内容
             this.left_display_view.Clear();
             this.right_display_panel.Controls.Clear();
-            this.right_display_panel.CreateGraphics().Clear(Color.White);
+            this.right_display_panel.CreateGraphics().Clear(Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(210)))), ((int)(((byte)(106))))));
         }
 
         private void left_display_view_MouseClick(object sender, MouseEventArgs e)
@@ -1012,18 +1439,19 @@ namespace TODO
             this.left_display_view.View = View.List;
 
             this.left_display_view.SmallImageList = this.color_imageList;
-            this.color_imageList.ImageSize = new Size(10, 30); // 这实际上是图片的占位，可能导致图片无法显示
+            //this.color_imageList.ImageSize = new Size(10, 30); // 这实际上是图片的占位，可能导致图片无法显示
             this.left_display_view.BeginUpdate();
             
             //显示管理的课程
             for (int i = 0; i < myuser.administrator_list.Count; i++)
             {
                 ListViewItem lvi = new ListViewItem();
-                lvi.ImageIndex = manager.list_tasks.Count + i;
+                lvi.ImageIndex = 4;
                 int temp_index = manager.get_all_class_index(myuser.administrator_list[i]);
                 if (temp_index >= 0)
                 {
                     lvi.Text = manager.all_classes[temp_index].name;//对应文字
+                    lvi.Tag = temp_index;
                 }
                 else { lvi.Text = "没有这门课"; }
                 lvi.ImageIndex = 0;
@@ -1130,13 +1558,50 @@ namespace TODO
                 add_list_show();
             }
         }
+        //修改班级作业
+        private void modify_class_task_info(object sender, EventArgs e)
+        {
+            int index = Convert.ToInt32(left_display_view.SelectedItems[0].Tag);
+            Task cur_task = manager.class_tasks[index];//当前的任务
+
+            string content = cur_task.name + "*" + cur_task.due_time.ToString("yyyy.MM.dd") + "*" + cur_task.description;
+
+            AddTask addtask = new AddTask(content);//打开修改页面
+            addtask.AfterMsgChange += this.AfterTxtChange2;
+            addtask.ShowDialog();
+
+            if (temp_task_str.Length == 0)
+            {
+                return;//没有输入则返回
+            }
+            //创建新的task
+            string[] temp_str = temp_task_str.Split('*'); temp_task_str = "";
+            Task new_task = new Task();
+            new_task.name = temp_str[0];
+            new_task.start_time = DateTime.Now;
+            new_task.due_time = str2date(temp_str[1]);
+
+            new_task.description = temp_str[2];
+            new_task.parent_id = cur_task.parent_id;
+            new_task.task_id = cur_task.task_id;
+
+            manager.modify("class_tasks", new_task);//task_id没有变化，可以用于检索
+
+            //根据新的内容可视化
+            //show_task_info(sender, e);
+            left_display_view_SelectedIndexChanged(null, null);
+            left_display_view.SelectedItems[0].Text = "     " + manager.class_tasks[index].name;
+
+        }
+        //修改个人日程
         private void modify_task_info(object sender, EventArgs e)
         {
             //弹出更改任务信息的窗口
-            Button button = (Button)sender;
-            int temp_index = Convert.ToInt32(button.Name.Substring(6));//task_id
-            temp_index = manager.get_list_task_index(temp_index);//在manager.list_tasks中的索引
-            Task cur_task = manager.list_tasks[temp_index];//当前的任务
+            //Button button = (Button)sender;
+            //int temp_index = Convert.ToInt32(button.Name.Substring(6));//task_id
+            //temp_index = manager.get_list_task_index(temp_index);//在manager.list_tasks中的索引
+            int index = Convert.ToInt32(left_display_view.SelectedItems[0].Tag);
+            Task cur_task = manager.list_tasks[index];//当前的任务
 
             string content =cur_task.name+ "*" + cur_task.due_time.ToString("yyyy.MM.dd") +"*"+ cur_task.description;
 
@@ -1156,21 +1621,70 @@ namespace TODO
             new_task.due_time = str2date(temp_str[1]);
 
             new_task.description = temp_str[2];
-            new_task.parent_id = manager.lists[choose_list_index - 1].list_id;
+            new_task.parent_id =cur_task.parent_id;
             new_task.task_id = cur_task.task_id;
 
             manager.modify("list_tasks", new_task);//task_id没有变化，可以用于检索
 
             //根据新的内容可视化
-            show_task_info(sender, e);
+            //show_task_info(sender, e);
+            left_display_view_SelectedIndexChanged(null, null);
+            left_display_view.SelectedItems[0].Text= "     " + manager.list_tasks[index].name;
+
         }
         private void submit_homework(object sender, EventArgs e)
         {
             //上交作业
             Button button = (Button)sender;
-            string url = "10.128.169.239:5000/filesubmit?taskid=";
+            //string url = "http://10.128.169.239:5000/filesubmit?taskid=";
+            string url = "http://aliyun.xiaotianxt.com:5000/filesubmit?taskid="; 
+            url += button.Name.Substring(6);
+           
+            Process.Start(url);//在浏览器打开链接
+        }
+        private void download_homework(object sender, EventArgs e)
+        {
+
+            //管理员下载作业
+            Button button = (Button)sender;
+            //string url = "http://10.128.169.239:5000/filesubmit?taskid=";
+            string url = "http://aliyun.xiaotianxt.com:5000/filesubmit?taskid=";
             url += button.Name.Substring(6);
             Process.Start(url);//在浏览器打开链接
+        }
+        private void finish_personal_task(object sender, EventArgs e)
+        {
+            //完成task
+            Button button = (Button)sender;
+            int temp_index = Convert.ToInt32(button.Name.Substring(13));//task_id
+            temp_index = manager.get_list_task_index(temp_index);//在manager.list_tasks中的索引
+            if(manager.finish(manager.list_tasks[temp_index]))
+            {
+                ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+                ListViewItem lvi = new ListViewItem();
+                //lvi.ImageIndex = 3;
+                //int index = this.left_display_view.SelectedIndices[0];
+                //this.left_display_view.Items.Insert(index, lvi);
+                //this.left_display_view.Items.RemoveAt(index + 1);
+                this.left_display_view.SelectedItems[0].ImageIndex = 3;
+            }
+        }
+        private void finish_class_task(object sender, EventArgs e)
+        {
+            //完成task
+            Button button = (Button)sender;
+            int temp_index = Convert.ToInt32(button.Name.Substring(13));//task_id
+            temp_index = manager.get_class_task_index(temp_index);//在manager.list_tasks中的索引
+            if(manager.finish(manager.class_tasks[temp_index]))
+            {
+                ListView.SelectedIndexCollection indexes = this.left_display_view.SelectedIndices;//选中的index
+                this.left_display_view.SelectedItems[0].ImageIndex = 3;
+            }
+        }
+
+        private void foot_button_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("抱歉，功能逻辑仍在研究中，敬请期待！");
         }
     }
 }

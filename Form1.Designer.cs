@@ -97,7 +97,7 @@
             this.left_panel.Location = new System.Drawing.Point(0, 0);
             this.left_panel.Margin = new System.Windows.Forms.Padding(1);
             this.left_panel.Name = "left_panel";
-            this.left_panel.Size = new System.Drawing.Size(183, 522);
+            this.left_panel.Size = new System.Drawing.Size(183, 523);
             this.left_panel.TabIndex = 5;
             this.left_panel.MouseEnter += new System.EventHandler(this.file_slide_MouseLeave);
             // 
@@ -270,6 +270,7 @@
             this.foot_button.TabIndex = 9;
             this.foot_button.Text = "我的足迹";
             this.foot_button.UseVisualStyleBackColor = true;
+            this.foot_button.Click += new System.EventHandler(this.foot_button_Click);
             this.foot_button.MouseEnter += new System.EventHandler(this.foot_button_MouseEnter);
             // 
             // admin_button
@@ -315,7 +316,6 @@
             this.person_list_button.Text = "个人列表";
             this.person_list_button.UseVisualStyleBackColor = true;
             this.person_list_button.MouseEnter += new System.EventHandler(this.File_Button_MouseEnter);
-            //this.person_list_button.MouseLeave += new System.EventHandler(this.file_slide_MouseLeave);
             // 
             // title_label
             // 
@@ -333,7 +333,7 @@
             // 
             // Exit_Button
             // 
-            this.Exit_Button.BackColor = System.Drawing.Color.Silver;
+            this.Exit_Button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(167)))), ((int)(((byte)(193)))), ((int)(((byte)(188)))));
             this.Exit_Button.Cursor = System.Windows.Forms.Cursors.Default;
             this.Exit_Button.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.Exit_Button.FlatAppearance.BorderSize = 0;
@@ -343,7 +343,7 @@
             this.Exit_Button.ForeColor = System.Drawing.Color.Black;
             this.Exit_Button.Image = ((System.Drawing.Image)(resources.GetObject("Exit_Button.Image")));
             this.Exit_Button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Exit_Button.Location = new System.Drawing.Point(739, 10);
+            this.Exit_Button.Location = new System.Drawing.Point(751, 11);
             this.Exit_Button.Margin = new System.Windows.Forms.Padding(1);
             this.Exit_Button.Name = "Exit_Button";
             this.Exit_Button.Size = new System.Drawing.Size(67, 37);
@@ -383,7 +383,7 @@
             // right_display_panel
             // 
             this.right_display_panel.AutoScroll = true;
-            this.right_display_panel.BackColor = System.Drawing.Color.White;
+            this.right_display_panel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(210)))), ((int)(((byte)(106)))));
             this.right_display_panel.Location = new System.Drawing.Point(518, 62);
             this.right_display_panel.Margin = new System.Windows.Forms.Padding(2);
             this.right_display_panel.Name = "right_display_panel";
@@ -400,6 +400,7 @@
             this.search_label.Size = new System.Drawing.Size(62, 20);
             this.search_label.TabIndex = 10;
             this.search_label.Text = "Search:";
+            this.search_label.Visible = false;
             // 
             // textBox1
             // 
@@ -409,6 +410,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(106, 27);
             this.textBox1.TabIndex = 11;
+            this.textBox1.Visible = false;
             // 
             // class_slide
             // 
@@ -441,9 +443,9 @@
             // 
             // left_display_view
             // 
-            this.left_display_view.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.left_display_view.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(110)))), ((int)(((byte)(148)))));
             this.left_display_view.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.left_display_view.Font = new System.Drawing.Font("微软雅黑", 15F);
+            this.left_display_view.Font = new System.Drawing.Font("微软雅黑", 14F);
             this.left_display_view.HideSelection = false;
             this.left_display_view.Location = new System.Drawing.Point(213, 62);
             this.left_display_view.Margin = new System.Windows.Forms.Padding(2);
@@ -454,7 +456,6 @@
             this.left_display_view.SelectedIndexChanged += new System.EventHandler(this.left_display_view_SelectedIndexChanged);
             this.left_display_view.MouseClick += new System.Windows.Forms.MouseEventHandler(this.left_display_view_MouseClick);
             this.left_display_view.MouseEnter += new System.EventHandler(this.file_slide_MouseLeave);
-            this.left_display_view.MouseEnter += new System.EventHandler(this.class_slide_MouseLeave);
             // 
             // contextMenuStrip3
             // 
@@ -551,12 +552,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.ClientSize = new System.Drawing.Size(829, 522);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(167)))), ((int)(((byte)(193)))), ((int)(((byte)(188)))));
+            this.ClientSize = new System.Drawing.Size(838, 523);
+            this.Controls.Add(this.right_display_panel);
             this.Controls.Add(this.class_slide);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.search_label);
-            this.Controls.Add(this.right_display_panel);
             this.Controls.Add(this.file_slide);
             this.Controls.Add(this.Exit_Button);
             this.Controls.Add(this.left_panel);
@@ -566,7 +567,6 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-            this.MouseEnter += new System.EventHandler(this.file_slide_MouseLeave);
             this.MouseEnter += new System.EventHandler(this.class_slide_MouseLeave);
             this.left_panel.ResumeLayout(false);
             this.left_panel.PerformLayout();

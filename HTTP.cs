@@ -22,8 +22,9 @@ namespace TODO
         /// <param name="url">请求Url地址</param>
         /// <param name="postParameters">post提交参数</param>
         /// <returns></returns>
-        //public static JObject HttpPost(string js, string url = "http://aliyun.xiaotianxt.com:5000")
+
         public static JObject HttpPost(string js, string url = "http://10.128.169.239:5000")
+        //public static JObject HttpPost(string js, string url = "http://aliyun.xiaotianxt.com:5000")
         {
             try
             {
@@ -48,7 +49,7 @@ namespace TODO
                 request.ContentType = "application/json;charset:utf-8";
                 js.Trim('\"');
                 // 设置超时时间
-                request.Timeout = 3000;
+                request.Timeout = 100000;
                 request.KeepAlive = false;
 
                 //POST参数

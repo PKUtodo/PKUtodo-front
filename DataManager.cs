@@ -146,7 +146,7 @@ namespace TODO
             new_task.due_time = item.due_time;
             if (table_name == "person_class_tasks")
             {
-                string req=JSONHelper.CreateJson("add_task",myuser_.email, myuser_.user_id,
+                string req=JSONHelper.CreateJsonAdd("add_task",myuser_.email, myuser_.user_id,
                     myuser_.password,item.parent_id,item.name,item.start_time,item.due_time,
                     item.description,item.position_x,item.position_y);
                 try{
@@ -170,7 +170,7 @@ namespace TODO
             }
             else if (table_name== "list_tasks")
             {
-                string req=JSONHelper.CreateJson("add_task",myuser_.email,myuser_.user_id,
+                string req=JSONHelper.CreateJsonAdd("add_task",myuser_.email,myuser_.user_id,
                     myuser_.password,item.parent_id,item.name,item.start_time,item.due_time,
                     item.description,item.position_x,item.position_y);
                 try{
@@ -205,29 +205,7 @@ namespace TODO
         public bool delete(string table_name, StudentClass item)
         {
             int index = 0;
-            //该功能不存在
-            if (table_name=="all_classes")
-            {
-                Debug.Assert(false);
-                index = get_person_class_index(item.class_id);
-                if (index >= 0)
-                {
-                    Debug.Assert(false);
-                    //删除课程所有作业
-                    for(int i=0;i<item.alltaskIDs.Count;i++)
-                    {
-                        int temp = get_all_class_task_index(item.alltaskIDs[i]);
-                        delete("all_classes", temp);
-                    }
-                    //@warning:
-                    //删除所有选修这门课的人的person_classes
-                    //这一点目前还没有办法实现，可能在处理管理员的时候出现一些问题
-
-                    delete(table_name, index); 
-                    return true; }
-                else { return false; }
-            }
-            else if (table_name == "person_classes")
+            if (table_name == "person_classes")
             {
                 string req=JSONHelper.CreateJsonDelList("quit_class",myuser_.email,myuser_.user_id,myuser_.password,item.class_id);
                 try{
@@ -300,25 +278,10 @@ namespace TODO
         public bool delete(string table_name, Task item)
         {
             int index = 0;
-            //该功能不存在
-            if (table_name == "all_class_tasks")
-            {
-                Debug.Assert(false);
-                index = get_all_class_task_index(item.task_id);
-                if (index >= 0)
-                { 
-                    //@warning：
-                    //还需要删除所有用户的该任务，这里没写
-
-                    delete(table_name, index);
-                    return true; 
-                }
-                else { return false; }
-            }
             //管理员权限
-            else if (table_name == "person_tasks")
+            if (table_name == "person_tasks")
             {
-                string req = JSONHelper.CreateJsonDelTask("del_assignment", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
+                string req = JSONHelper.CreateJsonDelTask("del_task", myuser_.email, myuser_.user_id, myuser_.password, item.task_id);
                 try
                 {
                     receiver = HTTP.HttpPost(req);
@@ -627,8 +590,14 @@ namespace TODO
                     JArray members_info = receiver.Value<JArray>("data");
                     for (int i=0;i<members_info.Count;i++)
                     {
+                        if(members_info[i].Value<int>("user_id")==myuser_.user_id)
+                        {
+                            continue;
+                        }
                         UserData class_member = new UserData();
-                        class_member.user_id = members_info[i].Value<int>("user_id");
+                        class_member.user_id = members_info[i].Value<int>("id");
+                        class_member.name = members_info[i].Value<string>("name");
+                        class_member.email = members_info[i].Value<string>("email");
                         class_members.Add(class_member);
                     }
                 }
@@ -684,8 +653,8 @@ namespace TODO
         {
             //修改某个表中的任务
             //task_id没有变化，可以用于检索
-            string req = JSONHelper.CreateJson(MessageType.modify_task, myuser_.email, myuser_.user_id,
-                    myuser_.password, new_task.parent_id, new_task.name, new_task.start_time, new_task.due_time,
+            string req = JSONHelper.CreateJsonModify(MessageType.modify_task, myuser_.email, myuser_.user_id,
+                    myuser_.password, new_task.task_id, new_task.name, new_task.start_time, new_task.due_time,
                     new_task.description, new_task.position_x, new_task.position_y);
             try
             {

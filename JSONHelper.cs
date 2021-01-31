@@ -191,8 +191,7 @@ namespace TODO
             return obj.ToString();
         }
         //添加task
-        //修改task
-        public static string CreateJson(string type, string email,int user_id, string password, int list_id, string task_name, DateTime create_date, DateTime due_date, string content, double position_x=0, double position_y=0)
+        public static string CreateJsonAdd(string type, string email, int user_id, string password, int list_id, string task_name, DateTime create_date, DateTime due_date, string content, double position_x = 0, double position_y = 0)
         {
             JObject obj = new JObject
             {
@@ -201,6 +200,27 @@ namespace TODO
                 { "user_id", user_id },
                 { "password", password },
                 { "list_id", list_id },
+                { "task_name", task_name },
+                { "create_date", create_date.ToString("yyyy-MM-dd HH:mm:ss") },
+                { "due_date", due_date.ToString("yyyy-MM-dd HH:mm:ss") },
+                //{ "create_date", create_date.ToString("yyyy-MM-dd~HH!mm!ss") },
+                //{ "due_date", due_date.ToString("yyyy-MM-dd~HH!mm!ss")},
+                { "position_x", position_x },
+                { "position_y", position_y },
+                { "content", content }
+            };
+            return obj.ToString();
+        }
+        //修改task
+        public static string CreateJsonModify(string type, string email,int user_id, string password, int task_id, string task_name, DateTime create_date, DateTime due_date, string content, double position_x=0, double position_y=0)
+        {
+            JObject obj = new JObject
+            {
+                { "type", type },
+                { "email", email },
+                { "user_id", user_id },
+                { "password", password },
+                { "task_id", task_id },
                 { "task_name", task_name },
                 { "create_date", create_date.ToString("yyyy-MM-dd HH:mm:ss") },
                 { "due_date", due_date.ToString("yyyy-MM-dd HH:mm:ss") },

@@ -251,9 +251,10 @@ namespace TODO
                 ListViewItem lvi = new ListViewItem();
                 
                 int index = manager.get_class_task_index(cur_class.alltaskIDs[i]);
-                lvi.Tag = index;
+                
                 if (index != -1)
                 {
+                    lvi.Tag = index;
                     //完成了是绿色(索引为3)，逾期未完成是红色（索引为1），未逾期未完成是黄色（索引为2）
                     if (manager.class_tasks[index].is_finished == true)
                     { lvi.ImageIndex = 3; }
@@ -505,11 +506,12 @@ namespace TODO
 
                         //右侧生成对应任务的内容
                         //确定选中的task
-                        index = indexes[0] - class_task_show_bios;//对应该class中的索引,此处class_task_show_bios没有用
-                        class_task_show_bios = 0;
-                        int temp_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
-                        StudentClass cur_class = manager.all_classes[temp_index];
-                        int task_index = manager.get_class_task_index(cur_class.alltaskIDs[index]);//class_tasks中的索引
+                        //index = indexes[0] - class_task_show_bios;//对应该class中的索引,此处class_task_show_bios没有用
+                        //class_task_show_bios = 0;
+                        //int temp_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
+                        //StudentClass cur_class = manager.all_classes[temp_index];
+                        //int task_index = manager.get_class_task_index(cur_class.alltaskIDs[index]);//class_tasks中的索引
+                        int task_index = Convert.ToInt32(left_display_view.SelectedItems[0].Tag);
                         show_class_task_info(sender, e,task_index);
                     }
                     else
@@ -726,8 +728,8 @@ namespace TODO
             button.TextAlign = ContentAlignment.MiddleCenter;
             button.Font = new Font("微软雅黑", 11);
             //位置和大小
-            button.Location = new Point(this.right_display_panel.Width - width - 10, 40);
-            button.Size = new Size(width, height);
+            button.Location = new Point(40, 300);
+            button.Size = new Size(220, 50);
 
             this.right_display_panel.Controls.Add(button);
 
@@ -737,7 +739,7 @@ namespace TODO
             label.Text = manager.all_classes[index].name;
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font("微软雅黑", 11);
-            label.Location = new Point(10, 40);
+            label.Location = new Point(10, 45);
             label.AutoSize = true;
             this.right_display_panel.Controls.Add(label);
 
@@ -785,7 +787,7 @@ namespace TODO
             label.Text = "任务名：" + manager.class_tasks[task_index].name;
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font("微软雅黑", 11);
-            label.Location = new Point(5, 40);
+            label.Location = new Point(0, 40);
             label.Size = new Size(200, 20);
             this.right_display_panel.Controls.Add(label);
 
@@ -800,7 +802,7 @@ namespace TODO
             if (task_index < 0) { label2.Text = "任务索引出错"; }
             else
             {
-                label2.Text = "任务介绍：\r\n\r\n任务开始时间：" + manager.class_tasks[task_index].start_time.ToString();
+                label2.Text = "任务开始时间：" + manager.class_tasks[task_index].start_time.ToString();
                 label2.Text += "\r\n\r\n任务到期时间：" + manager.class_tasks[task_index].due_time.ToString();
                 label2.Text += "\r\n\r\n任务描述：" + manager.class_tasks[task_index].description;
             }
@@ -841,7 +843,7 @@ namespace TODO
             button.BringToFront();
             button1.BringToFront();
         }
-        //课程管理页面右边栏显示
+        //课程管理状态时右边栏显示
         private void show_admin_class_task_info(object sender, EventArgs e, int task_index)
         {
 
@@ -858,7 +860,7 @@ namespace TODO
             label.Text = "任务名：" + manager.class_tasks[task_index].name;
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font("微软雅黑", 11);
-            label.Location = new Point(5, 40);
+            label.Location = new Point(5, 45);
             label.Size = new Size(200, 20);
             this.right_display_panel.Controls.Add(label);
 
@@ -873,7 +875,7 @@ namespace TODO
             if (task_index < 0) { label2.Text = "任务索引出错"; }
             else
             {
-                label2.Text = "任务介绍：\r\n\r\n任务开始时间：" + manager.class_tasks[task_index].start_time.ToString();
+                label2.Text = "任务开始时间：" + manager.class_tasks[task_index].start_time.ToString();
                 label2.Text += "\r\n\r\n任务到期时间：" + manager.class_tasks[task_index].due_time.ToString();
                 label2.Text += "\r\n\r\n任务描述：" + manager.class_tasks[task_index].description;
             }
@@ -967,7 +969,7 @@ namespace TODO
             label.Text = "任务名：" + cur_task.name;
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font("微软雅黑", 11);
-            label.Location = new Point(10, 40);
+            label.Location = new Point(-10, 40);
             label.Size = new Size(200, 20);
             this.right_display_panel.Controls.Add(label);
 
@@ -1006,7 +1008,7 @@ namespace TODO
             button1.TextAlign = ContentAlignment.MiddleCenter;
             button1.Font = new Font("微软雅黑", 11);
             //位置和大小
-            button1.Location = new Point(40, 350);
+            button1.Location = new Point(45, 350);
             button1.Size = new Size(220, height);
 
             this.right_display_panel.Controls.Add(button);
@@ -1025,7 +1027,7 @@ namespace TODO
             //label2.Text += "它要求我们把软件工程课程学到的东西都融会贯通";
             if (true)
             {
-                label2.Text = "任务介绍：\r\n\r\n任务开始时间：" + cur_task.start_time.ToString();
+                label2.Text = "任务开始时间：" + cur_task.start_time.ToString();
                 label2.Text += "\r\n\r\n任务到期时间：" + cur_task.due_time.ToString();
                 label2.Text += "\r\n\r\n任务描述：" + cur_task.description;
             }
@@ -1118,7 +1120,7 @@ namespace TODO
             button.Padding = this.add_class_button.Padding;
             button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_class_tasks_click);
-            button.MouseEnter += new System.EventHandler(this.classbuttonEnter);
+            button.MouseDown += new System.Windows.Forms.MouseEventHandler(this.classbuttonEnter);
             this.class_slide.Controls.Add(button);
         }
         #endregion
@@ -1259,6 +1261,7 @@ namespace TODO
                         else lvi.ImageIndex = 1;
                     }
                     lvi.Text = "  "+manager.list_tasks[index].name;//对应文字
+                    lvi.Tag = index;
                 }
                 else
                 {
@@ -1332,7 +1335,7 @@ namespace TODO
             button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_list_info_click);
 
-            button.MouseEnter += new System.EventHandler(this.listbuttonEnter);
+            button.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listbuttonEnter);
             //右键删除事件
             button.ContextMenuStrip = this.list_contextMenuStrip;
             this.file_slide.Controls.Add(button);
@@ -1606,7 +1609,6 @@ namespace TODO
 
             //根据新的内容可视化
             //show_task_info(sender, e);
-            left_display_view_SelectedIndexChanged(null, null);
             left_display_view.SelectedItems[0].Text = "     " + manager.class_tasks[index].name;
 
         }
@@ -1645,7 +1647,6 @@ namespace TODO
 
             //根据新的内容可视化
             //show_task_info(sender, e);
-            left_display_view_SelectedIndexChanged(null, null);
             left_display_view.SelectedItems[0].Text= "     " + manager.list_tasks[index].name;
 
         }
@@ -1654,7 +1655,7 @@ namespace TODO
             //上交作业
             Button button = (Button)sender;
             //string url = "http://10.128.169.239:5000/filesubmit?taskid=";
-            string url = "http://aliyun.xiaotianxt.com:5000/filesubmit?taskid="; 
+            string url = "https://aliyun.xiaotianxt.com:5000/filesubmit?taskid="; 
             url += button.Name.Substring(6);
            
             Process.Start(url);//在浏览器打开链接
@@ -1665,7 +1666,7 @@ namespace TODO
             //管理员下载作业
             Button button = (Button)sender;
             //string url = "http://10.128.169.239:5000/filesubmit?taskid=";
-            string url = "http://aliyun.xiaotianxt.com:5000/filedownload?taskid=";
+            string url = "https://aliyun.xiaotianxt.com:5000/filedownload?taskid=";
             url+=left_display_view.SelectedItems[0].Tag.ToString();
             Process.Start(url);//在浏览器打开链接
         }
@@ -1710,6 +1711,11 @@ namespace TODO
         }
 
         private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void left_panel_Paint(object sender, PaintEventArgs e)
         {
 
         }

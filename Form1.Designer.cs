@@ -73,6 +73,8 @@
             this.list_delete_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.add_task_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.listRenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.left_panel.SuspendLayout();
             this.menu_panel.SuspendLayout();
             this.file_slide.SuspendLayout();
@@ -85,6 +87,8 @@
             // left_panel
             // 
             this.left_panel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(55)))), ((int)(((byte)(67)))));
+            this.left_panel.Controls.Add(this.label2);
+            this.left_panel.Controls.Add(this.label1);
             this.left_panel.Controls.Add(this.not_finish_not_late);
             this.left_panel.Controls.Add(this.not_finish_late);
             this.left_panel.Controls.Add(this.finished);
@@ -105,27 +109,28 @@
             this.left_panel.Name = "left_panel";
             this.left_panel.Size = new System.Drawing.Size(183, 523);
             this.left_panel.TabIndex = 5;
+            this.left_panel.Paint += new System.Windows.Forms.PaintEventHandler(this.left_panel_Paint);
             this.left_panel.MouseEnter += new System.EventHandler(this.file_slide_MouseLeave);
             // 
             // not_finish_not_late
             // 
             this.not_finish_not_late.AutoSize = true;
-            this.not_finish_not_late.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.not_finish_not_late.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.not_finish_not_late.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.not_finish_not_late.Location = new System.Drawing.Point(64, 421);
+            this.not_finish_not_late.Location = new System.Drawing.Point(58, 490);
             this.not_finish_not_late.Name = "not_finish_not_late";
-            this.not_finish_not_late.Size = new System.Drawing.Size(77, 12);
+            this.not_finish_not_late.Size = new System.Drawing.Size(80, 17);
             this.not_finish_not_late.TabIndex = 20;
             this.not_finish_not_late.Text = "未逾期未完成";
             // 
             // not_finish_late
             // 
             this.not_finish_late.AutoSize = true;
-            this.not_finish_late.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.not_finish_late.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.not_finish_late.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.not_finish_late.Location = new System.Drawing.Point(64, 398);
+            this.not_finish_late.Location = new System.Drawing.Point(58, 467);
             this.not_finish_late.Name = "not_finish_late";
-            this.not_finish_late.Size = new System.Drawing.Size(65, 12);
+            this.not_finish_late.Size = new System.Drawing.Size(68, 17);
             this.not_finish_late.TabIndex = 19;
             this.not_finish_late.Text = "逾期未完成";
             this.not_finish_late.Click += new System.EventHandler(this.label1_Click_1);
@@ -133,13 +138,13 @@
             // finished
             // 
             this.finished.AutoSize = true;
-            this.finished.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.finished.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.finished.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.finished.Location = new System.Drawing.Point(64, 374);
+            this.finished.Location = new System.Drawing.Point(58, 443);
             this.finished.Name = "finished";
-            this.finished.Size = new System.Drawing.Size(41, 12);
+            this.finished.Size = new System.Drawing.Size(109, 17);
             this.finished.TabIndex = 18;
-            this.finished.Text = "已完成";
+            this.finished.Text = "已完成/已选择课程";
             this.finished.Click += new System.EventHandler(this.label1_Click);
             // 
             // purple_button
@@ -156,7 +161,7 @@
             // blue_button
             // 
             this.blue_button.Image = ((System.Drawing.Image)(resources.GetObject("blue_button.Image")));
-            this.blue_button.Location = new System.Drawing.Point(37, 417);
+            this.blue_button.Location = new System.Drawing.Point(31, 486);
             this.blue_button.Margin = new System.Windows.Forms.Padding(2);
             this.blue_button.Name = "blue_button";
             this.blue_button.Size = new System.Drawing.Size(22, 22);
@@ -177,19 +182,18 @@
             // yellow_button
             // 
             this.yellow_button.Image = ((System.Drawing.Image)(resources.GetObject("yellow_button.Image")));
-            this.yellow_button.Location = new System.Drawing.Point(57, 335);
+            this.yellow_button.Location = new System.Drawing.Point(31, 412);
             this.yellow_button.Margin = new System.Windows.Forms.Padding(2);
             this.yellow_button.Name = "yellow_button";
             this.yellow_button.Size = new System.Drawing.Size(22, 22);
             this.yellow_button.TabIndex = 14;
             this.yellow_button.UseVisualStyleBackColor = true;
-            this.yellow_button.Visible = false;
             // 
             // green_button
             // 
             this.green_button.BackColor = System.Drawing.Color.Transparent;
             this.green_button.Image = ((System.Drawing.Image)(resources.GetObject("green_button.Image")));
-            this.green_button.Location = new System.Drawing.Point(37, 369);
+            this.green_button.Location = new System.Drawing.Point(31, 438);
             this.green_button.Margin = new System.Windows.Forms.Padding(2);
             this.green_button.Name = "green_button";
             this.green_button.Size = new System.Drawing.Size(22, 22);
@@ -199,7 +203,7 @@
             // red_button
             // 
             this.red_button.Image = ((System.Drawing.Image)(resources.GetObject("red_button.Image")));
-            this.red_button.Location = new System.Drawing.Point(37, 393);
+            this.red_button.Location = new System.Drawing.Point(31, 462);
             this.red_button.Margin = new System.Windows.Forms.Padding(2);
             this.red_button.Name = "red_button";
             this.red_button.Size = new System.Drawing.Size(22, 22);
@@ -208,30 +212,32 @@
             // 
             // refresh_button
             // 
+            this.refresh_button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(70)))), ((int)(((byte)(81)))));
             this.refresh_button.FlatAppearance.BorderSize = 0;
             this.refresh_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.refresh_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.refresh_button.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.refresh_button.Location = new System.Drawing.Point(102, 456);
+            this.refresh_button.Location = new System.Drawing.Point(101, 341);
             this.refresh_button.Name = "refresh_button";
-            this.refresh_button.Size = new System.Drawing.Size(45, 45);
+            this.refresh_button.Size = new System.Drawing.Size(70, 35);
             this.refresh_button.TabIndex = 11;
             this.refresh_button.Text = "刷新";
-            this.refresh_button.UseVisualStyleBackColor = true;
+            this.refresh_button.UseVisualStyleBackColor = false;
             this.refresh_button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.refresh_button_MouseClick);
             // 
             // logout_button
             // 
+            this.logout_button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(70)))), ((int)(((byte)(81)))));
             this.logout_button.FlatAppearance.BorderSize = 0;
             this.logout_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.logout_button.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.logout_button.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.logout_button.Location = new System.Drawing.Point(34, 456);
+            this.logout_button.Location = new System.Drawing.Point(16, 341);
             this.logout_button.Name = "logout_button";
-            this.logout_button.Size = new System.Drawing.Size(45, 45);
+            this.logout_button.Size = new System.Drawing.Size(70, 35);
             this.logout_button.TabIndex = 10;
             this.logout_button.Text = "注销";
-            this.logout_button.UseVisualStyleBackColor = true;
+            this.logout_button.UseVisualStyleBackColor = false;
             this.logout_button.Click += new System.EventHandler(this.logout_button_Click);
             // 
             // menu_label
@@ -585,6 +591,28 @@
             this.listRenameToolStripMenuItem.Text = "重命名";
             this.listRenameToolStripMenuItem.Click += new System.EventHandler(this.listRenameToolStripMenuItem_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label1.Location = new System.Drawing.Point(58, 417);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(68, 17);
+            this.label1.TabIndex = 21;
+            this.label1.Text = "未选择课程";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label2.Location = new System.Drawing.Point(15, 387);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(51, 20);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "图例：";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -667,6 +695,8 @@
         private System.Windows.Forms.Label finished;
         private System.Windows.Forms.Label not_finish_not_late;
         private System.Windows.Forms.Label not_finish_late;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }
 

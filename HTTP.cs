@@ -1,4 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿/********************************************************************
+ * Project: PKU Todo List
+ * @file: HTTP.cs
+ * @author:张维昱、叶瑞麟、马睿平
+ * @说明：
+ * 1.HTTP为控制POST请求发送的类。
+ * 2.该类由Datamanager调用，与后端进行通信。
+ * *******************************************************************/
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;

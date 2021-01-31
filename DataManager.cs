@@ -1,4 +1,13 @@
-﻿using System;
+﻿/********************************************************************
+ * Project: PKU Todo List
+ * @file: Datamanager.cs
+ * @author:张维昱
+ * @说明：
+ * 1.Datamanager为数据管理类
+ * 2.将所有数据封装在五个List中
+ * 3.封装所有与数据相关的操作，并对Form提供接口
+ * *******************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +33,7 @@ namespace TODO
 
         public List<StudentList> lists = new List<StudentList>();//所有的用户表单
         public List<int> person_classes = new List<int>();//所有个人的课程,其实只需要存all_class中的主键ID
-        public List<Task> list_tasks= new List<Task>();///所有的私人任务
+        public List<Task> list_tasks= new List<Task>();//所有的私人任务
 
         public JObject receiver;//返回json接收器
 
@@ -103,7 +112,7 @@ namespace TODO
                 return false;
             }
         }
-
+        //添加列表
         public bool add(string table_name, StudentList item)
         {
             StudentList new_list= new StudentList();
@@ -134,7 +143,7 @@ namespace TODO
                 return false;
             }
         }
-
+        //添加日程或作业
         public bool add(string table_name, Task item)
         {
             Task new_task = new Task();
@@ -358,8 +367,6 @@ namespace TODO
         }
         #endregion
 
-
-
         #region 查询
         
         public int get_list_task_index(int task_id)
@@ -455,7 +462,7 @@ namespace TODO
 
         #endregion
 
-        # region 远端下载
+        # region 更新
         //下载所有用户数据
         public bool update_all()
         {
@@ -574,7 +581,7 @@ namespace TODO
 
         #endregion
 
-        //新增的函数
+        #region 转让权限
         public List<UserData> get_class_user(int class_id)
         {
             List<UserData> class_members = new List<UserData>();
@@ -646,7 +653,9 @@ namespace TODO
                 return false;
             }
         }
+        #endregion
 
+        #region 修改
         public bool modify(string table_name,Task new_task)
         {
             //修改某个表中的任务
@@ -713,7 +722,9 @@ namespace TODO
             }
             return true;
         }
+        #endregion  
 
+        //完成
         public bool finish(Task task)
         {
             string req = JSONHelper.CreateJson("finish", myuser_.email, myuser_.user_id, myuser_.password, task.task_id,true);
@@ -739,7 +750,3 @@ namespace TODO
         }
     }
 }
-
-//想要删除和增加课程，实际上需要教学网级别的管理员
-//想要删除和增加课程作业，实际上需要课程级别的管理员
-//本项目只能实现课程级别的管理员，手工充当教学网管理员

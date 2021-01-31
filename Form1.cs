@@ -1,9 +1,10 @@
 ﻿/********************************************************************
  * Project: PKU Todo List
  * @file: Form1.cs
+ * @author:张维昱、叶瑞麟
  * @说明：
  * 1.Form1为本项目的主窗口类
- * 
+ * 2.一个账户对应一个Form1，每个Form1含有一个Datamnager对象，用于管理数据；
  * *******************************************************************/
 using System;
 using System.Drawing;
@@ -233,7 +234,7 @@ namespace TODO
             this.left_content = "class";
         }
 
-        // 课程：左侧listview显示课程的任务
+        // 选择某个具体课程：左侧listview显示课程的任务
         private void show_class_tasks(int class_index)
         {
             //记录班级index
@@ -289,7 +290,7 @@ namespace TODO
             int class_index = manager.get_all_class_index(manager.person_classes[choose_list_index2 - 1]);
             show_class_tasks(class_index);
         }
-        //左侧列表显示课程管理页面
+        //进入课程管理页面，左侧列表显示该课程得作业
         private void show_admin_class_tasks(int class_index)
         {
             //记录班级index
@@ -397,7 +398,6 @@ namespace TODO
             //更改显示内容
             this.left_content = "all_task";
         }
-
         private void all_task_button_MouseClick(object sender, MouseEventArgs e)
         {
             show_all_tasks();
@@ -1721,14 +1721,3 @@ namespace TODO
         }
     }
 }
-
-//目前存在的明显问题
-//1.修改功能（List和Task）
-//2.增加上传作业的按钮（打开超链接）
-//3.完成情况的显示（不同颜色的图标）,目前只能用空格的方式
-//4.发布作业之后还是无法响应
-
-/// <summary>
-/// 列表：单击左侧表项触发的事件，在右边的显示栏展示列表中的task的内容
-/// </summary>
-/// <returns></returns>

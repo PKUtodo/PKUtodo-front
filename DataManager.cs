@@ -178,9 +178,7 @@ namespace TODO
                     if(receiver.Value<int>("success")==1)
                     {
                         item.task_id=receiver["data"].Value<int>("task_id");
-                        //将task加入task列表中
-                        class_tasks.Add(item);
-                        //将task注册到class中
+                        
                         int list_index=get_list_index(item.parent_id);
                         lists[list_index].taskIDs.Add(item.task_id);
                         //将task注册到所有私人事件表
@@ -701,7 +699,7 @@ namespace TODO
                 if (receiver.Value<int>("success") == 1)
                 {
                     int index=get_list_index(new_list.list_id);
-                    lists[index] = new_list;
+                    lists[index].name = new_list.name;
                 }
                 else {
                     MessageBox.Show(receiver.Value<string>("error_msg"));

@@ -24,7 +24,7 @@ namespace TODO
         /// <returns></returns>
 
         //public static JObject HttpPost(string js, string url = "http://10.128.169.239:5000")
-        public static JObject HttpPost(string js, string url = "http://aliyun.xiaotianxt.com:5000")
+        public static JObject HttpPost(string js, string url = "https://aliyun.xiaotianxt.com:5000")
         {
             try
             {

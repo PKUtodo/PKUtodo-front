@@ -90,8 +90,9 @@ namespace TODO
             };
             return obj.ToString();
         }
+
+
         //创建list
-        //注册验证
         public static string CreateJson(string type, string email, int user_id, string password, string list_name)
         {
             JObject obj = new JObject
@@ -130,7 +131,7 @@ namespace TODO
             };
             return obj.ToString();
         }
-
+        //注册验证
         public static string CreateJsonSetup(string type, string email, int veri_code, string user_name, string password)
         {
             JObject obj = new JObject

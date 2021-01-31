@@ -193,11 +193,13 @@ namespace TODO
         }
         private void show_list_info_click(object sender, MouseEventArgs e)
         {
+            
             //为了确定选中的是谁
             Button btn = (Button)sender;
             string name = btn.Name.Substring(6);
             choose_list_index = Convert.ToInt32(name);
             show_list_info(choose_list_index - 1);
+
         }
         /// <summary>
         /// 课程：点击“加入课程"按钮，左边显示栏显示所有的课程
@@ -217,10 +219,10 @@ namespace TODO
                 ListViewItem lvi = new ListViewItem();
                 lvi.Tag = i;
                 lvi.Text ="     " +manager.all_classes[i].name;//对应文字
-                //没选的是黄色（索引为5），选了的是红色（索引为4）
+                //没选的是黄色（索引为5），选了的是绿色（索引为1）
                 if(manager.all_classes[i].isSelected)
                 {
-                    lvi.ImageIndex =6 ;
+                    lvi.ImageIndex =3 ;
                 }
                 else { lvi.ImageIndex = 5; }
                 this.left_display_view.Items.Add(lvi);
@@ -1048,7 +1050,7 @@ namespace TODO
             temp_button.Enabled = false;//不能再点
             //展示加入的新课程
             add_class_show(index);
-            this.left_display_view.SelectedItems[0].ImageIndex = 1;
+            this.left_display_view.SelectedItems[0].ImageIndex = 3;
         }
         private void del_new_class(object sender, MouseEventArgs e)
         {
@@ -1329,10 +1331,10 @@ namespace TODO
             button.FlatAppearance.BorderSize = 0;
             button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             button.MouseClick += new System.Windows.Forms.MouseEventHandler(this.show_list_info_click);
+
             button.MouseEnter += new System.EventHandler(this.listbuttonEnter);
             //右键删除事件
             button.ContextMenuStrip = this.list_contextMenuStrip;
-
             this.file_slide.Controls.Add(button);
 
             //更新+号的位置
@@ -1400,17 +1402,17 @@ namespace TODO
         public void listbuttonEnter(object sender, EventArgs e)
         {
             ////为了确定选中的是谁
-            //Button btn = (Button)sender;
-            //string name = btn.Name.Substring(6);
-            //choose_list_index = Convert.ToInt32(name);
+            Button btn = (Button)sender;
+            string name = btn.Name.Substring(6);
+            choose_list_index = Convert.ToInt32(name);
         }
 
         public void classbuttonEnter(object sender, EventArgs e)
         {
             ////为了确定选中的是谁
-            //Button btn = (Button)sender;
-            //string name = btn.Name.Substring(6);
-            //choose_list_index2 = Convert.ToInt32(name);
+            Button btn = (Button)sender;
+            string name = btn.Name.Substring(6);
+            choose_list_index2 = Convert.ToInt32(name);
         }
         
         private void refresh_button_MouseClick(object sender, MouseEventArgs e)
@@ -1663,7 +1665,7 @@ namespace TODO
             //管理员下载作业
             Button button = (Button)sender;
             //string url = "http://10.128.169.239:5000/filesubmit?taskid=";
-            string url = "http://aliyun.xiaotianxt.com:5888/fileupload?taskid=";
+            string url = "http://aliyun.xiaotianxt.com:5000/filedownload?taskid=";
             url+=left_display_view.SelectedItems[0].Tag.ToString();
             Process.Start(url);//在浏览器打开链接
         }

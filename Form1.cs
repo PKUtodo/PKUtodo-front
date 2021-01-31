@@ -1663,7 +1663,7 @@ namespace TODO
             //管理员下载作业
             Button button = (Button)sender;
             //string url = "http://10.128.169.239:5000/filesubmit?taskid=";
-            string url = "http://aliyun.xiaotianxt.com:5888/fileupload?taskid=";
+            string url = "http://aliyun.xiaotianxt.com:5000/filedownload?taskid=";
             url+=left_display_view.SelectedItems[0].Tag.ToString();
             Process.Start(url);//在浏览器打开链接
         }

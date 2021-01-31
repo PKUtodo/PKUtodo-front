@@ -17,11 +17,12 @@ namespace TODO
         #region POST请求
         /// <summary>
         /// POST请求
-        /// </summary>
+        ///</summary>
         /// <typeparam name="JObject"></typeparam>
         /// <param name="url">请求Url地址</param>
         /// <param name="postParameters">post提交参数</param>
         /// <returns></returns>
+        //public static JObject HttpPost(string js, string url = "http://aliyun.xiaotianxt.com:5000")
         public static JObject HttpPost(string js, string url = "http://10.128.169.239:5000")
         {
             try

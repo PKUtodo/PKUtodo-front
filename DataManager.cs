@@ -110,7 +110,7 @@ namespace TODO
             new_list.name = item.name;
             //存在list id不匹配的问题
             new_list.list_id = item.list_id;
-            new_list.taskIDs = item.taskIDs;//有没有可能是传递指针，造成危险？
+            new_list.taskIDs = item.taskIDs;
             if (table_name == "lists")
             {
                 string req=JSONHelper.CreateJson("add_list",myuser_.email,myuser_.user_id,myuser_.password,item.name);
@@ -144,33 +144,7 @@ namespace TODO
             new_task.name = item.name;
             new_task.description = item.description;
             new_task.due_time = item.due_time;
-            //管理员会使用
-            if(table_name== "all_class_tasks")
-            {
-                Debug.Assert(false);
-                string req=JSONHelper.CreateJson("add_task",myuser_.email,myuser_.user_id,
-                    myuser_.password,item.parent_id,item.name,item.start_time,item.due_time,
-                    item.description,item.position_x,item.position_y);
-                try{
-                    receiver=HTTP.HttpPost(req);
-                    if(receiver.Value<int>("success")==1)
-                    {
-                        item.task_id= receiver["data"].Value<int>("task_id"); ;
-                        //all_class_tasks.Add(item);
-                        return true;
-                    }
-                    else {return false;}
-                }
-                catch(Exception e)
-                {
-                    return false;
-                }
-
-                //@warning:
-                //服务器需要发信号给所有选了这个课的人让他们更新（这显然是管理员功能）
-                
-            }
-            else if (table_name == "person_class_tasks")
+            if (table_name == "person_class_tasks")
             {
                 string req=JSONHelper.CreateJson("add_task",myuser_.email, myuser_.user_id,
                     myuser_.password,item.parent_id,item.name,item.start_time,item.due_time,
@@ -424,6 +398,7 @@ namespace TODO
         #endregion
 
 
+
         #region 查询
         
         public int get_list_task_index(int task_id)
@@ -543,6 +518,10 @@ namespace TODO
                         new_class.name = classes[i].Value<string>("list_name");
                         //new_class.description = classes[i].Value<string>("content");
                         new_class.admin_id = classes[i].Value<int>("admin_id");
+                        if(new_class.admin_id==myuser_.user_id)
+                        {
+                            myuser_.administrator_list.Add(new_class.class_id);
+                        }
                         all_classes.Add(new_class);
 
                     }
@@ -676,7 +655,6 @@ namespace TODO
                 if (receiver.Value<int>("success") == 1)
                 {
                     int index=get_all_class_index(class_id);
-                    all_classes[index].admin_id = to_user_id;
                     if(myuser_.tranferAdministrator(class_id)==false)
                     {
                         MessageBox.Show("您不是该课程管理员");
@@ -685,18 +663,19 @@ namespace TODO
                     else
                     {
                         MessageBox.Show("管理员权限转让成功");
+                        all_classes[index].admin_id = to_user_id;
                         return true;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("后端操作失败");
+                    MessageBox.Show(receiver.Value<string>("error_msg"));
                     return false;
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show(receiver.Value<string>("error_msg"));
+                MessageBox.Show(e.Message);
                 return false;
             }
         }
@@ -705,13 +684,91 @@ namespace TODO
         {
             //修改某个表中的任务
             //task_id没有变化，可以用于检索
-            return true;
+            string req = JSONHelper.CreateJson(MessageType.modify_task, myuser_.email, myuser_.user_id,
+                    myuser_.password, new_task.parent_id, new_task.name, new_task.start_time, new_task.due_time,
+                    new_task.description, new_task.position_x, new_task.position_y);
+            try
+            {
+                receiver = HTTP.HttpPost(req);
+                if (receiver.Value<int>("success") == 1)
+                {
+                    int index;
+                    //如果个人list无法搜到
+                    if(get_list_task_index(new_task.task_id)==-1)
+                    {
+                        index = get_class_task_index(new_task.task_id);
+                        Debug.Assert(index != -1);
+                        class_tasks[index] = new_task;
+                    }
+                    else
+                    {
+                        index = get_list_task_index(new_task.task_id);
+                        Debug.Assert(index != -1);
+                        list_tasks[index] = new_task;
+                    }
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show(receiver.Value<string>("error_msg"));
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
         }
         public bool modify(string table_name, StudentList new_list)
         {
             //修改lists表中的任务
             //list_id没有变化，可以用于检索
+            string req = JSONHelper.CreateJson(MessageType.modify_list,myuser_.email, myuser_.user_id,
+                    myuser_.password, new_list.list_id,new_list.name);
+            try
+            {
+                receiver = HTTP.HttpPost(req);
+                if (receiver.Value<int>("success") == 1)
+                {
+                    int index=get_list_index(new_list.list_id);
+                    lists[index] = new_list;
+                }
+                else {
+                    MessageBox.Show(receiver.Value<string>("error_msg"));
+                    return false; 
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
             return true;
+        }
+
+        public bool finish(Task task)
+        {
+            string req = JSONHelper.CreateJson("finish", myuser_.email, myuser_.user_id, myuser_.password, task.task_id,true);
+            try
+            {
+                receiver = HTTP.HttpPost(req);
+                if (receiver.Value<int>("success") == 1)
+                {
+                    task.is_finished = true;
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show(receiver.Value<string>("error_msg"));
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
         }
     }
 }
